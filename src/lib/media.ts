@@ -30,6 +30,12 @@ const COVERS: Record<string, Picture> = {
     width: 1600,
     height: 1000,
   },
+  gigachat: {
+    src: '/concepts/covers/gigachat.svg',
+    alt: 'Обложка гайда по ГигаЧату',
+    width: 1600,
+    height: 1000,
+  },
 };
 
 export function ogImageFor(id: string): string {
