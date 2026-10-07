@@ -12,13 +12,15 @@ html, body { overflow-x: clip; }
 }
 .skip:focus { top: 12px; }
 
-.js [data-reveal] {
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1);
-  transition-delay: var(--d, 0ms);
+/* Content stays visible with or without JS. The reveal class only plays motion. */
+.js [data-reveal].is-in {
+  animation: reveal-rise .7s cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: var(--d, 0ms);
 }
-.js [data-reveal].is-in { opacity: 1; transform: none; }
+@keyframes reveal-rise {
+  from { transform: translateY(18px); }
+  to { transform: none; }
+}
 
 .slide {
   opacity: 0;
@@ -28,6 +30,6 @@ html, body { overflow-x: clip; }
 .slide.is-active { opacity: 1; visibility: visible; }
 
 @media (prefers-reduced-motion: reduce) {
-  .js [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .js [data-reveal].is-in { animation: none; }
   .slide { transition: none; }
 }

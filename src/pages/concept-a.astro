@@ -4,7 +4,7 @@ import ConceptSwitch from '../components/concepts/ConceptSwitch.astro';
 import ConceptFooter from '../components/concepts/ConceptFooter.astro';
 import RubricIcon from '../components/concepts/RubricIcon.astro';
 import PartnerDisclosure from '../components/PartnerDisclosure.astro';
-import { BACKDROPS, TOOLS, loadConceptHome } from '../lib/concept-home';
+import { BACKDROPS, SPACE, TOOLS, loadConceptHome } from '../lib/concept-home';
 import '../styles/concept-motion.css';
 import '../styles/concept-a.css';
 
@@ -86,8 +86,8 @@ const slides = articles.map((article, i) => ({ article, backdrop: BACKDROPS[i % 
     {space && (
       <section class="space wrap" data-reveal>
         <figure>
-          <img src={BACKDROPS[0].src} alt={BACKDROPS[0].alt} />
-          <figcaption>{BACKDROPS[0].note}</figcaption>
+          <img src={SPACE.astronaut.src} alt={SPACE.astronaut.alt} />
+          <figcaption>{SPACE.astronaut.note}</figcaption>
         </figure>
         <div>
           <p class="kicker"><RubricIcon slug={space.slug} /> {space.name}</p>

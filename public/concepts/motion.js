@@ -1,6 +1,7 @@
 (() => {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.documentElement.classList.add('js');
+  if (reduce) document.documentElement.classList.add('reduce');
 
   const nodes = [...document.querySelectorAll('[data-reveal]')];
   if (reduce || !('IntersectionObserver' in window)) {

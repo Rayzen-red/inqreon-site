@@ -5,55 +5,61 @@ import { SITE, formatDate } from '../data/site';
 export type Cover = {
   src: string;
   alt: string;
-  kind: 'placeholder' | 'nasa';
+  kind: 'illustration' | 'space';
   note: string;
 };
 
-/** Абстрактные обложки статей — заглушки, не редакционные иллюстрации. */
+/** Абстрактные обложки статей: градиент, шум и иллюстрация. */
 const COVERS: Record<string, Cover> = {
   deepseek: {
     src: '/concepts/covers/deepseek.svg',
-    alt: 'Абстрактная заглушка обложки для материала о DeepSeek',
-    kind: 'placeholder',
-    note: 'Заглушка обложки',
+    alt: 'Абстрактная обложка материала о DeepSeek',
+    kind: 'illustration',
+    note: 'Иллюстрация обложки',
   },
   'besplatnye-neyroseti': {
     src: '/concepts/covers/free.svg',
-    alt: 'Абстрактная заглушка обложки для материала о бесплатных нейросетях',
-    kind: 'placeholder',
-    note: 'Заглушка обложки',
+    alt: 'Абстрактная обложка материала о бесплатных нейросетях',
+    kind: 'illustration',
+    note: 'Иллюстрация обложки',
   },
   'agregatory-neyrosetey': {
     src: '/concepts/covers/hubs.svg',
-    alt: 'Абстрактная заглушка обложки для материала об агрегаторах',
-    kind: 'placeholder',
-    note: 'Заглушка обложки',
+    alt: 'Абстрактная обложка материала об агрегаторах',
+    kind: 'illustration',
+    note: 'Иллюстрация обложки',
   },
 };
 
-/** NASA public domain. На месте этих кадров позже будут обложки редакции. */
+/** Иллюстрации рубрики «Космос и наука» — свои кадры редакции, webp. */
+export const HERO = [
+  {
+    src: '/concepts/covers/iss-night.webp',
+    alt: 'Ночная Земля, иллюстрация рубрики Космос и наука',
+    kind: 'space' as const,
+    note: 'Иллюстрация рубрики «Космос и наука»',
+  },
+  {
+    src: '/concepts/covers/iss-sunrise.webp',
+    alt: 'Рассвет на орбите, иллюстрация рубрики Космос и наука',
+    kind: 'space' as const,
+    note: 'Иллюстрация рубрики «Космос и наука»',
+  },
+  {
+    src: '/concepts/covers/iss-astronaut.webp',
+    alt: 'Космонавт у иллюминатора, иллюстрация рубрики Космос и наука',
+    kind: 'space' as const,
+    note: 'Иллюстрация рубрики «Космос и наука»',
+  },
+];
+
 export const SPACE = {
-  cliffs: {
-    src: '/concepts/covers/cliffs.jpg',
-    alt: 'Космические скалы туманности Киля, снимок James Webb',
-    kind: 'nasa' as const,
-    note: 'NASA / ESA / CSA / STScI · public domain · здесь будет обложка',
-  },
-  earth: {
-    src: '/concepts/covers/earth.jpg',
-    alt: 'Земля с борта Apollo 17',
-    kind: 'nasa' as const,
-    note: 'NASA, Apollo 17 (AS17-148-22727) · public domain · здесь будет обложка',
-  },
-  field: {
-    src: '/concepts/covers/webb.jpg',
-    alt: 'Первые цветные снимки телескопа James Webb',
-    kind: 'nasa' as const,
-    note: 'NASA (NHQ202207120017) · public domain · здесь будет обложка',
-  },
+  night: HERO[0],
+  sunrise: HERO[1],
+  astronaut: HERO[2],
 };
 
-export const BACKDROPS = [SPACE.cliffs, SPACE.field, SPACE.earth];
+export const BACKDROPS = HERO;
 
 /** Карточки инструментов ведут на уже опубликованные обзоры. Логотипы — монограммы-заглушки. */
 export const TOOLS = [

@@ -4,7 +4,7 @@ import ConceptSwitch from '../components/concepts/ConceptSwitch.astro';
 import ConceptFooter from '../components/concepts/ConceptFooter.astro';
 import RubricIcon from '../components/concepts/RubricIcon.astro';
 import PartnerDisclosure from '../components/PartnerDisclosure.astro';
-import { SPACE, TOOLS, loadConceptHome } from '../lib/concept-home';
+import { HERO, SPACE, TOOLS, loadConceptHome } from '../lib/concept-home';
 import '../styles/concept-motion.css';
 import '../styles/concept-b.css';
 
@@ -17,20 +17,20 @@ const feature = space
       title: space.name,
       description: space.description,
       dateLabel: 'Рубрика',
-      cover: SPACE.cliffs,
+      photo: HERO[0],
       kind: 'rubric' as const,
     }
   : null;
 const slides = [
   ...(feature ? [feature] : []),
-  ...articles.map((article) => ({
+  ...articles.map((article, i) => ({
     href: article.href,
     kicker: article.rubricName,
     rubric: article.rubric,
     title: article.title,
     description: article.description,
     dateLabel: `Проверено ${article.dateLabel}`,
-    cover: article.cover,
+    photo: HERO[(i + 1) % HERO.length],
     kind: 'article' as const,
   })),
 ];
@@ -62,8 +62,8 @@ const issue = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', 
         {slides.map((slide, i) => (
           <article class:list={['slide', 'hero-slide', { 'is-active': i === 0 }]} data-slide aria-hidden={i === 0 ? 'false' : 'true'}>
             <a class="hero-link" href={slide.href}>
-              <img src={slide.cover.src} alt={slide.cover.alt} />
-              <span class="shot-note">{slide.cover.note}</span>
+              <img src={slide.photo.src} alt={slide.photo.alt} />
+              <span class="shot-note">{slide.photo.note}</span>
             </a>
             <div class="hero-copy">
               <p class="chip" data-rubric={slide.rubric}><RubricIcon slug={slide.rubric} /> {slide.kicker}</p>
@@ -136,11 +136,11 @@ const issue = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', 
 
     {space && (
       <section class="space" data-reveal>
-        <img src={SPACE.earth.src} alt={SPACE.earth.alt} />
+        <img src={SPACE.sunrise.src} alt={SPACE.sunrise.alt} />
         <div>
           <p class="chip" data-rubric="kosmos-i-nauka"><RubricIcon slug="kosmos-i-nauka" /> {space.name}</p>
           <h2>{space.description}</h2>
-          <p class="shot-note">{SPACE.earth.note}</p>
+          <p class="shot-note">{SPACE.sunrise.note}</p>
           <a class="btn" href={`/${space.slug}/`}>К рубрике</a>
         </div>
       </section>
