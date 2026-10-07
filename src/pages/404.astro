@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { RUBRICS } from '../data/rubrics';
+---
+<BaseLayout title="Страница не найдена" description="Такой страницы нет. Перейдите на главную или в одну из рубрик Inqreon." noindex={true}>
+  <div class="container narrow">
+    <h1>Страница не найдена</h1>
+    <p class="lead">Возможно, статья ещё готовится или адрес набран с ошибкой.</p>
+    <p><a class="btn" href="/">На главную</a></p>
+    <h2>Рубрики</h2>
+    <ul>{RUBRICS.map((r) => <li><a href={`/${r.slug}/`}>{r.name}</a></li>)}</ul>
+  </div>
+</BaseLayout>

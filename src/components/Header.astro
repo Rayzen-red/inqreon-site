@@ -1,0 +1,22 @@
+---
+import { SITE } from '../data/site';
+import { RUBRICS } from '../data/rubrics';
+const current = Astro.url.pathname.split('/')[1] ?? '';
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo" aria-label="Inqreon — на главную">
+      <span class="logo-mark" aria-hidden="true">◆</span> Inqreon
+    </a>
+    <a class="tg-btn" href={SITE.telegram} target="_blank" rel="noopener">Telegram-канал</a>
+  </div>
+  <nav class="main-nav" aria-label="Рубрики">
+    <div class="container">
+      <ul>
+        {RUBRICS.filter((r) => r.inNav).map((r) => (
+          <li><a href={`/${r.slug}/`} aria-current={current === r.slug ? 'page' : undefined}>{r.name}</a></li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+</header>

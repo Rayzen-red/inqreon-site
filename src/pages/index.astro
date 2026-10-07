@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { RUBRICS } from '../data/rubrics';
+import { SITE } from '../data/site';
+
+const articles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
+  (a, b) => +(b.data.updatedAt ?? b.data.checkedAt) - +(a.data.updatedAt ?? a.data.checkedAt),
+);
+const count = (slug: string) => articles.filter((a) => a.data.rubric === slug).length;
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url + '/', inLanguage: 'ru', description: SITE.description },
+  { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url + '/', sameAs: [SITE.telegram] },
+];
+---
+<BaseLayout title={`${SITE.name} — ${SITE.tagline}`} description={SITE.description} withBrand={false} schema={schema}>
+  <section class="hero">
+    <div class="container">
+      <h1>Нейросети для работы и учёбы: что реально работает в России, Узбекистане и Казахстане</h1>
+      <p class="lead">Проверяем, где сервис доступен официально, сколько он стоит и чем за него заплатить. У каждой статьи — дата проверки и ссылки на первоисточники.</p>
+      <p class="hero-actions">
+        <a class="btn" href="/neyroseti/">Все обзоры нейросетей</a>
+        <a class="btn btn-ghost" href={SITE.telegram} target="_blank" rel="noopener">Telegram-канал</a>
+      </p>
+    </div>
+  </section>
+
+  <div class="container">
+    <section>
+      <h2>Новые статьи</h2>
+      <div class="cards">{articles.map((a) => <ArticleCard entry={a} />)}</div>
+    </section>
+
+    <section>
+      <h2>Рубрики</h2>
+      <ul class="rubric-grid">
+        {RUBRICS.map((r) => (
+          <li class="rubric-tile">
+            <a href={`/${r.slug}/`}><strong>{r.name}</strong></a>
+            <span>{r.description}</span>
+            <small>{count(r.slug) > 0 ? `Статей: ${count(r.slug)}` : 'Скоро'}</small>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

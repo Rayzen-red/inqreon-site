@@ -1,0 +1,30 @@
+---
+// Рекламная карточка с реферальной ссылкой (пометка «Реклама», рекламодатель, erid, rel="sponsored nofollow").
+// Использование в .astro-страницах:
+//   <AdCard partner="BotHub" />                         — данные из src/data/ads.json
+//   <AdCard name="BotHub" href="https://…" erid="2Vtz…" advertiser="ООО «…»" inn="…"
+//           site="bothub.chat" title="BotHub — ChatGPT, Claude, Gemini в одном окне"
+//           text="Оплата российскими картами. Цена: от 250 ₽." cta="Перейти на BotHub" />
+// Без href/erid/advertiser/title ссылка не выводится — остаётся заглушка [PARTNER: …].
+import ads from '../data/ads.json';
+import { renderAdCard } from '../lib/ad.mjs';
+
+interface Props {
+  partner?: string;   // ключ в ads.json
+  name?: string;
+  href?: string;      // реферальная ссылка из кабинета партнёрки (erid добавится сам)
+  erid?: string;      // токен из ОРД / от рекламодателя / сети
+  advertiser?: string; // наименование рекламодателя (сторона оферты)
+  inn?: string;
+  site?: string;
+  title?: string;
+  text?: string;
+  cta?: string;
+  bilingual?: boolean; // «Реклама / Reklama» — если блок адресован и аудитории УЗ
+}
+const { partner, ...props } = Astro.props;
+const base = partner ? (ads as Record<string, any>)[partner] ?? {} : {};
+const ad = { ...base, ...Object.fromEntries(Object.entries(props).filter(([, v]) => v !== undefined && v !== '')) };
+const html = renderAdCard(ad, props.name ?? partner ?? '');
+---
+<Fragment set:html={html} />

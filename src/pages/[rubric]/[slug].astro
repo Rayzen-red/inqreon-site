@@ -1,0 +1,140 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PartnerDisclosure from '../../components/PartnerDisclosure.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getRubric } from '../../data/rubrics';
+import { SITE, COUNTRY_LABELS, formatDate } from '../../data/site';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => !data.draft);
+  return articles.map((entry) => ({
+    params: { rubric: entry.data.rubric, slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content, headings } = await render(entry);
+const rubric = getRubric(d.rubric);
+const url = new URL(`/${d.rubric}/${entry.id}/`, SITE.url).href;
+const published = (d.publishedAt ?? d.checkedAt).toISOString();
+const modified = (d.updatedAt ?? d.checkedAt).toISOString();
+const words = (entry.body ?? '').split(/\s+/).filter(Boolean).length;
+const minutes = Math.max(1, Math.round(words / 180));
+const toc = headings.filter((h) => h.depth === 2);
+
+const related = (await getCollection('articles', ({ data }) => !data.draft))
+  .filter((a) => a.id !== entry.id)
+  .sort((a, b) => Number(a.data.rubric !== d.rubric) - Number(b.data.rubric !== d.rubric))
+  .slice(0, 3);
+
+const crumbs = [
+  { name: 'Главная', href: '/' },
+  { name: rubric.name, href: `/${rubric.slug}/` },
+  { name: d.title },
+];
+
+const stripMarkers = (s: string) => s.replace(/\s*\[(ПРОВЕРИТЬ|PARTNER:)[^\]]*\]/g, '').trim();
+const schema: object[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: d.h1,
+    description: d.description,
+    inLanguage: 'ru',
+    datePublished: published,
+    dateModified: modified,
+    mainEntityOfPage: url,
+    image: new URL(SITE.ogImage, SITE.url).href,
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url, logo: { '@type': 'ImageObject', url: new URL('/favicon.svg', SITE.url).href } },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      ...(c.href ? { item: new URL(c.href, SITE.url).href } : { item: url }),
+    })),
+  },
+];
+if (d.faq.length) {
+  schema.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: d.faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: stripMarkers(f.a) },
+    })),
+  });
+}
+---
+<BaseLayout
+  title={d.title}
+  description={d.description}
+  withBrand={false}
+  ogType="article"
+  schema={schema}
+  publishedTime={published}
+  modifiedTime={modified}
+>
+  <div class="container narrow">
+    <Breadcrumbs items={crumbs} />
+    <article class="article">
+      <header class="article-header">
+        <h1>{d.h1}</h1>
+        <p class="article-meta">
+          <span>Проверено: <time datetime={modified.slice(0, 10)}>{formatDate(d.updatedAt ?? d.checkedAt)}</time></span>
+          <span>·</span>
+          <span>{minutes} мин чтения</span>
+          {d.countries.length > 0 && (<><span>·</span><span>{d.countries.map((c) => COUNTRY_LABELS[c]).join(', ')}</span></>)}
+        </p>
+        <p class="article-note">Цены и правила доступа взяты с официальных страниц сервисов, источники — в конце статьи.</p>
+        {d.affiliate && <PartnerDisclosure />}
+      </header>
+
+      {toc.length > 2 && (
+        <nav class="toc" aria-label="Содержание">
+          <p class="toc-title">Содержание</p>
+          <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+        </nav>
+      )}
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {d.sources.length > 0 && (
+        <section class="sources" aria-labelledby="sources-title">
+          <h2 id="sources-title">Источники (проверено {formatDate(d.checkedAt)})</h2>
+          <ol>
+            {d.sources.map((s) => (
+              <li>
+                {s.title && <span class="src-title">{s.title}: </span>}
+                <a href={s.url} rel="nofollow noopener" target="_blank">{s.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+    </article>
+
+    {related.length > 0 && (
+      <section class="related">
+        <h2>Читайте также</h2>
+        <div class="cards">{related.map((a) => <ArticleCard entry={a} />)}</div>
+      </section>
+    )}
+
+    <aside class="tg-cta">
+      <p><strong>Обновления цен и новые обзоры</strong> — в нашем Telegram-канале.</p>
+      <a class="tg-btn" href={SITE.telegram} target="_blank" rel="noopener">Подписаться на t.me/Inqreon</a>
+    </aside>
+  </div>
+</BaseLayout>

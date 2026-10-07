@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { RUBRICS } from '../../data/rubrics';
+import { SITE } from '../../data/site';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => !data.draft);
+  return RUBRICS.map((rubric) => ({
+    params: { rubric: rubric.slug },
+    props: {
+      rubric,
+      items: articles
+        .filter((a) => a.data.rubric === rubric.slug)
+        .sort((a, b) => +(b.data.updatedAt ?? b.data.checkedAt) - +(a.data.updatedAt ?? a.data.checkedAt)),
+    },
+  }));
+}
+const { rubric, items } = Astro.props;
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Главная', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: rubric.name, item: `${SITE.url}/${rubric.slug}/` },
+  ],
+}];
+---
+<BaseLayout title={rubric.name} description={rubric.description} noindex={items.length === 0} schema={schema}>
+  <div class="container">
+    <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: rubric.name }]} />
+    <h1>{rubric.name}</h1>
+    <p class="lead">{rubric.description}</p>
+    {items.length > 0 ? (
+      <div class="cards">{items.map((a) => <ArticleCard entry={a} showRubric={false} />)}</div>
+    ) : (
+      <p class="empty">Материалы этой рубрики готовятся. Новые статьи анонсируем в <a href={SITE.telegram} target="_blank" rel="noopener">Telegram-канале</a>.</p>
+    )}
+  </div>
+</BaseLayout>

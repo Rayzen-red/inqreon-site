@@ -1,0 +1,15 @@
+---
+// Простая служебная страница (О проекте, политика и т. п.)
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+const { title, description, h1, noindex = false } = Astro.props;
+---
+<BaseLayout title={title} description={description} noindex={noindex}>
+  <div class="container narrow">
+    <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: h1 ?? title }]} />
+    <h1>{h1 ?? title}</h1>
+    <div class="prose">
+      <slot />
+    </div>
+  </div>
+</BaseLayout>

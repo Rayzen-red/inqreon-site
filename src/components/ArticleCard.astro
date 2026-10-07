@@ -1,0 +1,13 @@
+---
+import { getRubric } from '../data/rubrics';
+import { formatDate } from '../data/site';
+const { entry, showRubric = true } = Astro.props;
+const d = entry.data;
+const href = `/${d.rubric}/${entry.id}/`;
+---
+<article class="card">
+  {showRubric && <a class="card-rubric" href={`/${d.rubric}/`}>{getRubric(d.rubric).name}</a>}
+  <h3 class="card-title"><a href={href}>{d.h1}</a></h3>
+  <p class="card-desc">{d.description}</p>
+  <p class="card-meta">Проверено {formatDate(d.updatedAt ?? d.checkedAt)}</p>
+</article>

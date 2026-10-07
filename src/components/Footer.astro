@@ -1,0 +1,34 @@
+---
+import { SITE } from '../data/site';
+import { RUBRICS } from '../data/rubrics';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="footer-brand">Inqreon</p>
+      <p>{SITE.tagline}. Проверяем доступность по странам и указываем дату проверки цен.</p>
+      <p><a href={SITE.telegram} target="_blank" rel="noopener">Наш Telegram-канал: t.me/Inqreon</a></p>
+      <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+    </div>
+    <div>
+      <p class="footer-title">Рубрики</p>
+      <ul>
+        {RUBRICS.map((r) => <li><a href={`/${r.slug}/`}>{r.name}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <p class="footer-title">О сайте</p>
+      <ul>
+        <li><a href="/o-proekte/">О проекте</a></li>
+        <li><a href="/redakcionnaya-politika/">Как мы проверяем информацию</a></li>
+        <li><a href="/raskrytie-partnerskih-ssylok/">Раскрытие партнёрских ссылок</a></li>
+        <li><a href="/politika-konfidencialnosti/">Политика конфиденциальности</a></li>
+        <li><a href="/kontakty/">Контакты</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>© {year} Inqreon — проект {SITE.owner} ({SITE.ownerCountry}). Материалы носят справочный характер и не являются юридической или финансовой консультацией. Цены и условия сервисов меняются — перед оплатой сверяйтесь с официальным сайтом.</p>
+  </div>
+</footer>
