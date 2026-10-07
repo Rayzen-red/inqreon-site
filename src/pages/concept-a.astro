@@ -24,22 +24,21 @@ const slides = articles.map((article, i) => ({ article, backdrop: BACKDROPS[i % 
       <div class="hero-frame">
         {slides.map(({ article, backdrop }, i) => (
           <article class:list={['slide', 'hero-slide', { 'is-active': i === 0 }]} data-slide aria-hidden={i === 0 ? 'false' : 'true'}>
-            <img class="hero-bg" src={backdrop.src} alt="" />
-            <div class="hero-shade"></div>
             <div class="hero-copy">
               <p class="kicker"><RubricIcon slug={article.rubric} /> {article.rubricName}</p>
               <h1><a href={article.href}>{article.title}</a></h1>
               <p class="dek">{article.description}</p>
               <p class="meta">Проверено {article.dateLabel}</p>
-              <div class="hero-actions">
-                <a class="btn" href={article.href}>Читать материал</a>
-                <span class="shot-note">{backdrop.note}</span>
-              </div>
+              <a class="btn" href={article.href}>Читать материал</a>
               <figure class="mini-cover">
                 <img src={article.cover.src} alt={article.cover.alt} />
                 <figcaption>{article.cover.note}</figcaption>
               </figure>
             </div>
+            <figure class="hero-photo">
+              <img src={backdrop.src} alt={backdrop.alt} />
+              <figcaption>{backdrop.note}</figcaption>
+            </figure>
           </article>
         ))}
       </div>

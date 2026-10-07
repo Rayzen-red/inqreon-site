@@ -1,3 +1,6 @@
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+
 .skip {
   position: absolute;
   left: 12px;
