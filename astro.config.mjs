@@ -27,7 +27,14 @@ if (fs.existsSync(articlesDir)) {
     const date = get('updatedAt') ?? get('checkedAt');
     if (rubric) {
       filledRubrics.add(rubric);
-      if (date) lastmod.set(`${SITE}/${rubric}/${slug}/`, new Date(date).toISOString());
+      if (date) {
+        const iso = new Date(date).toISOString();
+        lastmod.set(`${SITE}/${rubric}/${slug}/`, iso);
+        const hub = `${SITE}/${rubric}/`;
+        if (!lastmod.has(hub) || iso > lastmod.get(hub)) lastmod.set(hub, iso);
+        const home = `${SITE}/`;
+        if (!lastmod.has(home) || iso > lastmod.get(home)) lastmod.set(home, iso);
+      }
     }
   }
 }
@@ -46,6 +53,16 @@ const legacyUrls = new Set(
 const ADS = JSON.parse(fs.readFileSync(path.resolve('./src/data/ads.json'), 'utf-8'));
 
 const pagesDir = path.resolve('./src/pages');
+const staticLastmod = new Map();
+const stamp = (urlPath, file) => {
+  const full = path.resolve(file);
+  if (fs.existsSync(full)) staticLastmod.set(`${SITE}${urlPath}`, fs.statSync(full).mtime.toISOString());
+};
+stamp('/o-proekte/', 'src/pages/o-proekte.astro');
+stamp('/kontakty/', 'src/pages/kontakty.astro');
+stamp('/redakcionnaya-politika/', 'src/pages/redakcionnaya-politika.astro');
+stamp('/raskrytie-partnerskih-ssylok/', 'src/pages/raskrytie-partnerskih-ssylok.astro');
+stamp('/instrumenty/', 'src/pages/[rubric]/index.astro');
 const validPaths = new Set(['/']);
 for (const f of fs.readdirSync(pagesDir)) {
   const m = f.match(/^([a-z0-9-]+)\.astro$/);
@@ -70,7 +87,7 @@ export default defineConfig({
       // noindex-страницы (пустые рубрики, шаблон политики, 404, старые адреса) в карту сайта не попадают
       filter: (page) => !page.includes('/404') && !page.includes('/politika-konfidencialnosti/') && !legacyUrls.has(page) && !emptyRubricUrls.has(page),
       serialize(item) {
-        const lm = lastmod.get(item.url);
+        const lm = lastmod.get(item.url) ?? staticLastmod.get(item.url);
         if (lm) item.lastmod = lm;
         return item;
       },

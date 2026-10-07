@@ -1,7 +1,11 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { RUBRICS } from '../data/rubrics';
 import RubricIcon from '../components/concepts/RubricIcon.astro';
+const articles = await getCollection('articles', ({ data }) => !data.draft);
+const filled = new Set(articles.map((a) => a.data.rubric));
+const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
 ---
 <BaseLayout title="Страница не найдена" description="Такой страницы нет. Перейдите на главную или в одну из рубрик Inqreon." noindex={true}>
   <div class="container page-hero">
@@ -11,7 +15,7 @@ import RubricIcon from '../components/concepts/RubricIcon.astro';
     <p><a class="btn" href="/">На главную</a></p>
   </div>
   <nav class="rubric-nav" aria-label="Рубрики">
-    {RUBRICS.filter((r) => r.inNav).map((r) => (
+    {nav.map((r) => (
       <a href={`/${r.slug}/`}>
         <RubricIcon slug={r.slug} />
         <span>{r.name}</span>

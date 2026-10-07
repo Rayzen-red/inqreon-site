@@ -8,7 +8,7 @@ import RubricIcon from '../../components/concepts/RubricIcon.astro';
 import TelegramCta from '../../components/TelegramCta.astro';
 import { getRubric } from '../../data/rubrics';
 import { SITE, COUNTRY_LABELS, formatDate } from '../../data/site';
-import { coverFor } from '../../lib/media';
+import { coverFor, ogImageFor } from '../../lib/media';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles', ({ data }) => !data.draft);
@@ -23,6 +23,11 @@ const d = entry.data;
 const { Content, headings } = await render(entry);
 const rubric = getRubric(d.rubric);
 const cover = coverFor(entry.id);
+const ogImage = ogImageFor(entry.id);
+const isApiEndpoint = (url: string) => {
+  try { return new URL(url).hostname === 'api.deepseek.com'; }
+  catch { return false; }
+};
 const url = new URL(`/${d.rubric}/${entry.id}/`, SITE.url).href;
 const published = (d.publishedAt ?? d.checkedAt).toISOString();
 const modified = (d.updatedAt ?? d.checkedAt).toISOString();
@@ -52,7 +57,7 @@ const schema: object[] = [
     datePublished: published,
     dateModified: modified,
     mainEntityOfPage: url,
-    image: new URL(cover.src, SITE.url).href,
+    image: new URL(ogImage, SITE.url).href,
     author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
     publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url, logo: { '@type': 'ImageObject', url: new URL('/favicon.svg', SITE.url).href } },
   },
@@ -84,7 +89,7 @@ if (d.faq.length) {
   description={d.description}
   withBrand={false}
   ogType="article"
-  ogImage={cover.src}
+  ogImage={ogImage}
   schema={schema}
   publishedTime={published}
   modifiedTime={modified}
@@ -136,7 +141,11 @@ if (d.faq.length) {
             {d.sources.map((s) => (
               <li>
                 {s.title && <span class="src-title">{s.title}: </span>}
-                <a href={s.url} rel="nofollow noopener" target="_blank">{s.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
+                {isApiEndpoint(s.url) ? (
+                  <code>{s.url}</code>
+                ) : (
+                  <a href={s.url} rel="nofollow noopener" target="_blank">{s.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
+                )}
               </li>
             ))}
           </ol>

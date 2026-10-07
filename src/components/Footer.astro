@@ -1,7 +1,11 @@
 ---
+import { getCollection } from 'astro:content';
 import { SITE } from '../data/site';
 import { RUBRICS } from '../data/rubrics';
 const year = new Date().getFullYear();
+const articles = await getCollection('articles', ({ data }) => !data.draft);
+const filled = new Set(articles.map((a) => a.data.rubric));
+const rubrics = RUBRICS.filter((r) => r.slug === 'instrumenty' || filled.has(r.slug));
 ---
 <footer class="site-foot">
   <div class="foot-grid">
@@ -14,7 +18,7 @@ const year = new Date().getFullYear();
     <div>
       <p class="foot-title">Рубрики</p>
       <ul>
-        {RUBRICS.map((r) => <li><a href={`/${r.slug}/`}>{r.name}</a></li>)}
+        {rubrics.map((r) => <li><a href={`/${r.slug}/`}>{r.name}</a></li>)}
       </ul>
     </div>
     <div>

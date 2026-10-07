@@ -32,6 +32,10 @@ const COVERS: Record<string, Picture> = {
   },
 };
 
+export function ogImageFor(id: string): string {
+  return COVERS[id] ? `/og/${id}.png` : '/og-default.png';
+}
+
 export function coverFor(id: string): Picture {
   return (
     COVERS[id] ?? {

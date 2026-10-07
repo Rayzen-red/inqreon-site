@@ -2,7 +2,7 @@
 import PageLayout from '../layouts/PageLayout.astro';
 import { SITE } from '../data/site';
 ---
-<PageLayout title="Контакты" description="Как связаться с редакцией Inqreon: Telegram-канал t.me/Inqreon и почта raydzim.group@gmail.com." h1="Контакты">
+<PageLayout title="Контакты редакции Inqreon: Telegram и почта" description="Как связаться с редакцией Inqreon: Telegram-канал t.me/Inqreon и почта raydzim.group@gmail.com." h1="Контакты">
   <p><strong>Telegram-канал:</strong> <a href={SITE.telegram} target="_blank" rel="noopener">t.me/Inqreon</a></p>
   <p><strong>E-mail:</strong> <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
   <p>Проект Inqreon ведёт {SITE.owner} ({SITE.ownerCountry}).</p>
