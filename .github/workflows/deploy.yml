@@ -1,5 +1,7 @@
 # Деплой на GitHub Pages через GitHub Actions (Settings → Pages → Source: GitHub Actions).
 # Если проект лежит в подпапке репозитория, укажите её в `path`.
+# GITHUB_TOKEN не может сам включить Pages (нужно administration:write), поэтому
+# источник «GitHub Actions» задаётся в настройках репозитория до первого успешного деплоя.
 name: Deploy to GitHub Pages
 on:
   push:
@@ -17,12 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # На пустом репозитории Pages ещё не включён. enablement создаёт сайт
-      # с источником GitHub Actions (build_type: workflow), если токен это позволяет.
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: withastro/action@v5
         with:
           path: .
