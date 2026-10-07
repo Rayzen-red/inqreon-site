@@ -1,17 +1,18 @@
 ---
 import '../styles/global.css';
+import '../styles/concept-motion.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE } from '../data/site';
 
 interface Props {
-  title: string;            // <title> целиком (бренд добавляется, если withBrand)
+  title: string;
   description: string;
   withBrand?: boolean;
   ogType?: 'website' | 'article';
   ogImage?: string;
   noindex?: boolean;
-  schema?: object[];        // JSON-LD
+  schema?: object[];
   publishedTime?: string;
   modifiedTime?: string;
 }
@@ -28,7 +29,6 @@ const {
 } = Astro.props;
 
 const fullTitle = withBrand && !title.includes(SITE.name) ? `${title} — ${SITE.name}` : title;
-// canonical всегда на https://inqreon.com + путь со слешем на конце
 const is404 = Astro.url.pathname.replace(/\/$/, '').endsWith('/404');
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImageUrl = new URL(ogImage, SITE.url).href;
@@ -43,8 +43,11 @@ const ogImageUrl = new URL(ogImage, SITE.url).href;
     {!is404 && <link rel="canonical" href={canonical} />}
     {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/concepts/fonts/xn7gYHE41ni1AdIRggOxSuXd.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/concepts/fonts/Yq6W-LOTXCb04q32xlpwv8ZfrxE.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/concepts/fonts.css" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="theme-color" content="#1f3a8a" />
+    <meta name="theme-color" content="#070b16" />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
@@ -66,10 +69,15 @@ const ogImageUrl = new URL(ogImage, SITE.url).href;
   </head>
   <body>
     <a class="skip-link" href="#main">К содержанию</a>
-    <Header />
-    <main id="main">
-      <slot />
-    </main>
-    <Footer />
+    <canvas id="stars" aria-hidden="true"></canvas>
+    <div class="cosmos">
+      <Header />
+      <main id="main">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+    <script is:inline src="/concepts/stars.js"></script>
+    <script is:inline src="/concepts/motion.js"></script>
   </body>
 </html>

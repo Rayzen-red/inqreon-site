@@ -26,7 +26,7 @@ function splitText(value, cards) {
       }
       out.push({
         type: 'html',
-        value: `<span class="ph ph-partner" data-partner="${esc(name)}" title="Место для партнёрской ссылки (пока заглушка)">[PARTNER: ${esc(name)}]</span>`,
+        value: `<span class="ph ph-partner" data-partner="${esc(name)}" title="Партнёрская ссылка появится после маркировки">[PARTNER: ${esc(name)}]</span>`,
       });
     } else {
       out.push({

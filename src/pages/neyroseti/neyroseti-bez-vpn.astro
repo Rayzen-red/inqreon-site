@@ -1,0 +1,18 @@
+---
+const target = '/neyroseti/neyroseti-dostupnye-v-rossii-i-sng/';
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Переадресация — Inqreon</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={`https://inqreon.com${target}`} />
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <script is:inline define:vars={{ target }}>location.replace(target);</script>
+  </head>
+  <body>
+    <p><a href={target}>Продолжить к статье</a></p>
+  </body>
+</html>

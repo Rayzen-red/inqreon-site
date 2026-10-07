@@ -1,5 +1,5 @@
 {
-  "_comment": "Реестр рекламных (реферальных) ссылок. Ключ = имя в заглушке [PARTNER: Имя]. Ссылка появится на сайте ТОЛЬКО когда заполнены href, erid, advertiser и title; иначе остаётся заглушка. Шаблон маркировки: /workspace/inqreon/analytics/affiliate-links-marking.md (раздел 6.2). Цены в тексте рекламы — в рублях (ч. 7.1 ст. 5 38-ФЗ). Никаких VPN.",
+  "_comment": "Реестр рекламных (реферальных) ссылок. Ключ = имя в заглушке [PARTNER: Имя]. Ссылка появится на сайте ТОЛЬКО когда заполнены href, erid, advertiser и title; иначе остаётся заглушка. Шаблон маркировки: /workspace/inqreon/analytics/affiliate-links-marking.md (раздел 6.2). Цены в тексте рекламы — в рублях (ч. 7.1 ст. 5 38-ФЗ). Не рекомендовать обход ограничений.",
   "BotHub":    { "href": "", "erid": "", "advertiser": "", "inn": "", "site": "bothub.chat", "title": "", "text": "", "cta": "Перейти на BotHub", "bilingual": false },
   "GPTunneL":  { "href": "", "erid": "", "advertiser": "", "inn": "", "site": "gptunnel.ru", "title": "", "text": "", "cta": "Перейти на GPTunneL", "bilingual": false },
   "Chad":      { "href": "", "erid": "", "advertiser": "", "inn": "", "site": "chadgpt.ru", "title": "", "text": "", "cta": "Перейти на Chad", "bilingual": false },

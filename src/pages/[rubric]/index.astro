@@ -3,8 +3,13 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
+import RubricIcon from '../../components/concepts/RubricIcon.astro';
+import PartnerDisclosure from '../../components/PartnerDisclosure.astro';
+import ToolGrid from '../../components/ToolGrid.astro';
+import TelegramCta from '../../components/TelegramCta.astro';
 import { RUBRICS } from '../../data/rubrics';
 import { SITE } from '../../data/site';
+import { SPACE_IMAGES } from '../../lib/media';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles', ({ data }) => !data.draft);
@@ -19,6 +24,8 @@ export async function getStaticPaths() {
   }));
 }
 const { rubric, items } = Astro.props;
+const isCatalog = rubric.slug === 'instrumenty';
+const isSpace = rubric.slug === 'kosmos-i-nauka';
 const schema = [{
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -28,15 +35,49 @@ const schema = [{
   ],
 }];
 ---
-<BaseLayout title={rubric.name} description={rubric.description} noindex={items.length === 0} schema={schema}>
+<BaseLayout title={rubric.name} description={rubric.description} noindex={items.length === 0 && !isCatalog} schema={schema}>
+  {isSpace ? (
+    <header class="page-banner container">
+      <img src={SPACE_IMAGES[0].src} alt={SPACE_IMAGES[0].alt} width={SPACE_IMAGES[0].width} height={SPACE_IMAGES[0].height} fetchpriority="high" decoding="async" />
+      <div class="page-banner-copy">
+        <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: rubric.name }]} />
+        <p class="kicker"><RubricIcon slug={rubric.slug} /> Рубрика</p>
+        <h1>{rubric.name}</h1>
+        <p class="lead">{rubric.description}</p>
+      </div>
+    </header>
+  ) : (
+    <div class="container page-hero">
+      <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: rubric.name }]} />
+      <p class="kicker"><RubricIcon slug={rubric.slug} /> Рубрика</p>
+      <h1>{rubric.name}</h1>
+      <p class="lead">{rubric.description}</p>
+    </div>
+  )}
+
+  {isSpace && (
+    <div class="space-gallery container">
+      {SPACE_IMAGES.slice(1).map((photo) => (
+        <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" />
+      ))}
+    </div>
+  )}
+
   <div class="container">
-    <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: rubric.name }]} />
-    <h1>{rubric.name}</h1>
-    <p class="lead">{rubric.description}</p>
-    {items.length > 0 ? (
-      <div class="cards">{items.map((a) => <ArticleCard entry={a} showRubric={false} />)}</div>
-    ) : (
-      <p class="empty">Материалы этой рубрики готовятся. Новые статьи анонсируем в <a href={SITE.telegram} target="_blank" rel="noopener">Telegram-канале</a>.</p>
+    {isCatalog && (
+      <>
+        <PartnerDisclosure />
+        <ToolGrid />
+      </>
     )}
+    {items.length > 0 ? (
+      <div class="cards">{items.map((a, i) => <ArticleCard entry={a} showRubric={false} eager={i === 0 && !isSpace} />)}</div>
+    ) : !isCatalog && (
+      <div class="empty-state">
+        <p>Материалы этой рубрики готовятся. Новые статьи анонсируем в <a href={SITE.telegram}>Telegram-канале</a>.</p>
+        <a class="btn" href={SITE.telegram} target="_blank" rel="noopener">Открыть t.me/Inqreon</a>
+      </div>
+    )}
+    <TelegramCta />
   </div>
 </BaseLayout>

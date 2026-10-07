@@ -198,4 +198,4 @@ sources: [{"title": "", "url": "https://help.openai.com/en/articles/7947663-chat
 
 Мы обновляем статью при изменении условий. Дата последней проверки — в начале страницы.
 
-**Читайте также:** [Нейросети без VPN: что работает в России и СНГ](/neyroseti/neyroseti-bez-vpn/) · [DeepSeek: как пользоваться](/neyroseti/deepseek/) · [Агрегаторы нейросетей в России](/neyroseti/agregatory-neyrosetey/) · [Как писать промпты](/prompty/kak-pisat-prompty/) · [Нейросети для учёбы](/dlya-ucheby/)
+**Читайте также:** [Нейросети в РФ, УЗ и КЗ: что работает напрямую](/neyroseti/neyroseti-dostupnye-v-rossii-i-sng/) · [DeepSeek: как пользоваться](/neyroseti/deepseek/) · [Агрегаторы нейросетей в России](/neyroseti/agregatory-neyrosetey/) · [Как писать промпты](/prompty/kak-pisat-prompty/) · [Нейросети для учёбы](/dlya-ucheby/)

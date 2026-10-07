@@ -1,13 +1,31 @@
 ---
 import { getRubric } from '../data/rubrics';
 import { formatDate } from '../data/site';
-const { entry, showRubric = true } = Astro.props;
+import { coverFor } from '../lib/media';
+
+interface Props {
+  entry: { id: string; data: { rubric: string; title: string; description: string; updatedAt?: Date; checkedAt: Date } };
+  showRubric?: boolean;
+  eager?: boolean;
+}
+const { entry, showRubric = true, eager = false } = Astro.props;
 const d = entry.data;
 const href = `/${d.rubric}/${entry.id}/`;
+const cover = coverFor(entry.id);
 ---
-<article class="card">
-  {showRubric && <a class="card-rubric" href={`/${d.rubric}/`}>{getRubric(d.rubric).name}</a>}
-  <h3 class="card-title"><a href={href}>{d.h1}</a></h3>
-  <p class="card-desc">{d.description}</p>
-  <p class="card-meta">Проверено {formatDate(d.updatedAt ?? d.checkedAt)}</p>
-</article>
+<a class="card" href={href} data-reveal>
+  <figure>
+    <img
+      src={cover.src}
+      alt={cover.alt}
+      width={cover.width}
+      height={cover.height}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  </figure>
+  {showRubric && <p class="tag">{getRubric(d.rubric).name}</p>}
+  <h3>{d.title}</h3>
+  <p>{d.description}</p>
+  <p class="meta">Проверено {formatDate(d.updatedAt ?? d.checkedAt)}</p>
+</a>
