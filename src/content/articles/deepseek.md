@@ -232,4 +232,4 @@ DeepSeek — одна из лучших бесплатных нейросете�
 
 Мы обновляем гайд при изменении интерфейса, цен и правил DeepSeek. Дата последней проверки — в начале страницы.
 
-**Читайте также:** [Бесплатные нейросети 2026: реальные лимиты](/neyroseti/besplatnye-neyroseti/) · [Нейросети без VPN: что работает в России и СНГ](/neyroseti/neyroseti-bez-vpn/) · [Агрегаторы нейросетей в России](/neyroseti/agregatory-neyrosetey/) · [Как писать промпты](/prompty/kak-pisat-prompty/) · [Нейросети для программирования](/dlya-raboty/neyroseti-dlya-programmirovaniya/) · [Qwen: как пользоваться](/neyroseti/qwen/)
+**Читайте также:** [Бесплатные нейросети 2026: реальные лимиты](/neyroseti/besplatnye-neyroseti/) · [Нейросети в РФ, УЗ и КЗ: что работает напрямую](/neyroseti/neyroseti-dostupnye-v-rossii-i-sng/) · [Агрегаторы нейросетей в России](/neyroseti/agregatory-neyrosetey/) · [Как писать промпты](/prompty/kak-pisat-prompty/) · [Нейросети для программирования](/dlya-raboty/neyroseti-dlya-programmirovaniya/) · [Qwen: как пользоваться](/neyroseti/qwen/)

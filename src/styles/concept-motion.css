@@ -1,0 +1,35 @@
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -40px;
+  background: #fff;
+  color: #111;
+  padding: 8px 12px;
+  z-index: 20;
+}
+.skip:focus { top: 12px; }
+
+/* Content stays visible with or without JS. The reveal class only plays motion. */
+.js [data-reveal].is-in {
+  animation: reveal-rise .7s cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes reveal-rise {
+  from { transform: translateY(18px); }
+  to { transform: none; }
+}
+
+.slide {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .55s ease;
+}
+.slide.is-active { opacity: 1; visibility: visible; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal].is-in { animation: none; }
+  .slide { transition: none; }
+}

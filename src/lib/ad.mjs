@@ -31,7 +31,7 @@ export function adCaption(ad) {
 export function renderAdCard(ad, name = '') {
   if (!isAdComplete(ad)) {
     const label = name || ad?.title || 'партнёр';
-    return `<span class="ph ph-partner" data-partner="${esc(label)}" title="Нет erid/рекламодателя — ссылка не выводится">[PARTNER: ${esc(label)}]</span>`;
+    return `<span class="ph ph-partner" data-partner="${esc(label)}" title="Партнёрская ссылка появится после маркировки">[PARTNER: ${esc(label)}]</span>`;
   }
   const label = ad.bilingual ? 'Реклама / Reklama' : 'Реклама';
   const cta = ad.cta || `Перейти на ${name || 'сайт'}`;

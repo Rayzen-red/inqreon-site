@@ -29,7 +29,7 @@ sources: [{"title": "Chad", "url": "https://chadgpt.ru/"}, {"title": "Chad API",
 - **API-агрегаторы** (AITUNNEL, ProxyAPI, Polza.ai, GenAPI, VseGPT) — для тех, кто пишет код, делает ботов или подключает модели к Cursor, n8n и похожим инструментам. Обычно у них тоже есть простой веб-чат, но главное — ключ API, совместимый с OpenAI.
 
 Кому агрегатор подходит:
-- вы в России, и вам нужны именно GPT, Claude или Gemini, а не только Алиса AI, ГигаЧат или DeepSeek (о сервисах без VPN — в [нашем сравнении](/neyroseti/neyroseti-bez-vpn/), о бесплатных тарифах и их лимитах — в [отдельной статье](/neyroseti/besplatnye-neyroseti/));
+- вы в России, и вам нужны именно GPT, Claude или Gemini, а не только Алиса AI, ГигаЧат или DeepSeek (о сервисах, которые работают в РФ, УЗ и КЗ напрямую — в [нашем сравнении](/neyroseti/neyroseti-dostupnye-v-rossii-i-sng/), о бесплатных тарифах и их лимитах — в [отдельной статье](/neyroseti/besplatnye-neyroseti/));
 - вы хотите сравнивать ответы разных моделей в одном окне и не платить несколько подписок по $20;
 - вы компания, и вам нужны договор, акты и оплата по счёту в рублях.
 
@@ -248,4 +248,4 @@ OpenRouter — зарубежный API-агрегатор. Сервис пиш�
 
 Мы обновляем статью при изменении цен. Дата последней проверки — в начале страницы.
 
-**Читайте также:** [Нейросети без VPN: что работает в России и СНГ](/neyroseti/neyroseti-bez-vpn/) · [Бесплатные нейросети 2026: реальные лимиты](/neyroseti/besplatnye-neyroseti/) · [DeepSeek: как пользоваться](/neyroseti/deepseek/) · [Нейросети для программирования](/dlya-raboty/neyroseti-dlya-programmirovaniya/) · [Как писать промпты](/prompty/kak-pisat-prompty/)
+**Читайте также:** [Нейросети в РФ, УЗ и КЗ: что работает напрямую](/neyroseti/neyroseti-dostupnye-v-rossii-i-sng/) · [Бесплатные нейросети 2026: реальные лимиты](/neyroseti/besplatnye-neyroseti/) · [DeepSeek: как пользоваться](/neyroseti/deepseek/) · [Нейросети для программирования](/dlya-raboty/neyroseti-dlya-programmirovaniya/) · [Как писать промпты](/prompty/kak-pisat-prompty/)

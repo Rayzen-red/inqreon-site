@@ -32,7 +32,13 @@ if (fs.existsSync(articlesDir)) {
   }
 }
 const RUBRICS = ['neyroseti', 'dlya-raboty', 'dlya-ucheby', 'prompty', 'sravneniya', 'dostup-i-oplata', 'kosmos-i-nauka', 'instrumenty'];
-const emptyRubricUrls = new Set(RUBRICS.filter((r) => !filledRubrics.has(r)).map((r) => `${SITE}/${r}/`));
+const emptyRubricUrls = new Set(RUBRICS.filter((r) => !filledRubrics.has(r) && r !== 'instrumenty').map((r) => `${SITE}/${r}/`));
+const legacyDir = path.resolve('./src/pages/neyroseti');
+const legacyUrls = new Set(
+  fs.existsSync(legacyDir)
+    ? fs.readdirSync(legacyDir).filter((f) => f.endsWith('.astro')).map((f) => `${SITE}/neyroseti/${f.replace(/\.astro$/, '')}/`)
+    : [],
+);
 
 // Все существующие внутренние URL: статические страницы + хабы рубрик + статьи.
 // Ссылки в Markdown на что-то другое (ещё не написанные статьи) скрываются плагином.
@@ -61,8 +67,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // noindex-страницы (пустые рубрики, шаблон политики, 404) в карту сайта не попадают
-      filter: (page) => !page.includes('/404') && !page.includes('/politika-konfidencialnosti/') && !emptyRubricUrls.has(page),
+      // noindex-страницы (пустые рубрики, шаблон политики, 404, старые адреса) в карту сайта не попадают
+      filter: (page) => !page.includes('/404') && !page.includes('/politika-konfidencialnosti/') && !legacyUrls.has(page) && !emptyRubricUrls.has(page),
       serialize(item) {
         const lm = lastmod.get(item.url);
         if (lm) item.lastmod = lm;

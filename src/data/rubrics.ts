@@ -7,7 +7,7 @@ export interface Rubric {
 }
 
 export const RUBRICS: Rubric[] = [
-  { slug: 'neyroseti', name: 'Нейросети', description: 'Обзоры сервисов, что доступно без VPN, агрегаторы, чат-боты, картинки, видео и голос.', inNav: true },
+  { slug: 'neyroseti', name: 'Нейросети', description: 'Обзоры сервисов, которые работают в РФ, УЗ и КЗ напрямую: агрегаторы, чат-боты, картинки, видео и голос.', inNav: true },
   { slug: 'dlya-raboty', name: 'Для работы', description: 'Письма, отчёты, таблицы, презентации, код и резюме с помощью нейросетей.', inNav: true },
   { slug: 'dlya-ucheby', name: 'Для учёбы', description: 'Конспекты, объяснение тем, подготовка к экзаменам и языки — с акцентом на честное использование.', inNav: true },
   { slug: 'prompty', name: 'Промпты', description: 'Готовые запросы под задачи и гайды по составлению промптов.', inNav: true },

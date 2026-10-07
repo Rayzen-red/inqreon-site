@@ -1,0 +1,14 @@
+---
+import { TOOLS } from '../lib/media';
+---
+<div class="tool-grid">
+  {TOOLS.map((tool) => (
+    <a class={`tool tone-${tool.tone}`} href={tool.href}>
+      <span class="mark" aria-hidden="true">{tool.mark}</span>
+      <span>
+        <strong>{tool.name}</strong>
+        <em>{tool.text}</em>
+      </span>
+    </a>
+  ))}
+</div>

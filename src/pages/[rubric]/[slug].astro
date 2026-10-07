@@ -4,8 +4,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import PartnerDisclosure from '../../components/PartnerDisclosure.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
+import RubricIcon from '../../components/concepts/RubricIcon.astro';
+import TelegramCta from '../../components/TelegramCta.astro';
 import { getRubric } from '../../data/rubrics';
 import { SITE, COUNTRY_LABELS, formatDate } from '../../data/site';
+import { coverFor } from '../../lib/media';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles', ({ data }) => !data.draft);
@@ -19,6 +22,7 @@ const { entry } = Astro.props;
 const d = entry.data;
 const { Content, headings } = await render(entry);
 const rubric = getRubric(d.rubric);
+const cover = coverFor(entry.id);
 const url = new URL(`/${d.rubric}/${entry.id}/`, SITE.url).href;
 const published = (d.publishedAt ?? d.checkedAt).toISOString();
 const modified = (d.updatedAt ?? d.checkedAt).toISOString();
@@ -48,7 +52,7 @@ const schema: object[] = [
     datePublished: published,
     dateModified: modified,
     mainEntityOfPage: url,
-    image: new URL(SITE.ogImage, SITE.url).href,
+    image: new URL(cover.src, SITE.url).href,
     author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
     publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url, logo: { '@type': 'ImageObject', url: new URL('/favicon.svg', SITE.url).href } },
   },
@@ -80,24 +84,39 @@ if (d.faq.length) {
   description={d.description}
   withBrand={false}
   ogType="article"
+  ogImage={cover.src}
   schema={schema}
   publishedTime={published}
   modifiedTime={modified}
 >
-  <div class="container narrow">
+  <div class="container">
     <Breadcrumbs items={crumbs} />
+  </div>
+  <header class="article-hero container">
+    <img
+      src={cover.src}
+      alt={cover.alt}
+      width={cover.width}
+      height={cover.height}
+      fetchpriority="high"
+      decoding="async"
+    />
+    <div class="article-hero-copy">
+      <p class="kicker"><RubricIcon slug={rubric.slug} /> <a href={`/${rubric.slug}/`}>{rubric.name}</a></p>
+      <h1>{d.h1}</h1>
+      <p class="article-meta">
+        <span>Проверено: <time datetime={modified.slice(0, 10)}>{formatDate(d.updatedAt ?? d.checkedAt)}</time></span>
+        <span>·</span>
+        <span>{minutes} мин чтения</span>
+        {d.countries.length > 0 && (<><span>·</span><span>{d.countries.map((c) => COUNTRY_LABELS[c]).join(', ')}</span></>)}
+      </p>
+    </div>
+  </header>
+
+  <div class="container narrow">
     <article class="article">
-      <header class="article-header">
-        <h1>{d.h1}</h1>
-        <p class="article-meta">
-          <span>Проверено: <time datetime={modified.slice(0, 10)}>{formatDate(d.updatedAt ?? d.checkedAt)}</time></span>
-          <span>·</span>
-          <span>{minutes} мин чтения</span>
-          {d.countries.length > 0 && (<><span>·</span><span>{d.countries.map((c) => COUNTRY_LABELS[c]).join(', ')}</span></>)}
-        </p>
-        <p class="article-note">Цены и правила доступа взяты с официальных страниц сервисов, источники — в конце статьи.</p>
-        {d.affiliate && <PartnerDisclosure />}
-      </header>
+      <p class="article-note">Цены и правила доступа взяты с официальных страниц сервисов, источники — в конце статьи.</p>
+      {d.affiliate && <PartnerDisclosure />}
 
       {toc.length > 2 && (
         <nav class="toc" aria-label="Содержание">
@@ -124,17 +143,16 @@ if (d.faq.length) {
         </section>
       )}
     </article>
+  </div>
 
-    {related.length > 0 && (
-      <section class="related">
-        <h2>Читайте также</h2>
-        <div class="cards">{related.map((a) => <ArticleCard entry={a} />)}</div>
-      </section>
-    )}
+  {related.length > 0 && (
+    <section class="related container">
+      <h2>Читайте также</h2>
+      <div class="cards">{related.map((a) => <ArticleCard entry={a} />)}</div>
+    </section>
+  )}
 
-    <aside class="tg-cta">
-      <p><strong>Обновления цен и новые обзоры</strong> — в нашем Telegram-канале.</p>
-      <a class="tg-btn" href={SITE.telegram} target="_blank" rel="noopener">Подписаться на t.me/Inqreon</a>
-    </aside>
+  <div class="container">
+    <TelegramCta />
   </div>
 </BaseLayout>

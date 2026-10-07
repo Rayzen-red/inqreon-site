@@ -1,22 +1,22 @@
 ---
 import { SITE } from '../data/site';
 import { RUBRICS } from '../data/rubrics';
+import RubricIcon from './concepts/RubricIcon.astro';
 const current = Astro.url.pathname.split('/')[1] ?? '';
 ---
 <header class="site-header">
-  <div class="container header-inner">
+  <div class="topbar">
     <a href="/" class="logo" aria-label="Inqreon — на главную">
-      <span class="logo-mark" aria-hidden="true">◆</span> Inqreon
+      <span class="logo-orb" aria-hidden="true"></span> Inqreon
     </a>
-    <a class="tg-btn" href={SITE.telegram} target="_blank" rel="noopener">Telegram-канал</a>
+    <a class="tg-link" href={SITE.telegram} target="_blank" rel="noopener">Telegram</a>
   </div>
-  <nav class="main-nav" aria-label="Рубрики">
-    <div class="container">
-      <ul>
-        {RUBRICS.filter((r) => r.inNav).map((r) => (
-          <li><a href={`/${r.slug}/`} aria-current={current === r.slug ? 'page' : undefined}>{r.name}</a></li>
-        ))}
-      </ul>
-    </div>
+  <nav class="rubric-nav" aria-label="Рубрики">
+    {RUBRICS.filter((r) => r.inNav).map((r) => (
+      <a href={`/${r.slug}/`} aria-current={current === r.slug ? 'page' : undefined}>
+        <RubricIcon slug={r.slug} />
+        <span>{r.name}</span>
+      </a>
+    ))}
   </nav>
 </header>
