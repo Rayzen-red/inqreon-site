@@ -14,7 +14,8 @@ const articles = (await getCollection('articles', ({ data }) => !data.draft)).so
   const byDate = +b.data.checkedAt - +a.data.checkedAt;
   return byDate || a.id.localeCompare(b.id, 'ru');
 });
-const nav = RUBRICS.filter((r) => r.inNav);
+const filled = new Set(articles.map((a) => a.data.rubric));
+const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
 const space = RUBRICS.find((r) => r.slug === 'kosmos-i-nauka');
 const schema = [
   { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url + '/', inLanguage: 'ru', description: SITE.description },
@@ -22,6 +23,10 @@ const schema = [
 ];
 ---
 <BaseLayout title={`${SITE.name} — ${SITE.tagline}`} description={SITE.description} withBrand={false} schema={schema}>
+  <header class="container home-intro">
+    <h1>Нейросети для работы и учёбы в России и СНГ</h1>
+    <p class="lead">{SITE.description}</p>
+  </header>
   <section class="hero container" data-slider aria-roledescription="карусель" aria-label="Избранные материалы">
     <div class="hero-frame">
       {articles.map((article, i) => {
@@ -32,7 +37,7 @@ const schema = [
           <article class:list={['slide', 'hero-slide', { 'is-active': i === 0 }]} data-slide aria-hidden={i === 0 ? 'false' : 'true'}>
             <div class="hero-copy">
               <p class="kicker"><RubricIcon slug={article.data.rubric} /> {RUBRICS.find((r) => r.slug === article.data.rubric)?.name}</p>
-              <h1><a href={href}>{article.data.title}</a></h1>
+              <h2><a href={href}>{article.data.title}</a></h2>
               <p class="dek">{article.data.description}</p>
               <p class="meta">Проверено {formatDate(article.data.checkedAt)}</p>
               <a class="btn" href={href}>Читать материал</a>
@@ -99,7 +104,7 @@ const schema = [
         <p class="kicker"><RubricIcon slug={space.slug} /> {space.name}</p>
         <h2>Рубрика, в которую хочется возвращаться</h2>
         <p>{space.description}</p>
-        <a class="btn" href={`/${space.slug}/`}>Открыть рубрику</a>
+        {filled.has(space.slug) && <a class="btn" href={`/${space.slug}/`}>Открыть рубрику</a>}
       </div>
     </section>
   )}

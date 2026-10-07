@@ -1,8 +1,12 @@
 ---
+import { getCollection } from 'astro:content';
 import { SITE } from '../data/site';
 import { RUBRICS } from '../data/rubrics';
 import RubricIcon from './concepts/RubricIcon.astro';
 const current = Astro.url.pathname.split('/')[1] ?? '';
+const articles = await getCollection('articles', ({ data }) => !data.draft);
+const filled = new Set(articles.map((a) => a.data.rubric));
+const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
 ---
 <header class="site-header">
   <div class="topbar">
@@ -12,7 +16,7 @@ const current = Astro.url.pathname.split('/')[1] ?? '';
     <a class="tg-link" href={SITE.telegram} target="_blank" rel="noopener">Telegram</a>
   </div>
   <nav class="rubric-nav" aria-label="Рубрики">
-    {RUBRICS.filter((r) => r.inNav).map((r) => (
+    {nav.map((r) => (
       <a href={`/${r.slug}/`} aria-current={current === r.slug ? 'page' : undefined}>
         <RubricIcon slug={r.slug} />
         <span>{r.name}</span>
