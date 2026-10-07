@@ -1,0 +1,158 @@
+---
+import ConceptShell from '../layouts/ConceptShell.astro';
+import ConceptSwitch from '../components/concepts/ConceptSwitch.astro';
+import ConceptFooter from '../components/concepts/ConceptFooter.astro';
+import RubricIcon from '../components/concepts/RubricIcon.astro';
+import PartnerDisclosure from '../components/PartnerDisclosure.astro';
+import { SPACE, TOOLS, loadConceptHome } from '../lib/concept-home';
+import '../styles/concept-motion.css';
+import '../styles/concept-b.css';
+
+const { articles, rubrics, space, site } = await loadConceptHome();
+const feature = space
+  ? {
+      href: `/${space.slug}/`,
+      kicker: space.name,
+      rubric: space.slug,
+      title: space.name,
+      description: space.description,
+      dateLabel: 'Рубрика',
+      cover: SPACE.cliffs,
+      kind: 'rubric' as const,
+    }
+  : null;
+const slides = [
+  ...(feature ? [feature] : []),
+  ...articles.map((article) => ({
+    href: article.href,
+    kicker: article.rubricName,
+    rubric: article.rubric,
+    title: article.title,
+    description: article.description,
+    dateLabel: `Проверено ${article.dateLabel}`,
+    cover: article.cover,
+    kind: 'article' as const,
+  })),
+];
+const issue = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date('2026-10-07'));
+---
+<ConceptShell title="Концепт B — редакционный журнал — Inqreon" description="Черновик главной: светлый редакционный журнал Inqreon.">
+  <div class="paper">
+    <header class="mast">
+      <p class="issue">Выпуск · {issue}</p>
+      <a class="logo" href="/">Inqreon</a>
+      <div class="mast-side">
+        <ConceptSwitch current="b" />
+        <a class="tg-link" href={site.telegram} target="_blank" rel="noopener">Telegram</a>
+      </div>
+    </header>
+    <p class="tagline">{site.tagline}</p>
+
+    <nav class="rubric-nav" aria-label="Рубрики">
+      {rubrics.map((r) => (
+        <a href={`/${r.slug}/`} data-rubric={r.slug}>
+          <RubricIcon slug={r.slug} />
+          <span>{r.name}</span>
+        </a>
+      ))}
+    </nav>
+
+    <section class="hero" data-slider aria-roledescription="карусель" aria-label="Обложка номера">
+      <div class="hero-frame">
+        {slides.map((slide, i) => (
+          <article class:list={['slide', 'hero-slide', { 'is-active': i === 0 }]} data-slide aria-hidden={i === 0 ? 'false' : 'true'}>
+            <a class="hero-link" href={slide.href}>
+              <img src={slide.cover.src} alt={slide.cover.alt} />
+              <span class="shot-note">{slide.cover.note}</span>
+            </a>
+            <div class="hero-copy">
+              <p class="chip" data-rubric={slide.rubric}><RubricIcon slug={slide.rubric} /> {slide.kicker}</p>
+              <h1>{slide.title}</h1>
+              <p class="dek">{slide.description}</p>
+              <p class="meta">{slide.dateLabel}</p>
+              <a class="btn" href={slide.href}>{slide.kind === 'rubric' ? 'Открыть рубрику' : 'Читать материал'}</a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="hero-ui">
+        <button type="button" data-prev aria-label="Предыдущий материал">Назад</button>
+        <div class="dots" role="tablist" aria-label="Слайды">
+          {slides.map((slide, i) => (
+            <button type="button" data-dot class:list={[{ 'is-active': i === 0 }]} aria-label={slide.title} aria-selected={i === 0 ? 'true' : 'false'}></button>
+          ))}
+        </div>
+        <button type="button" data-next aria-label="Следующий материал">Дальше</button>
+      </div>
+    </section>
+
+    <section class="stories" data-reveal>
+      <header class="sec-head"><h2>В номере</h2><a href="/neyroseti/">Все обзоры нейросетей</a></header>
+      <div class="cards">
+        {articles.map((article) => (
+          <a class="card" href={article.href} data-reveal>
+            <figure>
+              <img src={article.cover.src} alt={article.cover.alt} />
+              <figcaption>{article.cover.note}</figcaption>
+            </figure>
+            <p class="chip" data-rubric={article.rubric}>{article.rubricName}</p>
+            <h3>{article.title}</h3>
+            <p>{article.description}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="rubric-board" data-reveal>
+      <h2>Рубрики</h2>
+      <div class="board">
+        {rubrics.map((r) => (
+          <a href={`/${r.slug}/`} data-rubric={r.slug}>
+            <RubricIcon slug={r.slug} />
+            <strong>{r.name}</strong>
+            <span>{r.description}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="tools" data-reveal>
+      <header class="sec-head">
+        <h2>Инструменты номера</h2>
+        <p>Логотипы — заглушки. Ссылки ведут в опубликованные обзоры.</p>
+      </header>
+      <PartnerDisclosure />
+      <div class="tool-row">
+        {TOOLS.map((tool) => (
+          <a class="tool" href={tool.href}>
+            <span class="mark" aria-hidden="true">{tool.mark}</span>
+            <strong>{tool.name}</strong>
+            <em>{tool.text}</em>
+            <small>заглушка логотипа</small>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    {space && (
+      <section class="space" data-reveal>
+        <img src={SPACE.earth.src} alt={SPACE.earth.alt} />
+        <div>
+          <p class="chip" data-rubric="kosmos-i-nauka"><RubricIcon slug="kosmos-i-nauka" /> {space.name}</p>
+          <h2>{space.description}</h2>
+          <p class="shot-note">{SPACE.earth.note}</p>
+          <a class="btn" href={`/${space.slug}/`}>К рубрике</a>
+        </div>
+      </section>
+    )}
+
+    <section class="tg" data-reveal>
+      <p>Канал редакции</p>
+      <h2>t.me/Inqreon</h2>
+      <p>Даты проверки и короткие разборы — в Telegram, без рассылки на почту.</p>
+      <a class="btn btn-light" href={site.telegram} target="_blank" rel="noopener">Открыть канал</a>
+    </section>
+
+    <ConceptFooter />
+  </div>
+</ConceptShell>

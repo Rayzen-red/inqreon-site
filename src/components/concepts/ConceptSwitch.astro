@@ -1,0 +1,17 @@
+---
+interface Props { current: 'a' | 'b' | 'c'; }
+const { current } = Astro.props;
+const items = [
+  { id: 'a', href: '/concept-a/', k: 'A', n: 'Космос' },
+  { id: 'b', href: '/concept-b/', k: 'B', n: 'Журнал' },
+  { id: 'c', href: '/concept-c/', k: 'C', n: 'Продукт' },
+];
+---
+<nav class="concept-switch" aria-label="Черновики главной">
+  <span class="concept-switch-label">Черновик</span>
+  {items.map((it) => (
+    <a href={it.href} aria-current={current === it.id ? 'page' : undefined}>
+      <span class="k">{it.k}</span><span class="n">{it.n}</span>
+    </a>
+  ))}
+</nav>

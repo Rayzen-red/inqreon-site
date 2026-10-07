@@ -62,7 +62,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       // noindex-страницы (пустые рубрики, шаблон политики, 404) в карту сайта не попадают
-      filter: (page) => !page.includes('/404') && !page.includes('/politika-konfidencialnosti/') && !emptyRubricUrls.has(page),
+      filter: (page) => !page.includes('/404') && !page.includes('/politika-konfidencialnosti/') && !page.includes('/concept-') && !emptyRubricUrls.has(page),
       serialize(item) {
         const lm = lastmod.get(item.url);
         if (lm) item.lastmod = lm;
