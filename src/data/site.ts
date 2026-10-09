@@ -12,6 +12,10 @@ export const SITE = {
   locale: 'ru_RU',
   lang: 'ru',
   ogImage: '/og-default.png',
+  /** Номер счётчика Яндекс Метрики. */
+  metrikaId: 113580277,
+  /** Идентификатор Google Analytics (gtag.js). */
+  googleTagId: 'G-1WP83BSRDX',
 };
 
 export const COUNTRY_LABELS: Record<string, string> = {
