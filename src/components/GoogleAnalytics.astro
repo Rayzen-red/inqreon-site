@@ -1,0 +1,13 @@
+---
+import { SITE } from '../data/site';
+
+const id = SITE.googleTagId;
+// Классический сниппет без обёртки: function gtag должна быть глобальной.
+const snippet = `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${id}');`;
+---
+<!-- Google tag (gtag.js) -->
+<script async is:inline src={`https://www.googletagmanager.com/gtag/js?id=${id}`}></script>
+<script is:inline set:html={snippet}></script>

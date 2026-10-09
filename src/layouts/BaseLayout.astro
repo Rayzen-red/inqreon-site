@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/concept-motion.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import YandexMetrika from '../components/YandexMetrika.astro';
 import { SITE } from '../data/site';
 
@@ -67,6 +68,7 @@ const ogImageUrl = new URL(ogImage, SITE.url).href;
     <meta name="twitter:image" content={ogImageUrl} />
 
     {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+    <GoogleAnalytics />
   </head>
   <body>
     <YandexMetrika />
