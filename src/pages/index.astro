@@ -19,7 +19,7 @@ const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
 const space = RUBRICS.find((r) => r.slug === 'kosmos-i-nauka');
 const schema = [
   { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url + '/', inLanguage: 'ru', description: SITE.description },
-  { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url + '/', sameAs: [SITE.telegram] },
+  { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url + '/', sameAs: [SITE.telegram, SITE.youtube, SITE.instagram] },
 ];
 ---
 <BaseLayout title={`${SITE.name} — ${SITE.tagline}`} description={SITE.description} withBrand={false} schema={schema}>

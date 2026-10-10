@@ -12,7 +12,7 @@ npm run preview                             # локальный просмот�
 
 - `astro.config.mjs` — site https://inqreon.com, base '/', trailingSlash always, sitemap, remark-плагин пометок.
 - `src/content.config.ts` — схема коллекции `articles`.
-- `src/data/rubrics.ts` — рубрики и их URL (по structure.md); `src/data/site.ts` — название, владелец, e-mail, Telegram, OG-картинка.
+- `src/data/rubrics.ts` — рубрики и их URL (по structure.md); `src/data/site.ts` — название, владелец, e-mail, Telegram, YouTube, Instagram, OG-картинка.
 - `src/pages/[rubric]/[slug].astro` — шаблон статьи; `src/pages/[rubric]/index.astro` — хаб рубрики.
 - `src/plugins/remark-markers.mjs` — подсветка `[PARTNER: …]` и `[ПРОВЕРИТЬ]`.
 - `src/plugins/remark-internal-links.mjs` — скрывает внутренние ссылки на страницы, которых нет в сборке (список URL формируется в `astro.config.mjs`).

@@ -13,7 +13,11 @@ const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
     <a href="/" class="logo" aria-label="Inqreon — на главную">
       <span class="logo-orb" aria-hidden="true"></span> Inqreon
     </a>
-    <a class="tg-link" href={SITE.telegram} target="_blank" rel="noopener">Telegram</a>
+    <nav class="social-links" aria-label="Соцсети">
+      <a href={SITE.youtube} target="_blank" rel="noopener">YouTube</a>
+      <a href={SITE.instagram} target="_blank" rel="noopener">Instagram</a>
+      <a href={SITE.telegram} target="_blank" rel="noopener">Telegram</a>
+    </nav>
   </div>
   <nav class="rubric-nav" aria-label="Рубрики">
     {nav.map((r) => (

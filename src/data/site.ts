@@ -6,6 +6,8 @@ export const SITE = {
   description:
     'Inqreon — что из нейросетей реально работает в России, Узбекистане и Казахстане: обзоры, сравнения, цены с датой проверки и промпты.',
   telegram: 'https://t.me/Inqreon',
+  youtube: 'https://www.youtube.com/@inqreon',
+  instagram: 'https://www.instagram.com/inqreon/',
   email: 'raydzim.group@gmail.com',
   owner: 'Raydzim Group',
   ownerCountry: 'Узбекистан',
