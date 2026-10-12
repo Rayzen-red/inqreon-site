@@ -62,6 +62,7 @@ stamp('/o-proekte/', 'src/pages/o-proekte.astro');
 stamp('/kontakty/', 'src/pages/kontakty.astro');
 stamp('/redakcionnaya-politika/', 'src/pages/redakcionnaya-politika.astro');
 stamp('/raskrytie-partnerskih-ssylok/', 'src/pages/raskrytie-partnerskih-ssylok.astro');
+stamp('/politika-konfidencialnosti/', 'src/pages/politika-konfidencialnosti.astro');
 stamp('/instrumenty/', 'src/pages/[rubric]/index.astro');
 const validPaths = new Set(['/']);
 for (const f of fs.readdirSync(pagesDir)) {
@@ -84,8 +85,9 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // noindex-страницы (пустые рубрики, шаблон политики, 404, старые адреса) в карту сайта не попадают
-      filter: (page) => !page.includes('/404') && !page.includes('/politika-konfidencialnosti/') && !legacyUrls.has(page) && !emptyRubricUrls.has(page),
+      // noindex-страницы (пустые рубрики, 404, старые адреса) в карту сайта не попадают.
+      // Политика конфиденциальности в карте есть: на неё ссылается уведомление о cookie.
+      filter: (page) => !page.includes('/404') && !legacyUrls.has(page) && !emptyRubricUrls.has(page),
       serialize(item) {
         const lm = lastmod.get(item.url) ?? staticLastmod.get(item.url);
         if (lm) item.lastmod = lm;

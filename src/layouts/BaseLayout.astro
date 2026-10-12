@@ -3,6 +3,8 @@ import '../styles/global.css';
 import '../styles/concept-motion.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 import { SITE } from '../data/site';
 
 interface Props {
@@ -66,6 +68,7 @@ const ogImageUrl = new URL(ogImage, SITE.url).href;
     <meta name="twitter:image" content={ogImageUrl} />
 
     {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+    <Analytics />
   </head>
   <body>
     <a class="skip-link" href="#main">К содержанию</a>
@@ -77,6 +80,7 @@ const ogImageUrl = new URL(ogImage, SITE.url).href;
       </main>
       <Footer />
     </div>
+    <CookieBanner />
     <script is:inline src="/concepts/stars.js"></script>
     <script is:inline src="/concepts/motion.js"></script>
   </body>

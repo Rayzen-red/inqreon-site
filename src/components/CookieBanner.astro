@@ -1,0 +1,24 @@
+---
+// Короткое уведомление о cookie. Кнопка «Понятно» пишет согласие в localStorage
+// (ключ inqreon-cookie-consent, значение accepted).
+---
+<aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label="Уведомление о файлах cookie">
+  <p>Мы используем cookie и счётчики Яндекс Метрики и Google, чтобы понимать, какие страницы читают. Подробнее — в <a href="/politika-konfidencialnosti/">политике конфиденциальности</a>.</p>
+  <button type="button" class="btn">Понятно</button>
+</aside>
+<script is:inline>
+  (function () {
+    var KEY = 'inqreon-cookie-consent';
+    var banner = document.getElementById('cookie-banner');
+    if (!banner) return;
+    var button = banner.querySelector('button');
+    try {
+      if (localStorage.getItem(KEY) === 'accepted') return;
+    } catch (e) {}
+    banner.hidden = false;
+    button.addEventListener('click', function () {
+      try { localStorage.setItem(KEY, 'accepted'); } catch (e) {}
+      banner.hidden = true;
+    });
+  })();
+</script>
