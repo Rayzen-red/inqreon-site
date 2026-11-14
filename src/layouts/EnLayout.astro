@@ -1,0 +1,80 @@
+---
+import '@fontsource-variable/geist/wght.css';
+import '@fontsource-variable/geist-mono/wght.css';
+import '../styles/en.css';
+import Analytics from '../components/Analytics.astro';
+import { SITE } from '../data/site';
+import { PAGE } from '../data/offer';
+
+interface Props {
+  title?: string;
+  description?: string;
+  schema?: object[];
+}
+const { title = PAGE.title, description = PAGE.description, schema = [] } = Astro.props;
+const canonical = new URL('/en/', SITE.url).href;
+const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={canonical} />
+    <link rel="alternate" hreflang="ru" href={`${SITE.url}/`} />
+    <link rel="alternate" hreflang="x-default" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#08090b" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ru_RU" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A dark glass app panel with a lime edge light, on a black grid." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+    <script is:inline>
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('reduce-motion');
+      }
+    </script>
+    <Analytics />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-noise" aria-hidden="true"></div>
+    <slot />
+    <aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label="Cookie notice">
+      <p>This site uses cookies and analytics (Google Analytics and Yandex Metrica) to see which pages are read. <a href="/politika-konfidencialnosti/">Privacy policy (Russian)</a>.</p>
+      <button type="button">OK</button>
+    </aside>
+    <script is:inline>
+      (function () {
+        var KEY = 'inqreon-cookie-consent';
+        var banner = document.getElementById('cookie-banner');
+        if (!banner) return;
+        var button = banner.querySelector('button');
+        try { if (localStorage.getItem(KEY) === 'accepted') return; } catch (e) {}
+        banner.hidden = false;
+        button.addEventListener('click', function () {
+          try { localStorage.setItem(KEY, 'accepted'); } catch (e) {}
+          banner.hidden = true;
+        });
+      })();
+    </script>
+  </body>
+</html>

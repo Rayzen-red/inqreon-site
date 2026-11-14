@@ -18,6 +18,10 @@
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.2",
     "@astrojs/sitemap": "^3.7.4",
-    "astro": "^7.3.6"
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "astro": "^7.3.6",
+    "gsap": "^3.15.1",
+    "three": "^0.187.0"
   }
 }

@@ -1,0 +1,27 @@
+---
+import OrderLink from './OrderLink.astro';
+import { HAS_UPWORK } from '../../data/offer';
+---
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="/en/" aria-label="Inqreon"><span class="logo-mark" aria-hidden="true">iq</span>Inqreon</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#rescue">How a rescue works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#case">Case</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label="Language">
+        <span lang="en" aria-current="true">EN</span>
+        <a href="/" lang="ru" hreflang="ru">RU</a>
+      </div>
+      {HAS_UPWORK ? (
+        <OrderLink kind="hire" variant="cta" size="sm" label="Hire on Upwork" />
+      ) : (
+        <OrderLink kind="scan" variant="cta" size="sm" label="Scan $79" />
+      )}
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>

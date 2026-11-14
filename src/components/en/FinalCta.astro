@@ -1,0 +1,27 @@
+---
+import Picture from './Picture.astro';
+import OrderLink from './OrderLink.astro';
+import { HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
+---
+<section class="final" id="order" aria-labelledby="final-h">
+  <div class="wrap final-grid">
+    <div>
+      <span class="eyebrow rv">Stuck before launch?</span>
+      <h2 id="final-h" class="rv">Start with a $79 Scan.</h2>
+      <p class="lead rv">You get a written report and a fixed price for the fix. Then you decide. No call, and no code changes until you approve the plan.</p>
+      <div class="hero-ctas rv">
+        <OrderLink kind="scan" variant="cta" label={HAS_UPWORK ? 'Hire me on Upwork' : 'Order a Scan — $79'} />
+        <a class="btn" href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram <span class="arr" aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+    <Picture
+      class="final-art rv"
+      name="hero-assembled"
+      widths={[800, 1600]}
+      width={1600}
+      height={900}
+      alt="A dark glass app panel, assembled, with a lime edge light. Illustration, not a client project."
+      sizes="(max-width: 980px) 92vw, 560px"
+    />
+  </div>
+</section>

@@ -1,0 +1,39 @@
+---
+interface Props {
+  name: string;
+  widths: number[];
+  width: number;
+  height: number;
+  alt: string;
+  sizes: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+}
+const {
+  name,
+  widths,
+  width,
+  height,
+  alt,
+  sizes,
+  loading = 'lazy',
+  fetchpriority = 'low',
+  class: className,
+} = Astro.props;
+const largest = widths[widths.length - 1] ?? widths[0];
+const srcset = (ext: string) => widths.map((w) => `/images/en/${name}-${w}w.${ext} ${w}w`).join(', ');
+---
+<picture class={className}>
+  <source type="image/avif" srcset={srcset('avif')} sizes={sizes} />
+  <source type="image/webp" srcset={srcset('webp')} sizes={sizes} />
+  <img
+    src={`/images/en/${name}-${largest}w.webp`}
+    width={width}
+    height={height}
+    alt={alt}
+    loading={loading}
+    decoding="async"
+    fetchpriority={fetchpriority}
+  />
+</picture>

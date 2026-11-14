@@ -58,6 +58,7 @@ const stamp = (urlPath, file) => {
   const full = path.resolve(file);
   if (fs.existsSync(full)) staticLastmod.set(`${SITE}${urlPath}`, fs.statSync(full).mtime.toISOString());
 };
+stamp('/en/', 'src/pages/en/index.astro');
 stamp('/o-proekte/', 'src/pages/o-proekte.astro');
 stamp('/kontakty/', 'src/pages/kontakty.astro');
 stamp('/redakcionnaya-politika/', 'src/pages/redakcionnaya-politika.astro');
