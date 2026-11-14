@@ -1,9 +1,12 @@
 ---
 import OrderLink from './OrderLink.astro';
 import { HAS_UPWORK } from '../../data/offer';
+import { SERVICE_PATH } from '../../data/automation';
+import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice } from '../../data/prices';
 
 interface Props {
-  /** Russian alternate for this page. The landing page pairs with the Russian home. */
+  lang?: 'en' | 'ru';
+  /** Russian alternate for this page. Defaults to the Russian service page when that block is on. */
   ruHref?: string;
   ruPaired?: boolean;
   ruTitle?: string;
@@ -11,29 +14,50 @@ interface Props {
   /** Section links stay on this page. Other English pages point them at the landing page. */
   here?: boolean;
 }
-const { ruHref = '/', ruPaired = true, ruTitle, news = false, here = true } = Astro.props;
+const {
+  lang = 'en',
+  ruHref,
+  ruPaired = true,
+  ruTitle,
+  news = false,
+  here = true,
+} = Astro.props;
 const to = (hash: string) => (news || !here ? `/en/${hash}` : hash);
+const resolvedRu = ruHref ?? (SHOW_AUTOMATION_BLOCK ? SERVICE_PATH.ru : '/');
 ---
 <header class="nav" id="nav">
   <div class="wrap">
-    <a class="logo" href="/en/" aria-label="Inqreon"><span class="logo-mark" aria-hidden="true">iq</span>Inqreon</a>
-    <nav class="nav-links" aria-label="Main">
-      <a class="nav-news" href="/en/news/" aria-current={news ? 'page' : undefined}>News</a>
-      <a href={to('#rescue')}>How a rescue works</a>
-      <a href={to('#pricing')}>Pricing</a>
-      <a href={to('#case')}>Case</a>
-      <a href={to('#faq')}>FAQ</a>
-    </nav>
+    <a class="logo" href={lang === 'ru' ? SERVICE_PATH.ru : '/en/'} aria-label="Inqreon"><span class="logo-mark" aria-hidden="true">iq</span>Inqreon</a>
+    {lang === 'en' && (
+      <nav class="nav-links" aria-label="Main">
+        <a class="nav-news" href="/en/news/" aria-current={news ? 'page' : undefined}>News</a>
+        <a href={to('#rescue')}>How a rescue works</a>
+        <a href={to('#pricing')}>Pricing</a>
+        {SHOW_AUTOMATION_BLOCK && <a href={to('#programs')}>Programs</a>}
+        <a href={to('#case')}>Case</a>
+        <a href={to('#faq')}>FAQ</a>
+      </nav>
+    )}
     <div class="nav-right">
-      <a class="nav-news nav-news-bar" href="/en/news/" aria-current={news ? 'page' : undefined}>News</a>
-      <div class="lang" role="group" aria-label="Language">
-        <span lang="en" aria-current="true">EN</span>
-        <a href={ruHref} lang="ru" hreflang={ruPaired ? 'ru' : undefined} aria-label={ruTitle}>RU</a>
+      {lang === 'en' && (
+        <a class="nav-news nav-news-bar" href="/en/news/" aria-current={news ? 'page' : undefined}>News</a>
+      )}
+      <div class="lang" role="group" aria-label={lang === 'ru' ? 'Язык' : 'Language'}>
+        {lang === 'en' ? (
+          <span lang="en" aria-current="true">EN</span>
+        ) : (
+          <a href="/en/" lang="en" hreflang="en">EN</a>
+        )}
+        {lang === 'ru' ? (
+          <span lang="ru" aria-current="true">RU</span>
+        ) : (
+          <a href={resolvedRu} lang="ru" hreflang={ruPaired ? 'ru' : undefined} aria-label={ruTitle}>RU</a>
+        )}
       </div>
-      {!news && (HAS_UPWORK ? (
+      {lang === 'en' && !news && (HAS_UPWORK ? (
         <OrderLink kind="hire" variant="cta" size="sm" label="Hire on Upwork" />
       ) : (
-        <OrderLink kind="scan" variant="cta" size="sm" label="Scan $79" />
+        <OrderLink kind="scan" variant="cta" size="sm" label={`Scan ${formatPrice(PRICES.scan)}`} />
       ))}
     </div>
   </div>

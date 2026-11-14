@@ -5,41 +5,44 @@ import '../styles/en.css';
 import Analytics from '../components/Analytics.astro';
 import { SITE } from '../data/site';
 import { PAGE } from '../data/offer';
+import { SERVICE_PATH } from '../data/automation';
+import { SHOW_AUTOMATION_BLOCK } from '../data/prices';
 
 interface Props {
   title?: string;
   description?: string;
   schema?: object[];
+  lang?: 'en' | 'ru';
   /** Site path for canonical and og:url. Defaults to the English landing. */
   path?: string;
-  /** Replaces the landing ↔ Russian home hreflang pair. */
+  /** Replaces the service-page hreflang pair. The privacy page uses this. */
   alternates?: { en: string; ru: string; xDefault: string };
 }
-const { title = PAGE.title, description = PAGE.description, schema = [], path = '/en/', alternates } = Astro.props;
+const { title = PAGE.title, description = PAGE.description, schema = [], lang = 'en', path = '/en/', alternates } = Astro.props;
 const canonical = new URL(path, SITE.url).href;
-const enAlt = alternates?.en ?? new URL('/en/', SITE.url).href;
-const ruAlt = alternates?.ru ?? new URL('/', SITE.url).href;
-const xDefault = alternates?.xDefault ?? enAlt;
+const enHref = alternates?.en ?? new URL(SERVICE_PATH.en, SITE.url).href;
+const ruHref = alternates?.ru ?? new URL(SHOW_AUTOMATION_BLOCK ? SERVICE_PATH.ru : '/', SITE.url).href;
+const xDefault = alternates?.xDefault ?? enHref;
 const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
 ---
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en" href={enAlt} />
-    <link rel="alternate" hreflang="ru" href={ruAlt} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="ru" href={ruHref} />
     <link rel="alternate" hreflang="x-default" href={xDefault} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#08090b" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:locale:alternate" content="ru_RU" />
+    <meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'ru' ? 'en_US' : 'ru_RU'} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -61,12 +64,18 @@ const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
     <Analytics />
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
+    <a class="skip" href="#main">{lang === 'ru' ? 'К содержанию' : 'Skip to content'}</a>
     <div class="bg-grid" aria-hidden="true"></div>
     <div class="bg-noise" aria-hidden="true"></div>
     <slot />
-    <aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label="Cookie notice">
-      <p>This site uses cookies and analytics (Google Analytics and Yandex Metrica) to see which pages are read. <a href="/en/privacy/">Privacy policy</a>.</p>
+    <aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label={lang === 'ru' ? 'Уведомление о куки' : 'Cookie notice'}>
+      <p>
+        {lang === 'ru' ? (
+          <>Этот сайт использует куки и аналитику (Google Analytics и Яндекс Метрику), чтобы видеть, какие страницы читают. <a href="/politika-konfidencialnosti/">Политика конфиденциальности</a>.</>
+        ) : (
+          <>This site uses cookies and analytics (Google Analytics and Yandex Metrica) to see which pages are read. <a href="/en/privacy/">Privacy policy</a>.</>
+        )}
+      </p>
       <button type="button">OK</button>
     </aside>
     <script is:inline>

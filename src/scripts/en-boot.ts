@@ -1,4 +1,5 @@
 /** Page behavior that does not need Three.js: terminal, pricing, compare slider, reveals. */
+import { PRICES, formatRange } from '../data/prices';
 
 const reduce = () => document.documentElement.classList.contains('reduce-motion');
 
@@ -153,7 +154,7 @@ function initPricing(): void {
   const sync = () => {
     const picked = radios.find((radio) => radio.checked) ?? radios[0];
     if (!picked) return;
-    amount.textContent = picked.dataset.price ?? '$249';
+    amount.textContent = picked.dataset.price ?? formatRange(PRICES.fix.small.min, PRICES.fix.small.max);
     desc.textContent = picked.dataset.desc ?? '';
   };
   radios.forEach((radio) => radio.addEventListener('change', sync));
