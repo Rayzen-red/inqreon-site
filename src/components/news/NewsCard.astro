@@ -1,0 +1,34 @@
+---
+import { formatNewsDate, isoDay, newsImage, newsPath, type NewsEntry } from '../../lib/news';
+
+interface Props {
+  entry: NewsEntry;
+  level?: 2 | 3;
+  priority?: boolean;
+}
+const { entry, level = 2, priority = false } = Astro.props;
+const image = newsImage(entry.data.image);
+const href = newsPath(entry.data.lang, entry.data.slug);
+const Tag = level === 3 ? 'h3' : 'h2';
+---
+
+<article class="news-card">
+  {image && (
+    <img
+      src={image}
+      alt={entry.data.imageAlt ?? ''}
+      width="1200"
+      height="630"
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : undefined}
+      decoding="async"
+    />
+  )}
+  <header>
+    <time datetime={isoDay(entry.data.date)}>{formatNewsDate(entry.data.date, entry.data.lang)}</time>
+    <Tag>
+      <a class="card-link" href={href}>{entry.data.title}</a>
+    </Tag>
+  </header>
+  <p>{entry.data.description}</p>
+</article>

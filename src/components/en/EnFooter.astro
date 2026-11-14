@@ -3,9 +3,12 @@ import { EMAIL, HAS_UPWORK, TELEGRAM_URL, UPWORK_URL, SCAN_MAIL } from '../../da
 
 interface Props {
   lang?: 'en' | 'ru';
+  /** News pages use a plain mailto so the prefilled order text stays on /en/. */
+  plainMail?: boolean;
 }
-const { lang = 'en' } = Astro.props;
+const { lang = 'en', plainMail = false } = Astro.props;
 const year = new Date().getFullYear();
+const mailHref = HAS_UPWORK ? UPWORK_URL : plainMail ? `mailto:${EMAIL}` : SCAN_MAIL;
 ---
 <footer>
   <div class="wrap">
@@ -13,7 +16,8 @@ const year = new Date().getFullYear();
     <span>{lang === 'ru' ? 'Программы и автоматизации под ваш запрос' : 'I fix AI-built websites and apps'}</span>
     <a href="/">{lang === 'ru' ? 'Журнал' : 'Journal'}</a>
     <span class="foot-links">
-      <a href={HAS_UPWORK ? UPWORK_URL : SCAN_MAIL}>{HAS_UPWORK ? 'Upwork' : EMAIL}</a>
+      <a href={lang === 'ru' ? '/news/' : '/en/news/'}>{lang === 'ru' ? 'Новости' : 'News'}</a>
+      <a href={mailHref}>{HAS_UPWORK ? 'Upwork' : EMAIL}</a>
       <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram</a>
     </span>
   </div>

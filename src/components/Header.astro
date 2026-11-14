@@ -4,6 +4,12 @@ import { SITE } from '../data/site';
 import { SHOW_AUTOMATION_BLOCK } from '../data/prices';
 import { RUBRICS } from '../data/rubrics';
 import RubricIcon from './concepts/RubricIcon.astro';
+interface Props {
+  enHref?: string;
+  enPaired?: boolean;
+  enTitle?: string;
+}
+const { enHref = '/en/', enPaired = true, enTitle } = Astro.props;
 const current = Astro.url.pathname.split('/')[1] ?? '';
 const articles = await getCollection('articles', ({ data }) => !data.draft);
 const filled = new Set(articles.map((a) => a.data.rubric));
@@ -16,7 +22,7 @@ const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
     </a>
     <nav class="lang-switch" aria-label="Язык">
       <span lang="ru" aria-current="true">RU</span>
-      <a href="/en/" hreflang="en" lang="en">EN</a>
+      <a href={enHref} hreflang={enPaired ? 'en' : undefined} lang="en" aria-label={enTitle}>EN</a>
     </nav>
     {SHOW_AUTOMATION_BLOCK && (
       <nav class="social-links" aria-label="Услуги">
@@ -29,6 +35,12 @@ const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
     </nav>
   </div>
   <nav class="rubric-nav" aria-label="Рубрики">
+    <a href="/news/" aria-current={current === 'news' ? 'page' : undefined}>
+      <svg class="rico" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 4h11l3 3v13H5V4zM15 4v4h4M8 11h8M8 15h5" />
+      </svg>
+      <span>Новости</span>
+    </a>
     {nav.map((r) => (
       <a href={`/${r.slug}/`} aria-current={current === r.slug ? 'page' : undefined}>
         <RubricIcon slug={r.slug} />

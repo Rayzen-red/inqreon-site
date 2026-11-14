@@ -29,4 +29,51 @@ const articles = defineCollection({
   }),
 });
 
-export const collections = { articles };
+// Новости: src/content/news/ru/<slug>.md и src/content/news/en/<slug>.md
+// Не класть в articles. draft: true не попадает в страницы, sitemap и RSS,
+// пока сборка не запущена с SHOW_DRAFTS=1 (по умолчанию выключено).
+const news = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/news',
+    // Keep ru/ and en/ in the id. The same slug may exist in both languages.
+    generateId: ({ entry }) => entry.replace(/\.md$/, ''),
+  }),
+  schema: z
+    .object({
+      title: z.string().min(1).max(70),
+      slug: z
+        .string()
+        .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+        .refine((value) => value !== 'page' && value !== 'rss', 'reserved slug'),
+      date: z.coerce.date(),
+      lang: z.enum(['ru', 'en']),
+      description: z.string().min(1).max(170),
+      image: z
+        .string()
+        .regex(/^\/images\/news\/[a-z0-9.-]+\.(webp|avif|png|jpe?g)$/)
+        .optional(),
+      imageAlt: z.string().min(1).max(240).optional(),
+      sources: z
+        .array(
+          z.object({
+            title: z.string().min(1),
+            url: z
+              .string()
+              .url()
+              .refine((value) => value.startsWith('https://') || value.startsWith('http://'), 'http(s) only'),
+          }),
+        )
+        .min(1),
+      translationKey: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+      tags: z.array(z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)).min(1).max(3),
+      cta: z.enum(['scan', 'fix', 'telegram']).optional(),
+      draft: z.boolean(),
+    })
+    .refine((data) => !data.image || !!data.imageAlt, {
+      message: 'imageAlt is required when image is set',
+      path: ['imageAlt'],
+    }),
+});
+
+export const collections = { articles, news };

@@ -1,0 +1,29 @@
+---
+import NewsRuLayout from '../../../layouts/NewsRuLayout.astro';
+import NewsFeed from '../../../components/news/NewsFeed.astro';
+import { PAGE_SIZE, feedCopy, loadNews, pagePath } from '../../../lib/news';
+
+export async function getStaticPaths() {
+  const items = await loadNews('ru');
+  const total = Math.ceil(items.length / PAGE_SIZE);
+  return Array.from({ length: Math.max(0, total - 1) }, (_, index) => ({
+    params: { page: String(index + 2) },
+    props: { page: index + 2 },
+  }));
+}
+
+const { page } = Astro.props;
+const items = await loadNews('ru');
+const total = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+const copy = feedCopy('ru', page);
+---
+
+<NewsRuLayout
+  title={copy.title}
+  description={copy.description}
+  rssPath={copy.rssPath}
+  prev={pagePath('ru', page - 1)}
+  next={page < total ? pagePath('ru', page + 1) : undefined}
+>
+  <NewsFeed lang="ru" items={items} page={page} />
+</NewsRuLayout>
