@@ -1,0 +1,52 @@
+---
+import EnLayout from '../../layouts/EnLayout.astro';
+import EnHeader from '../../components/en/EnHeader.astro';
+import EnFooter from '../../components/en/EnFooter.astro';
+import Hero from '../../components/en/Hero.astro';
+import Rescue from '../../components/en/Rescue.astro';
+import Rest from '../../components/en/Rest.astro';
+import Process from '../../components/en/Process.astro';
+import Pricing from '../../components/en/Pricing.astro';
+import FinalCta from '../../components/en/FinalCta.astro';
+import Tail from '../../components/en/Tail.astro';
+import { EMAIL, PAGE } from '../../data/offer';
+import { SITE } from '../../data/site';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: 'Inqreon',
+    url: `${SITE.url}/en/`,
+    description: PAGE.description,
+    email: EMAIL,
+    image: `${SITE.url}/images/en/og-share-1200x630.webp`,
+    inLanguage: 'en',
+    priceRange: '$79–$599',
+    makesOffer: [
+      { '@type': 'Offer', name: 'Scan', price: '79', priceCurrency: 'USD' },
+      { '@type': 'Offer', name: 'Fix', price: '249', priceCurrency: 'USD', description: 'From $249. The tier depends on scope, agreed before work starts.' },
+      { '@type': 'Offer', name: 'Vault', price: '19', priceCurrency: 'USD' },
+    ],
+  },
+];
+---
+<EnLayout schema={schema}>
+  <div class="page">
+    <EnHeader />
+    <main id="main">
+      <Hero />
+      <Rescue />
+      <Rest />
+      <Process />
+      <Pricing />
+      <Tail />
+      <FinalCta />
+    </main>
+    <EnFooter />
+  </div>
+</EnLayout>
+<script>
+  import { initEnPage } from '../../scripts/en-boot';
+  initEnPage();
+</script>

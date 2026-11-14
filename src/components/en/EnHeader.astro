@@ -1,0 +1,24 @@
+---
+import { UPWORK_URL } from '../../data/offer';
+---
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="/en/" aria-label="Inqreon"><span class="logo-mark" aria-hidden="true">iq</span>Inqreon</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#rescue">How a rescue works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#case">Case</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label="Language">
+        <span lang="en" aria-current="true">EN</span>
+        <a href="/" lang="ru" hreflang="ru">RU</a>
+      </div>
+      <a class="btn btn-cta btn-sm" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">
+        <span>Hire</span><span class="t-long">&nbsp;on Upwork</span>
+      </a>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>

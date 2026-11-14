@@ -1,0 +1,56 @@
+---
+import Picture from './Picture.astro';
+const steps = [
+  {
+    n: '01',
+    name: 'bot-scan',
+    title: 'Scan',
+    price: '$79',
+    alt: 'Scan agent: a small glass robot with a lime scanning beam across its eyes.',
+    text: 'You give me read access. I send a plain-English report: what is broken, who owns which account, and a fixed-price repair plan.',
+  },
+  {
+    n: '02',
+    name: 'bot-fix',
+    title: 'Fix',
+    price: '$249 / $399 / $599',
+    alt: 'Fix agent: the same glass robot, with stylus tools and lime sparks.',
+    text: 'You approve the plan and the price. I repair the app and send a written update every day.',
+  },
+  {
+    n: '03',
+    name: 'bot-launch',
+    title: 'Launch',
+    price: '+ optional Vault $19/mo',
+    alt: 'Launch agent: the same glass robot, brighter, with a mint glow.',
+    text: 'The app goes live on your domain. You get a short handover note. Keep it watched with Vault if you want.',
+  },
+];
+---
+<section class="sec" id="process" aria-labelledby="proc-h">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Process</span>
+      <h2 id="proc-h">Three steps. No surprises.</h2>
+    </div>
+    <div class="proc">
+      {steps.map((step) => (
+        <div class="ps rv">
+          <Picture
+            class="mascot"
+            name={step.name}
+            widths={[800, 1024]}
+            width={1024}
+            height={1024}
+            alt={step.alt}
+            sizes="132px"
+          />
+          <div class="num">{step.n}</div>
+          <h3>{step.title}</h3>
+          <div class="price">{step.price}</div>
+          <p>{step.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

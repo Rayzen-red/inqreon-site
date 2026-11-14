@@ -64,8 +64,24 @@ main { flex: 1; }
   background: radial-gradient(circle at 35% 35%, #fff, #67e8f9 40%, #7c3aed 72%, transparent 74%);
   box-shadow: 0 0 18px #22d3ee;
 }
-.social-links {
+.lang-switch {
   margin-left: auto;
+  display: inline-flex;
+  border: 1px solid #ffffff33;
+  border-radius: 999px;
+  padding: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.lang-switch a, .lang-switch span {
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #94a3b8;
+}
+.lang-switch [aria-current="true"] { background: #e8eefc; color: #070b16; }
+.social-links {
   display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px;
 }
 .social-links a {

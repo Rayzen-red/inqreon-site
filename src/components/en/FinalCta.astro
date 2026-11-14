@@ -1,0 +1,26 @@
+---
+import Picture from './Picture.astro';
+import { EMAIL, UPWORK_URL } from '../../data/offer';
+---
+<section class="final" aria-labelledby="final-h">
+  <div class="wrap final-grid">
+    <div>
+      <span class="eyebrow rv">Stuck before launch?</span>
+      <h2 id="final-h" class="rv">Let's get your app live.</h2>
+      <p class="lead rv">Start with a $79 Scan. You get a clear report and a fixed price for the fix, and you decide what happens next.</p>
+      <div class="hero-ctas rv">
+        <a class="btn btn-cta" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">Hire me on Upwork <span class="arr" aria-hidden="true">↗</span></a>
+        <a class="btn" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+      </div>
+    </div>
+    <Picture
+      class="final-art rv"
+      name="hero-assembled"
+      widths={[800, 1600]}
+      width={1600}
+      height={900}
+      alt="A dark glass app panel, assembled, with a lime edge light. Illustration, not a client project."
+      sizes="(max-width: 980px) 92vw, 560px"
+    />
+  </div>
+</section>

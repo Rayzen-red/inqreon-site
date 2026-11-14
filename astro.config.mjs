@@ -58,6 +58,7 @@ const stamp = (urlPath, file) => {
   const full = path.resolve(file);
   if (fs.existsSync(full)) staticLastmod.set(`${SITE}${urlPath}`, fs.statSync(full).mtime.toISOString());
 };
+stamp('/en/', 'src/pages/en/index.astro');
 stamp('/o-proekte/', 'src/pages/o-proekte.astro');
 stamp('/kontakty/', 'src/pages/kontakty.astro');
 stamp('/redakcionnaya-politika/', 'src/pages/redakcionnaya-politika.astro');
@@ -79,6 +80,7 @@ export default defineConfig({
   trailingSlash: 'always',
   output: 'static',
   build: { format: 'directory' },
+  vite: { envPrefix: ['PUBLIC_', 'UPWORK_', 'VITE_'] },
   markdown: {
     // remark-конвейер нужен для плагина, подсвечивающего [PARTNER: …] и [ПРОВЕРИТЬ]
     processor: unified({ remarkPlugins: [[remarkInternalLinks, { valid: [...validPaths] }], [remarkMarkers, { ads: ADS }]] }),

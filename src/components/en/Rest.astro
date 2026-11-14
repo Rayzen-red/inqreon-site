@@ -1,0 +1,60 @@
+---
+const before = `<span class="c">// src/lib/supabase.ts  (runs in the browser)</span>
+<span class="k2">const</span> supabase = createClient(
+  url,
+  <span class="bad">SERVICE_ROLE_KEY</span>   <span class="c">// full admin access, public</span>
+)
+
+<span class="c">-- database</span>
+<span class="k2">alter table</span> profiles
+  <span class="bad">disable row level security</span>;`;
+const after = `<span class="c">// src/lib/supabase.ts  (runs in the browser)</span>
+<span class="k2">const</span> supabase = createClient(
+  url,
+  <span class="good">ANON_KEY</span>            <span class="c">// safe for the client</span>
+)
+
+<span class="c">-- database</span>
+<span class="k2">alter table</span> profiles <span class="good">enable row level security</span>;
+<span class="k2">create policy</span> <span class="s">"own profile"</span> <span class="k2">on</span> profiles
+  <span class="k2">using</span> (<span class="good">auth.uid() = id</span>);`;
+---
+<section class="sec" aria-labelledby="prob-h">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">What usually breaks</span>
+      <h2 id="prob-h">Works in preview. Breaks in production.</h2>
+    </div>
+    <div class="prob-grid">
+      <div class="prob rv"><span class="k">Login</span><h3>Users can't stay signed in</h3><p>Redirect loops, lost sessions, password reset that never arrives.</p></div>
+      <div class="prob rv"><span class="k">Security</span><h3>Data is open to anyone</h3><p>Supabase row-level security off, secret keys shipped to the browser.</p></div>
+      <div class="prob rv"><span class="k">Payments</span><h3>Money doesn't land</h3><p>Stripe checkout works in test mode, but webhooks and subscriptions fail live.</p></div>
+      <div class="prob rv"><span class="k">Deploy</span><h3>It won't go live</h3><p>Builds fail, environment variables are missing, the domain isn't connected.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="padding-top:0" aria-labelledby="ba-h">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Before / after</span>
+      <h2 id="ba-h">Drag to see the fix</h2>
+      <p class="lead">A typical security fix in a Supabase app built with AI: the secret key leaves the browser and every table gets its own access rules.</p>
+    </div>
+    <div class="ba-wrap rv">
+      <div class="ba" id="ba">
+        <div class="ba-pane ba-before">
+          <span class="ba-label">Before · AI build</span>
+          <code class="ba-code" set:html={before} />
+        </div>
+        <div class="ba-pane ba-after">
+          <span class="ba-label">After · production-ready</span>
+          <code class="ba-code" set:html={after} />
+        </div>
+        <div class="ba-handle" aria-hidden="true"></div>
+        <input class="ba-range" id="baRange" type="range" min="0" max="100" value="50" aria-label="Before / after comparison" />
+      </div>
+      <p class="ba-note">Illustrative code. Real fixes depend on your project.</p>
+    </div>
+  </div>
+</section>

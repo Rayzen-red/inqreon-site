@@ -1,0 +1,58 @@
+---
+import { FIX_TIERS, UPWORK_URL } from '../../data/offer';
+---
+<!-- TO CONFIRM: Fix tier descriptions are a draft. See src/data/offer.ts. -->
+<section class="sec" id="pricing" aria-labelledby="price-h">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Pricing</span>
+      <h2 id="price-h">Fixed prices. Agreed before I start.</h2>
+    </div>
+    <div class="prices">
+      <article class="pc rv">
+        <span class="tag">Start here</span>
+        <h3>Scan</h3>
+        <div class="amt">$79</div>
+        <ul>
+          <li>Plain-English report of what is broken</li>
+          <li>Who owns which account and key</li>
+          <li>Fixed-price repair plan</li>
+        </ul>
+        <a class="btn" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">Order a Scan <span class="arr" aria-hidden="true">↗</span></a>
+      </article>
+      <article class="pc feat rv">
+        <span class="tag">Repair &amp; launch</span>
+        <h3>Fix</h3>
+        <div class="amt" id="fixAmt">{FIX_TIERS[0].price}</div>
+        <fieldset class="tiers">
+          <legend>Scope</legend>
+          {FIX_TIERS.map((tier, i) => (
+            <>
+              <input type="radio" name="tier" id={tier.id} value={String(i)} checked={i === 0} data-price={tier.price} data-desc={tier.description} />
+              <label for={tier.id}>{tier.price}</label>
+            </>
+          ))}
+        </fieldset>
+        <p class="tier-desc" id="tierDesc" aria-live="polite">{FIX_TIERS[0].description}</p>
+        <ul>
+          <li>Login, Supabase security, Stripe, deploy</li>
+          <li>Daily written progress updates</li>
+          <li>Tier is set after the Scan, before work starts</li>
+        </ul>
+        <a class="btn btn-cta" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">Get my app fixed <span class="arr" aria-hidden="true">↗</span></a>
+      </article>
+      <article class="pc rv">
+        <span class="tag">After launch</span>
+        <h3>Vault</h3>
+        <div class="amt">$19<small>/ month</small></div>
+        <ul>
+          <li>Backups</li>
+          <li>Uptime checks</li>
+          <li>Monthly “what changed” note</li>
+        </ul>
+        <a class="btn" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">Add Vault <span class="arr" aria-hidden="true">↗</span></a>
+      </article>
+    </div>
+    <p class="price-note">All work and payments go through Upwork.</p>
+  </div>
+</section>

@@ -1,0 +1,77 @@
+---
+import { UPWORK_URL } from '../../data/offer';
+const faqs = [
+  ['Which projects do you take?', 'Apps and websites built with Lovable, Bolt, Cursor or v0, usually with Supabase and Stripe. If yours is built differently, start with a Scan and I will tell you honestly whether I can help.'],
+  ['Why no calls?', 'Written messages keep every decision on record and work across time zones. You get a written update every day, so you never have to chase me.'],
+  ['Do I have to share my passwords?', 'No. You invite me as a collaborator to your repo, Supabase and hosting. Accounts and keys stay yours, and you can remove my access at any time.'],
+  ['What if the Scan finds more than expected?', 'The price is agreed before work starts. If something new comes up, I describe it and quote it first. Nothing extra happens without your OK.'],
+  ['How do I pay?', 'Through Upwork, by fixed-price contract. Work, files and payment stay on the platform.'],
+  ['Who owns the code after the fix?', 'You do. Everything lives in your own repository and accounts.'],
+];
+---
+<section class="sec" style="padding-top:0" aria-labelledby="rules-h">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">How I work</span>
+      <h2 id="rules-h">Five rules I don't break</h2>
+    </div>
+    <div class="rules">
+      <div class="rule rv"><span class="ix">01</span><b>Written messages only</b><p>No calls. Every decision stays on record.</p></div>
+      <div class="rule rv"><span class="ix">02</span><b>Fixed price</b><p>Agreed before work starts. No hourly meter.</p></div>
+      <div class="rule rv"><span class="ix">03</span><b>Daily updates</b><p>Every day you know what was done.</p></div>
+      <div class="rule rv"><span class="ix">04</span><b>Your keys stay yours</b><p>You invite me; you can remove access anytime.</p></div>
+      <div class="rule rv"><span class="ix">05</span><b>Stays on Upwork</b><p>Work and payment never leave the platform.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="case" style="padding-top:0" aria-labelledby="case-h">
+  <div class="wrap case">
+    <div class="rv">
+      <span class="eyebrow">Case · my own project</span>
+      <h2 id="case-h" style="margin-top:16px">inqreon.com</h2>
+      <p class="lead" style="margin-top:16px">An AI-built website with a Telegram bot. I built it with Cursor and took it all the way to production.</p>
+      <dl>
+        <dt>Role</dt><dd>Developer and designer</dd>
+        <dt>Stack</dt><dd>Astro · GitHub Actions · GitHub Pages</dd>
+        <dt>Done</dt><dd>Domain, automatic deploy, mobile layout, Telegram bot with auto-posting</dd>
+        <dt>Status</dt><dd>Site and bot are live</dd>
+      </dl>
+      <a class="btn" href="https://inqreon.com/" target="_blank" rel="noopener noreferrer">Open inqreon.com <span class="arr" aria-hidden="true">↗</span></a>
+      <p class="price-note">The site itself is a Russian-language blog about AI tools.</p>
+    </div>
+    <div class="pipe rv" id="pipe" role="img" aria-label="Deploy pipeline: Cursor, GitHub, Actions, Pages, inqreon.com. A Telegram bot auto-posts to the channel.">
+      <div class="pipe-row">
+        <span class="node">Cursor</span><span class="edge"></span>
+        <span class="node">GitHub</span><span class="edge"></span>
+        <span class="node">Actions</span><span class="edge"></span>
+        <span class="node">Pages</span><span class="edge"></span>
+        <span class="node end">inqreon.com ✓</span>
+      </div>
+      <div class="branch">
+        <span class="node">Telegram bot</span><span class="edge"></span>
+        <span class="node">auto-posting</span><span class="edge"></span>
+        <span class="node end">channel ✓</span>
+      </div>
+      <p class="pipe-cap">Push to main → build → deploy. No manual uploads.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="faq" style="padding-top:0" aria-labelledby="faq-h">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">FAQ</span>
+      <h2 id="faq-h">Questions before you hire</h2>
+    </div>
+    <div class="faq">
+      {faqs.map(([q, a]) => (
+        <details>
+          <summary>{q}</summary>
+          <p>{a}</p>
+        </details>
+      ))}
+    </div>
+    <p class="price-note">Work is booked on <a href={UPWORK_URL}>Upwork</a>.</p>
+  </div>
+</section>
