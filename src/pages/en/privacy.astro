@@ -1,0 +1,90 @@
+---
+import EnLayout from '../../layouts/EnLayout.astro';
+import EnHeader from '../../components/en/EnHeader.astro';
+import EnFooter from '../../components/en/EnFooter.astro';
+import { EMAIL, TELEGRAM_URL } from '../../data/offer';
+import { SITE } from '../../data/site';
+
+const path = '/en/privacy/';
+const ruPath = '/politika-konfidencialnosti/';
+const canonical = new URL(path, SITE.url).href;
+const ru = new URL(ruPath, SITE.url).href;
+const mail = `mailto:${EMAIL}`;
+---
+<EnLayout
+  title="Privacy policy — Inqreon"
+  description="What the English pages of inqreon.com collect, which services receive it, and how to ask Inqreon for access or deletion."
+  path={path}
+  alternates={{ en: canonical, ru, xDefault: canonical }}
+>
+  <div class="page">
+    <EnHeader ruHref={ruPath} here={false} />
+    <main id="main" class="legal">
+      <article class="wrap legal-col">
+        <p class="eyebrow">Privacy</p>
+        <h1>Privacy policy</h1>
+        <p class="legal-date">Effective <time datetime="2026-11-15">15 November 2026</time>. This policy covers the English pages under /en/.</p>
+        <p>The <a href={ruPath} hreflang="ru" lang="ru">privacy policy in Russian</a> covers the rest of the site.</p>
+
+        <h2>Who operates this site</h2>
+        <p>Inqreon operates this site. For a privacy question, email <a href={mail}>{EMAIL}</a>.</p>
+
+        <h2>What the English pages do</h2>
+        <p>These pages describe a service for fixing AI-built websites and apps. They are static files. The page has no account, no comment form, and no card checkout.</p>
+        <p>Buttons for a Scan, a Fix, or Support open your email program with a draft to {EMAIL}. The draft can include a project link, what the app was built with, and what is broken, and it asks you to leave out passwords and secret keys. The message stays on your device until you send it.</p>
+        <p>Type and images on these pages are files on this site. The pages do not load a separate font service.</p>
+
+        <h2>Analytics</h2>
+        <p>Each English page loads two analytics scripts so Inqreon can see which pages are read.</p>
+        <ul>
+          <li><strong>Google Analytics</strong>, measurement ID G-1WP83BSRDX, from googletagmanager.com. It records a page view and technical details of the visit.</li>
+          <li><strong>Yandex Metrica</strong>, counter 113580277, from mc.yandex.ru. The counter starts with a click map, link tracking, bounce measurement, and Webvisor. Webvisor can record clicks, scrolling, and pointer movement on the page. With JavaScript off, an image request to mc.yandex.ru/watch/113580277 can still count the visit.</li>
+        </ul>
+        <p>A call to those services includes the page address and the IP address of the connection. They may set their own cookies. Inqreon's own pages do not set a cookie, and Inqreon does not keep a copy of those visits. Their rules: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's privacy policy</a> and <a href="https://yandex.com/legal/confidential/en/" target="_blank" rel="noopener noreferrer">Yandex's privacy policy</a>.</p>
+        <p>The scripts load with the page. OK on the notice records that you closed it. The scripts keep running.</p>
+
+        <h2>The notice on your device</h2>
+        <p>The first visit shows a short notice at the bottom of the page. OK stores one value in localStorage: the key <code>inqreon-cookie-consent</code> and the value <code>accepted</code>. That value keeps the notice hidden. It stays on your device until you clear site data for inqreon.com. Clearing it shows the notice again. The site's own code writes no other localStorage item.</p>
+
+        <h2>Hosting</h2>
+        <p>GitHub Pages, a service of GitHub, Inc., publishes the site. GitHub's documentation says that a visit to a GitHub Pages site logs the visitor's IP address for security purposes, whether or not the visitor is signed in to GitHub. Details are in <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages" target="_blank" rel="noopener noreferrer">What is GitHub Pages?</a>.</p>
+
+        <h2>Email, Telegram, and Upwork</h2>
+        <p>Mail sent to <a href={mail}>{EMAIL}</a> arrives in that Gmail inbox. Your email provider and Google both handle the message. Inqreon uses it to reply and to do the work you asked for.</p>
+        <p>Telegram links go to <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">t.me/Inqreon_bot</a>. The conversation then happens on Telegram, under <a href="https://telegram.org/privacy" target="_blank" rel="noopener noreferrer">Telegram's privacy policy</a>. Inqreon reads messages sent to that bot in order to reply. This website does not receive the chat itself.</p>
+        <p>A build of this page can show an Upwork profile link in place of the email buttons. Following that link leaves this site, and Upwork handles the visit under its own policy. The link appears only when an Upwork profile URL is configured for the build. Otherwise those buttons open email. This website does not receive an Upwork account.</p>
+
+        <h2>How long information is kept</h2>
+        <p>The notice flag stays in your browser until you remove it. Google, Yandex, and GitHub keep analytics and security logs under their own rules. Inqreon does not set those periods and does not keep a separate copy.</p>
+        <p>Inqreon keeps email for as long as it is needed to answer and finish the work, then deletes it. There is no mailing list and no customer database on this website.</p>
+
+        <h2>Asking for access or deletion</h2>
+        <p>Email <a href={mail}>{EMAIL}</a> to ask what Inqreon holds about you, to correct it, or to delete it. Inqreon will answer that email. You can also block the analytics scripts in your browser, or clear site data to remove the notice flag.</p>
+        <p>If you are in the European Economic Area, the United Kingdom, or Switzerland, you can use that email to ask for access, correction, or deletion, and you can complain to your local data protection authority. This page does not claim a certification, and it does not name a representative there.</p>
+        <p>If you live in California, you can use the same email to ask what personal information Inqreon holds and to ask for deletion. Inqreon does not sell personal information.</p>
+
+        <h2>Children</h2>
+        <p>These pages are for adult clients. They do not ask for a date of birth. If a parent or guardian believes a child under 13 sent a message, email and Inqreon will delete it.</p>
+
+        <h2>Changes</h2>
+        <p>Inqreon may update this page. The date at the top is the version you are reading.</p>
+
+        <h2>Contact</h2>
+        <address>
+          Inqreon<br />
+          <a href={mail}>{EMAIL}</a>
+        </address>
+      </article>
+    </main>
+    <EnFooter />
+  </div>
+  <script is:inline>
+    (function () {
+      var nav = document.getElementById('nav');
+      if (!nav) return;
+      var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+  </script>
+</EnLayout>

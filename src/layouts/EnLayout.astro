@@ -10,9 +10,16 @@ interface Props {
   title?: string;
   description?: string;
   schema?: object[];
+  /** Site path for canonical and og:url. Defaults to the English landing. */
+  path?: string;
+  /** Replaces the landing ↔ Russian home hreflang pair. */
+  alternates?: { en: string; ru: string; xDefault: string };
 }
-const { title = PAGE.title, description = PAGE.description, schema = [] } = Astro.props;
-const canonical = new URL('/en/', SITE.url).href;
+const { title = PAGE.title, description = PAGE.description, schema = [], path = '/en/', alternates } = Astro.props;
+const canonical = new URL(path, SITE.url).href;
+const enAlt = alternates?.en ?? new URL('/en/', SITE.url).href;
+const ruAlt = alternates?.ru ?? new URL('/', SITE.url).href;
+const xDefault = alternates?.xDefault ?? enAlt;
 const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
 ---
 <!doctype html>
@@ -23,9 +30,9 @@ const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en" href={canonical} />
-    <link rel="alternate" hreflang="ru" href={`${SITE.url}/`} />
-    <link rel="alternate" hreflang="x-default" href={canonical} />
+    <link rel="alternate" hreflang="en" href={enAlt} />
+    <link rel="alternate" hreflang="ru" href={ruAlt} />
+    <link rel="alternate" hreflang="x-default" href={xDefault} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#08090b" />
@@ -59,7 +66,7 @@ const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
     <div class="bg-noise" aria-hidden="true"></div>
     <slot />
     <aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label="Cookie notice">
-      <p>This site uses cookies and analytics (Google Analytics and Yandex Metrica) to see which pages are read. <a href="/politika-konfidencialnosti/">Privacy policy (Russian)</a>.</p>
+      <p>This site uses cookies and analytics (Google Analytics and Yandex Metrica) to see which pages are read. <a href="/en/privacy/">Privacy policy</a>.</p>
       <button type="button">OK</button>
     </aside>
     <script is:inline>

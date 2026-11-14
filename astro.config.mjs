@@ -59,6 +59,7 @@ const stamp = (urlPath, file) => {
   if (fs.existsSync(full)) staticLastmod.set(`${SITE}${urlPath}`, fs.statSync(full).mtime.toISOString());
 };
 stamp('/en/', 'src/pages/en/index.astro');
+stamp('/en/privacy/', 'src/pages/en/privacy.astro');
 stamp('/o-proekte/', 'src/pages/o-proekte.astro');
 stamp('/kontakty/', 'src/pages/kontakty.astro');
 stamp('/redakcionnaya-politika/', 'src/pages/redakcionnaya-politika.astro');
@@ -73,6 +74,8 @@ for (const f of fs.readdirSync(pagesDir)) {
 // Хабы рубрик считаем существующими, только если в рубрике есть статьи (пустые — noindex-заглушки).
 RUBRICS.filter((r) => filledRubrics.has(r)).forEach((r) => validPaths.add(`/${r}/`));
 for (const u of lastmod.keys()) validPaths.add(u.slice(SITE.length));
+validPaths.add('/en/');
+validPaths.add('/en/privacy/');
 
 export default defineConfig({
   site: SITE,

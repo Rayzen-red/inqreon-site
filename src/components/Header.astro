@@ -3,6 +3,10 @@ import { getCollection } from 'astro:content';
 import { SITE } from '../data/site';
 import { RUBRICS } from '../data/rubrics';
 import RubricIcon from './concepts/RubricIcon.astro';
+interface Props {
+  enHref?: string;
+}
+const { enHref = '/en/' } = Astro.props;
 const current = Astro.url.pathname.split('/')[1] ?? '';
 const articles = await getCollection('articles', ({ data }) => !data.draft);
 const filled = new Set(articles.map((a) => a.data.rubric));
@@ -15,7 +19,7 @@ const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
     </a>
     <nav class="lang-switch" aria-label="Язык">
       <span lang="ru" aria-current="true">RU</span>
-      <a href="/en/" hreflang="en" lang="en">EN</a>
+      <a href={enHref} hreflang="en" lang="en">EN</a>
     </nav>
     <nav class="social-links" aria-label="Соцсети">
       <a href={SITE.youtube} target="_blank" rel="noopener">YouTube</a>
