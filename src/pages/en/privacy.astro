@@ -24,14 +24,14 @@ const mail = `mailto:${EMAIL}`;
         <p class="eyebrow">Privacy</p>
         <h1>Privacy policy</h1>
         <p class="legal-date">Effective <time datetime="2026-11-15">15 November 2026</time>. This policy covers the English pages under /en/.</p>
-        <p>The <a href={ruPath} hreflang="ru" lang="ru">privacy policy in Russian</a> covers the rest of the site.</p>
+        <p>The <a href={ruPath} hreflang="ru" lang="ru">privacy policy in Russian</a> is the other language version. That page marks itself as a draft.</p>
 
         <h2>Who operates this site</h2>
         <p>Inqreon operates this site. For a privacy question, email <a href={mail}>{EMAIL}</a>.</p>
 
         <h2>What the English pages do</h2>
         <p>These pages describe a service for fixing AI-built websites and apps. They are static files. The page has no account, no comment form, and no card checkout.</p>
-        <p>Order and contact buttons open your email program with a draft to {EMAIL}. The draft can include a project link, what the app was built with, and what is broken, and it asks you to leave out passwords and secret keys. The message stays on your device until you send it.</p>
+        <p>Order and contact buttons open your email program with a draft to {EMAIL}, unless the build uses an Upwork link instead. The draft can include a project link, what the app was built with, and what is broken, and it asks you to leave out passwords and secret keys. The message stays on your device until you send it.</p>
         <p>Type and images on these pages are files on this site. The pages do not load a separate font service.</p>
 
         <h2>Analytics</h2>
@@ -44,7 +44,7 @@ const mail = `mailto:${EMAIL}`;
         <p>The scripts load with the page. OK on the notice records that you closed it. The scripts keep running.</p>
 
         <h2>The notice on your device</h2>
-        <p>The first visit shows a short notice at the bottom of the page. OK stores one value in localStorage: the key <code>inqreon-cookie-consent</code> and the value <code>accepted</code>. That value keeps the notice hidden. It stays on your device until you clear site data for inqreon.com. Clearing it shows the notice again. The site's own code writes no other localStorage item.</p>
+        <p>The first visit shows a short notice at the bottom of the page. OK stores one value in localStorage when the browser allows it: the key <code>inqreon-cookie-consent</code> and the value <code>accepted</code>. That stored value keeps the notice hidden. It stays on your device until you clear site data for inqreon.com. Clearing it shows the notice again. If the browser blocks storage, the notice can show on the next visit. The site's own code writes no other localStorage item.</p>
 
         <h2>Hosting</h2>
         <p>GitHub Pages, a service of GitHub, Inc., publishes the site. GitHub's documentation says that a visit to a GitHub Pages site logs the visitor's IP address for security purposes, whether or not the visitor is signed in to GitHub. Details are in <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages" target="_blank" rel="noopener noreferrer">What is GitHub Pages?</a>.</p>
@@ -55,7 +55,7 @@ const mail = `mailto:${EMAIL}`;
         <p>A build of this page can show an Upwork profile link in place of the email buttons. Following that link leaves this site, and Upwork handles the visit under its own policy. The link appears only when an Upwork profile URL is configured for the build. Otherwise those buttons open email. This website does not receive an Upwork account.</p>
 
         <h2>How long information is kept</h2>
-        <p>The notice flag stays in your browser until you remove it. Google, Yandex, and GitHub keep analytics and security logs under their own rules. Inqreon does not set those periods and does not keep a separate copy.</p>
+        <p>When the browser stores the notice flag, it stays there until you remove it. Google, Yandex, and GitHub keep analytics and security logs under their own rules. Inqreon does not set those periods and does not keep a separate copy.</p>
         <p>Inqreon keeps email for as long as it is needed to answer and finish the work, then deletes it. There is no mailing list and no customer database on this website.</p>
 
         <h2>Asking for access or deletion</h2>
