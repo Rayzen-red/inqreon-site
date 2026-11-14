@@ -23,6 +23,14 @@ jobs:
         with:
           path: .
           node-version: 22
+      # IndexNow читает карту уже собранного сайта, а не пересобирает её.
+      - name: Upload sitemap for IndexNow
+        uses: actions/upload-artifact@v4
+        with:
+          name: sitemap
+          path: dist/sitemap*.xml
+          if-no-files-found: error
+          retention-days: 7
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -32,3 +40,24 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+  # После успешного деплоя Pages, в том числе при ручном запуске не с main:
+  # этот workflow публикует выбранный ref на боевой домен. Google IndexNow не
+  # поддерживает — см. docs/indexing.md. timeout-minutes ограничивает ожидание,
+  # если api.indexnow.org завис: группа concurrency `pages` иначе держит следующий деплой.
+  # continue-on-error: неудачный ping не краснит деплой.
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: sitemap
+          path: dist
+      - name: Submit sitemap URLs to IndexNow
+        continue-on-error: true
+        run: node scripts/indexnow.mjs

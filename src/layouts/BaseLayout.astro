@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import { SITE } from '../data/site';
+import { alternatePath, hreflangLinks } from '../data/translations.mjs';
 
 interface Props {
   title: string;
@@ -34,12 +35,8 @@ const fullTitle = withBrand && !title.includes(SITE.name) ? `${title} — ${SITE
 const is404 = Astro.url.pathname.replace(/\/$/, '').endsWith('/404');
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImageUrl = new URL(ogImage, SITE.url).href;
-const bare = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const pairs: Record<string, { en: string; ru: string }> = {
-  '/': { en: '/en/', ru: '/' },
-  '/politika-konfidencialnosti': { en: '/en/privacy/', ru: '/politika-konfidencialnosti/' },
-};
-const pair = pairs[bare];
+const alternates = is404 ? [] : hreflangLinks(Astro.url.pathname, SITE.url);
+const enHref = (!is404 && alternatePath(Astro.url.pathname)) || '/en/';
 ---
 <!doctype html>
 <html lang={SITE.lang}>
@@ -49,9 +46,7 @@ const pair = pairs[bare];
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     {!is404 && <link rel="canonical" href={canonical} />}
-    {pair && <link rel="alternate" hreflang="ru" href={new URL(pair.ru, SITE.url).href} />}
-    {pair && <link rel="alternate" hreflang="en" href={new URL(pair.en, SITE.url).href} />}
-    {pair && <link rel="alternate" hreflang="x-default" href={new URL(pair.en, SITE.url).href} />}
+    {alternates.map((alt) => <link rel="alternate" hreflang={alt.lang} href={alt.href} />)}
     {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="/concepts/fonts/xn7gYHE41ni1AdIRggOxSuXd.woff2" as="font" type="font/woff2" crossorigin />
@@ -63,7 +58,7 @@ const pair = pairs[bare];
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:locale" content={SITE.locale} />
-    {pair && <meta property="og:locale:alternate" content="en_US" />}
+    {alternates.some((alt) => alt.lang === 'en') && <meta property="og:locale:alternate" content="en_US" />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {!is404 && <meta property="og:url" content={canonical} />}
@@ -84,7 +79,7 @@ const pair = pairs[bare];
     <a class="skip-link" href="#main">К содержанию</a>
     <canvas id="stars" aria-hidden="true"></canvas>
     <div class="cosmos">
-      <Header enHref={pair?.en ?? '/en/'} />
+      <Header enHref={enHref} />
       <main id="main">
         <slot />
       </main>

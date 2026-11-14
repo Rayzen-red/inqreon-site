@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import remarkMarkers from './src/plugins/remark-markers.mjs';
 import remarkInternalLinks from './src/plugins/remark-internal-links.mjs';
 import { applyHreflang, DEFAULT_LOCALE, LOCALES } from './src/data/translations.mjs';
@@ -76,12 +77,11 @@ for (const f of fs.readdirSync(pagesDir)) {
 // Хабы рубрик считаем существующими, только если в рубрике есть статьи (пустые — noindex-заглушки).
 RUBRICS.filter((r) => filledRubrics.has(r)).forEach((r) => validPaths.add(`/${r}/`));
 for (const u of lastmod.keys()) validPaths.add(u.slice(SITE.length));
-validPaths.add('/en/');
-validPaths.add('/en/privacy/');
 
 // /en/ is a real page. News URLs come from published files only (drafts stay out
 // unless SHOW_DRAFTS=1). hreflang pairs live in src/data/translations.mjs.
 validPaths.add('/en/');
+validPaths.add('/en/privacy/');
 validPaths.add('/news/');
 validPaths.add('/en/news/');
 for (const page of indexableNews()) {
@@ -90,6 +90,25 @@ for (const page of indexableNews()) {
   lastmod.set(`${SITE}${page.path}`, iso);
   const feed = page.lang === 'en' ? `${SITE}/en/news/` : `${SITE}/news/`;
   if (!lastmod.has(feed) || iso > lastmod.get(feed)) lastmod.set(feed, iso);
+}
+
+// Many crawlers request /sitemap.xml. @astrojs/sitemap writes sitemap-index.xml.
+function sitemapXmlAlias() {
+  return {
+    name: 'sitemap-xml-alias',
+    hooks: {
+      'astro:build:done': async ({ dir, logger }) => {
+        const dest = fileURLToPath(dir);
+        const index = path.join(dest, 'sitemap-index.xml');
+        if (!fs.existsSync(index)) {
+          logger.warn('sitemap-index.xml missing; /sitemap.xml alias was not written.');
+          return;
+        }
+        fs.copyFileSync(index, path.join(dest, 'sitemap.xml'));
+        logger.info('Copied sitemap-index.xml to sitemap.xml');
+      },
+    },
+  };
 }
 
 export default defineConfig({
@@ -119,5 +138,6 @@ export default defineConfig({
         return applyHreflang(item, SITE);
       },
     }),
+    sitemapXmlAlias(),
   ],
 });
