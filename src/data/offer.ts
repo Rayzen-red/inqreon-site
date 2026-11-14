@@ -1,10 +1,11 @@
 /**
  * English service page constants.
  *
- * UPWORK_URL is the public profile link. It is a placeholder until the owner
- * sets the UPWORK_URL environment variable at build time. Not a secret.
+ * The public profile link. Set PUBLIC_UPWORK_URL at build time.
+ * Only the PUBLIC_ prefix is exposed to the browser. Until the owner
+ * sets it, links use the placeholder homepage.
  */
-const raw = (import.meta.env.UPWORK_URL || import.meta.env.PUBLIC_UPWORK_URL || '') as string;
+const raw = (import.meta.env.PUBLIC_UPWORK_URL || '') as string;
 
 export const UPWORK_URL = raw.trim() || 'https://www.upwork.com/';
 

@@ -2,8 +2,11 @@
 
 const reduce = () => document.documentElement.classList.contains('reduce-motion');
 
+const canObserve = () => typeof IntersectionObserver === 'function';
+
 export function initEnPage(): void {
   document.documentElement.classList.add('js');
+  if (!canObserve()) document.documentElement.classList.add('no-io');
   initNav();
   initProgressFallback();
   initTerminal();
@@ -184,6 +187,8 @@ function initCompare(): void {
     if (frame) cancelAnimationFrame(frame);
   };
   range.addEventListener('pointerdown', stop, { once: true });
+  range.addEventListener('keydown', stop, { once: true });
+  if (!canObserve()) return;
 
   const io = new IntersectionObserver(
     ([entry]) => {
@@ -214,7 +219,7 @@ function initCompare(): void {
 }
 
 function initReveals(): void {
-  if (reduce()) return;
+  if (reduce() || !canObserve()) return;
   const nodes = [...document.querySelectorAll<HTMLElement>('.rv')];
   if (nodes.length === 0) return;
   const io = new IntersectionObserver(
@@ -232,7 +237,7 @@ function initReveals(): void {
 
 function initPipe(): void {
   const pipe = document.querySelector<HTMLElement>('#pipe');
-  if (!pipe || reduce()) return;
+  if (!pipe || reduce() || !canObserve()) return;
   const io = new IntersectionObserver(
     ([entry]) => {
       if (!entry?.isIntersecting) return;
@@ -252,6 +257,7 @@ async function bootScene(): Promise<void> {
       const mod = await import('./rescue-scene');
       await mod.mountRescue();
     } catch (err) {
+      console.warn('Rescue scene unavailable', err);
       root.classList.add('no-webgl');
     }
   };

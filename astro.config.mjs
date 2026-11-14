@@ -80,7 +80,6 @@ export default defineConfig({
   trailingSlash: 'always',
   output: 'static',
   build: { format: 'directory' },
-  vite: { envPrefix: ['PUBLIC_', 'UPWORK_', 'VITE_'] },
   markdown: {
     // remark-конвейер нужен для плагина, подсвечивающего [PARTNER: …] и [ПРОВЕРИТЬ]
     processor: unified({ remarkPlugins: [[remarkInternalLinks, { valid: [...validPaths] }], [remarkMarkers, { ads: ADS }]] }),

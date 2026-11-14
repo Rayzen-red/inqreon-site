@@ -396,6 +396,14 @@ export async function mountRescue(): Promise<void> {
   fixAt = (tl.labels.fix ?? 0) / duration;
   launchAt = (tl.labels.launch ?? 1) / duration;
 
+  const paint = () => {
+    scrollP = tl.progress();
+    const step = scrollP < scanAt ? 0 : scrollP < fixAt ? 1 : scrollP < launchAt ? 2 : 3;
+    setStep(step);
+    requestDraw();
+  };
+  tl.eventCallback('onUpdate', paint);
+
   ScrollTrigger.create({
     trigger: pin,
     start: 'top top',
@@ -404,12 +412,7 @@ export async function mountRescue(): Promise<void> {
     scrub: 0.65,
     anticipatePin: 1,
     animation: tl,
-    onUpdate: (self) => {
-      scrollP = self.progress;
-      const step = scrollP < scanAt ? 0 : scrollP < fixAt ? 1 : scrollP < launchAt ? 2 : 3;
-      setStep(step);
-      requestDraw();
-    },
+    onUpdate: paint,
   });
 
   document.addEventListener('visibilitychange', () => {
