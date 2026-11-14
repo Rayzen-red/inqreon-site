@@ -3,8 +3,8 @@
  *
  * Change a number below. Buttons, page copy, mailto subjects and bodies,
  * meta and Open Graph descriptions, and JSON-LD all read this object.
- * Amounts are whole US dollars. `symbol` is what the page shows; `currency`
- * is the JSON-LD priceCurrency. Set them together.
+ * Amounts are whole US dollars. `currency` is the only currency setting;
+ * the symbol shown on the page is derived from it.
  *
  * Ranges render as $60–$120: a dollar sign on both sides and an en dash,
  * so the top of the range still reads as a price.
@@ -18,9 +18,13 @@
  * SHOW_AUTOMATION_BLOCK — set false to hide that section on /en/ and /uslugi/.
  */
 
+const CURRENCIES = { USD: '$' } as const;
+type Currency = keyof typeof CURRENCIES;
+const currency: Currency = 'USD';
+
 export const PRICES = {
-  currency: 'USD' as const,
-  symbol: '$' as const,
+  currency,
+  symbol: CURRENCIES[currency],
   scan: 49,
   fix: {
     small: { min: 60, max: 120 },

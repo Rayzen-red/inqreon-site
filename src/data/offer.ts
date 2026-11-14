@@ -10,7 +10,18 @@ import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice, formatRange } from './price
 
 const raw = (import.meta.env.PUBLIC_UPWORK_URL || '') as string;
 
-export const UPWORK_URL = raw.trim();
+/** An http(s) URL, or empty so order buttons fall back to email. */
+function upworkUrl(value: string): string {
+  try {
+    const url = new URL(value.trim());
+    if (url.protocol === 'https:' || url.protocol === 'http:') return url.href;
+  } catch {
+    /* not a URL */
+  }
+  return '';
+}
+
+export const UPWORK_URL = upworkUrl(raw);
 export const HAS_UPWORK = UPWORK_URL.length > 0;
 
 export const EMAIL = 'raydzim.group@gmail.com';

@@ -64,8 +64,14 @@ const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
     <div class="bg-grid" aria-hidden="true"></div>
     <div class="bg-noise" aria-hidden="true"></div>
     <slot />
-    <aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label="Cookie notice">
-      <p>This site uses cookies and analytics (Google Analytics and Yandex Metrica) to see which pages are read. <a href="/politika-konfidencialnosti/">Privacy policy (Russian)</a>.</p>
+    <aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label={lang === 'ru' ? 'Уведомление о куки' : 'Cookie notice'}>
+      <p>
+        {lang === 'ru' ? (
+          <>Этот сайт использует куки и аналитику (Google Analytics и Яндекс Метрику), чтобы видеть, какие страницы читают. <a href="/politika-konfidencialnosti/">Политика конфиденциальности</a>.</>
+        ) : (
+          <>This site uses cookies and analytics (Google Analytics and Yandex Metrica) to see which pages are read. <a href="/politika-konfidencialnosti/">Privacy policy (Russian)</a>.</>
+        )}
+      </p>
       <button type="button">OK</button>
     </aside>
     <script is:inline>

@@ -5,12 +5,14 @@ import EnFooter from '../../components/en/EnFooter.astro';
 import Automations from '../../components/en/Automations.astro';
 import { EMAIL } from '../../data/offer';
 import { automationOffers, automationSection } from '../../data/automation';
-import { PRICES, formatPrice } from '../../data/prices';
+import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice } from '../../data/prices';
 import { SITE } from '../../data/site';
 
 const heading = automationSection('ru').title;
 const title = `Inqreon — ${heading}`;
-const description = `${heading}. Лёгкая программа — ${formatPrice(PRICES.automation.light)}. Средняя автоматизация — ${formatPrice(PRICES.automation.medium)}. Большой проект — цена по договорённости.`;
+const description = SHOW_AUTOMATION_BLOCK
+  ? `${heading}. Лёгкая программа — ${formatPrice(PRICES.automation.light)}. Средняя автоматизация — ${formatPrice(PRICES.automation.medium)}. Большой проект — цена по договорённости.`
+  : heading;
 const schema = [
   {
     '@context': 'https://schema.org',
@@ -20,7 +22,7 @@ const schema = [
     description,
     email: EMAIL,
     inLanguage: 'ru',
-    makesOffer: automationOffers('ru'),
+    makesOffer: SHOW_AUTOMATION_BLOCK ? automationOffers('ru') : [],
   },
 ];
 ---
