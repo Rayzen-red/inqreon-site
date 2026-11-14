@@ -1,0 +1,18 @@
+---
+import NewsRuLayout from '../../layouts/NewsRuLayout.astro';
+import NewsFeed from '../../components/news/NewsFeed.astro';
+import { PAGE_SIZE, feedCopy, loadNews, pagePath } from '../../lib/news';
+
+const items = await loadNews('ru');
+const copy = feedCopy('ru', 1);
+const total = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+---
+
+<NewsRuLayout
+  title={copy.title}
+  description={copy.description}
+  rssPath={copy.rssPath}
+  next={total > 1 ? pagePath('ru', 2) : undefined}
+>
+  <NewsFeed lang="ru" items={items} page={1} />
+</NewsRuLayout>

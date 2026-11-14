@@ -1,0 +1,18 @@
+---
+import NewsEnLayout from '../../../layouts/NewsEnLayout.astro';
+import NewsFeed from '../../../components/news/NewsFeed.astro';
+import { PAGE_SIZE, feedCopy, loadNews, pagePath } from '../../../lib/news';
+
+const items = await loadNews('en');
+const copy = feedCopy('en', 1);
+const total = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+---
+
+<NewsEnLayout
+  title={copy.title}
+  description={copy.description}
+  rssPath={copy.rssPath}
+  next={total > 1 ? pagePath('en', 2) : undefined}
+>
+  <NewsFeed lang="en" items={items} page={1} />
+</NewsEnLayout>

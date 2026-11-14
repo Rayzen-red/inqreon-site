@@ -1,0 +1,20 @@
+---
+import { languageSwitch } from '../../data/translations.mjs';
+
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const sw = languageSwitch(path);
+const ruCurrent = sw.lang === 'ru';
+---
+
+<nav class={sw.lang === 'en' ? 'lang' : 'lang-switch'} aria-label={sw.lang === 'ru' ? 'Язык' : 'Language'}>
+  {ruCurrent ? (
+    <span lang="ru" aria-current="true">RU</span>
+  ) : (
+    <a href={sw.href} lang="ru" hreflang={sw.paired ? 'ru' : undefined} aria-label={sw.label}>RU</a>
+  )}
+  {ruCurrent ? (
+    <a href={sw.href} lang="en" hreflang={sw.paired ? 'en' : undefined} aria-label={sw.label}>EN</a>
+  ) : (
+    <span lang="en" aria-current="true">EN</span>
+  )}
+</nav>

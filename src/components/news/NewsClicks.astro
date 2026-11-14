@@ -1,0 +1,55 @@
+---
+// Delegated GA4 clicks for news pages. Pageviews already load with the
+// existing tag. These events wait for the same consent key the cookie
+// banner writes (inqreon-cookie-consent = accepted).
+---
+<script is:inline>
+  (function () {
+    var KEY = 'inqreon-cookie-consent';
+    function allowed() {
+      try { return localStorage.getItem(KEY) === 'accepted'; }
+      catch (e) { return false; }
+    }
+    function send(name, params) {
+      if (!allowed() || typeof window.gtag !== 'function') return;
+      window.gtag('event', name, params);
+    }
+    document.addEventListener('click', function (event) {
+      var el = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+      if (!el) return;
+      var lang = document.body.getAttribute('data-news-lang') || '';
+      var slug = document.body.getAttribute('data-news-slug') || '';
+      var href = el.getAttribute('href') || '';
+      var cta = el.getAttribute('data-cta');
+      var base = { lang: lang, article_slug: slug };
+      if (cta === 'scan' || cta === 'fix' || cta === 'telegram') {
+        send('cta_click', {
+          cta_type: cta,
+          placement: el.getAttribute('data-placement') || '',
+          lang: lang,
+          article_slug: slug
+        });
+      }
+      var telegram = el.getAttribute('data-telegram');
+      if (cta === 'telegram' || telegram || /^https?:\/\/(t\.me|telegram\.(me|org))\//i.test(href)) {
+        send('telegram_click', {
+          telegram_target: telegram || (/Inqreon_bot/i.test(href) ? 'bot' : 'channel'),
+          lang: base.lang,
+          article_slug: base.article_slug
+        });
+        return;
+      }
+      if (href.indexOf('mailto:') === 0) {
+        send('mailto_click', base);
+        return;
+      }
+      try {
+        var url = new URL(href, location.href);
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+        var host = url.hostname;
+        if (host === location.hostname || host === 'inqreon.com' || host === 'www.inqreon.com') return;
+        send('outbound_click', { link_url: url.href.slice(0, 100), lang: base.lang, article_slug: base.article_slug });
+      } catch (e) {}
+    });
+  })();
+</script>

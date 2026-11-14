@@ -1,0 +1,115 @@
+---
+import { render } from 'astro:content';
+import Breadcrumbs from '../Breadcrumbs.astro';
+import LangSwitch from './LangSwitch.astro';
+import NewsCard from './NewsCard.astro';
+import NewsCta from './NewsCta.astro';
+import {
+  formatNewsDate,
+  isoDay,
+  loadNews,
+  newsImage,
+  newsPath,
+  relatedNews,
+  type NewsEntry,
+} from '../../lib/news';
+
+interface Props {
+  entry: NewsEntry;
+}
+const { entry } = Astro.props;
+const lang = entry.data.lang;
+const { Content, headings } = await render(entry);
+const image = newsImage(entry.data.image);
+const words = (entry.body ?? '').split(/\s+/).filter(Boolean).length;
+const minutes = Math.max(1, Math.round(words / (lang === 'ru' ? 180 : 200)));
+const toc = headings.filter((heading) => heading.depth === 2);
+const pool = await loadNews(lang);
+const related = relatedNews(entry, pool);
+const crumbs =
+  lang === 'ru'
+    ? [
+        { name: 'Главная', href: '/' },
+        { name: 'Новости', href: '/news/' },
+        { name: entry.data.title },
+      ]
+    : [
+        { name: 'Home', href: '/en/' },
+        { name: 'News', href: '/en/news/' },
+        { name: entry.data.title },
+      ];
+const feed = newsPath(lang);
+---
+
+<article class="news-article news-wrap narrow">
+  <Breadcrumbs items={crumbs} label={lang === 'ru' ? 'Хлебные крошки' : 'Breadcrumb'} />
+  <header class="news-article-head">
+    <div class="news-article-tools">
+      <p class="news-kicker"><a href={feed}>{lang === 'ru' ? 'Новости' : 'News'}</a></p>
+      <LangSwitch />
+    </div>
+    <h1>{entry.data.title}</h1>
+    <p class="article-meta">
+      <time datetime={isoDay(entry.data.date)}>{formatNewsDate(entry.data.date, lang)}</time>
+      <span aria-hidden="true">·</span>
+      <span>{lang === 'ru' ? `${minutes} мин чтения` : `${minutes} min read`}</span>
+    </p>
+    {image && (
+      <figure class="news-cover">
+        <img
+          src={image}
+          alt={entry.data.imageAlt ?? ''}
+          width="1200"
+          height="630"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </figure>
+    )}
+    <p class="lead">{entry.data.description}</p>
+  </header>
+
+  <NewsCta entry={entry} variant="light" />
+
+  {toc.length > 2 && (
+    <nav class="toc" aria-label={lang === 'ru' ? 'Содержание' : 'Contents'}>
+      <p class="toc-title">{lang === 'ru' ? 'Содержание' : 'Contents'}</p>
+      <ol>
+        {toc.map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}
+      </ol>
+    </nav>
+  )}
+
+  <div class="prose news-prose">
+    <Content />
+  </div>
+
+  <section class="sources news-sources" aria-labelledby="news-sources-title">
+    <h2 id="news-sources-title">{lang === 'ru' ? 'Источники' : 'Sources'}</h2>
+    <ol>
+      {entry.data.sources.map((source) => (
+        <li>
+          <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <div class="news-tags">
+    <p class="news-kicker" id="news-tags-label">{lang === 'ru' ? 'Темы' : 'Topics'}</p>
+    <ul aria-labelledby="news-tags-label">
+      {entry.data.tags.map((tag) => <li>{tag}</li>)}
+    </ul>
+  </div>
+
+  <NewsCta entry={entry} variant="end" />
+
+  {related.length > 0 && (
+    <section class="news-related" aria-labelledby="news-related-title">
+      <h2 id="news-related-title">{lang === 'ru' ? 'Ещё новости' : 'Related news'}</h2>
+      <div class="news-grid">
+        {related.map((item) => <NewsCard entry={item} level={3} />)}
+      </div>
+    </section>
+  )}
+</article>

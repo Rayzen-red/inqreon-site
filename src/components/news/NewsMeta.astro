@@ -1,0 +1,68 @@
+---
+import { SITE } from '../../data/site';
+import { hreflangLinks } from '../../data/translations.mjs';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: 'ru' | 'en';
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  ogImageAlt?: string;
+  publishedTime?: string;
+  schema?: object[];
+  rssPath: string;
+  prev?: string;
+  next?: string;
+}
+const {
+  title,
+  description,
+  lang,
+  ogType = 'website',
+  ogImage = lang === 'en' ? '/images/en/og-share-1200x630.webp' : SITE.ogImage,
+  ogImageAlt = '',
+  publishedTime,
+  schema = [],
+  rssPath,
+  prev,
+  next,
+} = Astro.props;
+
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const canonical = new URL(path, SITE.url).href;
+const alternates = hreflangLinks(path, SITE.url);
+const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
+const ogImageUrl = new URL(ogImage, SITE.url).href;
+const rssTitle = lang === 'ru' ? 'Новости Inqreon' : 'Inqreon news';
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{alternates.map((alt) => <link rel="alternate" hreflang={alt.lang} href={alt.href} />)}
+{prev && <link rel="prev" href={prev} />}
+{next && <link rel="next" href={next} />}
+<link rel="alternate" type="application/rss+xml" title={rssTitle} href={rssPath} />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<meta name="theme-color" content={lang === 'en' ? '#08090b' : '#070b16'} />
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content={lang === 'en' ? 'en_US' : 'ru_RU'} />
+{alternates.some((alt) => alt.lang === (lang === 'en' ? 'ru' : 'en')) && (
+  <meta property="og:locale:alternate" content={lang === 'en' ? 'ru_RU' : 'en_US'} />
+)}
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+{ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+{schema.map((item) => <script type="application/ld+json" set:html={JSON.stringify(item).replace(/</g, '\\u003c')} />)}

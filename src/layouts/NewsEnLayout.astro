@@ -1,0 +1,74 @@
+---
+import '@fontsource-variable/geist/wght.css';
+import '@fontsource-variable/geist-mono/wght.css';
+import '../styles/en.css';
+import '../styles/news.css';
+import EnHeader from '../components/en/EnHeader.astro';
+import EnFooter from '../components/en/EnFooter.astro';
+import Analytics from '../components/Analytics.astro';
+import NewsClicks from '../components/news/NewsClicks.astro';
+import NewsMeta from '../components/news/NewsMeta.astro';
+import { languageSwitch } from '../data/translations.mjs';
+
+interface Props {
+  title: string;
+  description: string;
+  slug?: string;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  ogImageAlt?: string;
+  publishedTime?: string;
+  schema?: object[];
+  rssPath: string;
+  prev?: string;
+  next?: string;
+}
+const props = Astro.props;
+const sw = languageSwitch(Astro.url.pathname);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <NewsMeta lang="en" {...props} />
+    <script is:inline>
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('reduce-motion');
+      }
+    </script>
+    <Analytics />
+  </head>
+  <body class="news-en" data-news-lang="en" data-news-slug={props.slug ?? ''}>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-noise" aria-hidden="true"></div>
+    <div class="page">
+      <EnHeader news ruHref={sw.href} ruPaired={sw.paired} ruTitle={sw.label} />
+      <main id="main" class="news-main">
+        <slot />
+      </main>
+      <EnFooter plainMail />
+    </div>
+    <aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label="Cookie notice">
+      <p>This site uses cookies and analytics (Google Analytics and Yandex Metrica) to see which pages are read. <a href="/politika-konfidencialnosti/">Privacy policy (Russian)</a>.</p>
+      <button type="button">OK</button>
+    </aside>
+    <script is:inline>
+      (function () {
+        var KEY = 'inqreon-cookie-consent';
+        var banner = document.getElementById('cookie-banner');
+        if (!banner) return;
+        var button = banner.querySelector('button');
+        try { if (localStorage.getItem(KEY) === 'accepted') return; } catch (e) {}
+        banner.hidden = false;
+        button.addEventListener('click', function () {
+          try { localStorage.setItem(KEY, 'accepted'); } catch (e) {}
+          banner.hidden = true;
+        });
+      })();
+    </script>
+    <NewsClicks />
+  </body>
+</html>
