@@ -13,12 +13,10 @@
  * fix.small / fix.medium / fix.launch — repair tiers, each a min and max
  * hourly — per hour, when a tier does not fit
  *
- * automation.lightPrograms — two fixed-price packages. null means the amount
- * is not approved. Do not invent a number. The large project is quoted
- * ("Price on request") and has no amount here.
- * SHOW_AUTOMATION_BLOCK — /en/ omits that section while this is false.
+ * automation.light / automation.medium — fixed-price custom programs.
+ * The large project is quoted ("Price on request") and has no amount here.
+ * SHOW_AUTOMATION_BLOCK — set false to hide that section on /en/ and /uslugi/.
  */
-const lightPrograms: [number | null, number | null] = [null, null];
 
 export const PRICES = {
   currency: 'USD' as const,
@@ -31,12 +29,13 @@ export const PRICES = {
   },
   hourly: { min: 20, max: 25 },
   automation: {
-    lightPrograms,
+    light: 60,
+    medium: 200,
   },
 };
 
-/** The custom-programs section stays off the live site while this is false. */
-export const SHOW_AUTOMATION_BLOCK = false;
+/** Custom programs section. On for both /en/ and /uslugi/. */
+export const SHOW_AUTOMATION_BLOCK = true;
 
 /** Whole-dollar amount with `PRICES.symbol`. No thousands separator. */
 export function formatPrice(amount: number): string {

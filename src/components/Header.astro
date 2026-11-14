@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { SITE } from '../data/site';
+import { SHOW_AUTOMATION_BLOCK } from '../data/prices';
 import { RUBRICS } from '../data/rubrics';
 import RubricIcon from './concepts/RubricIcon.astro';
 const current = Astro.url.pathname.split('/')[1] ?? '';
@@ -17,6 +18,11 @@ const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
       <span lang="ru" aria-current="true">RU</span>
       <a href="/en/" hreflang="en" lang="en">EN</a>
     </nav>
+    {SHOW_AUTOMATION_BLOCK && (
+      <nav class="social-links" aria-label="Услуги">
+        <a href="/uslugi/">Услуги</a>
+      </nav>
+    )}
     <nav class="social-links" aria-label="Соцсети">
       <a href={SITE.youtube} target="_blank" rel="noopener">YouTube</a>
       <a href={SITE.telegram} target="_blank" rel="noopener">Telegram</a>

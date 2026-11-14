@@ -22,7 +22,7 @@ Inqreon’s offer is the one in `src/data/prices.ts`: a Scan, three Fix ranges (
 
 The failure list (login, open data, payments, deploy) matches how those shops describe the work, and it was already the concept’s list.
 
-Fix tiers are small, medium, and full launch. Amounts live in `src/data/prices.ts`. The concept’s monthly “Vault” plan is not offered. A second block, Custom programs & automations, is built but hidden: `SHOW_AUTOMATION_BLOCK` is false, and its two light-program amounts are null until the owner approves them. The large project is price on request.
+Fix tiers are small, medium, and full launch. Amounts live in `src/data/prices.ts`. The concept’s monthly “Vault” plan is not offered. Custom programs are on the services page in English (`/en/`) and Russian (`/uslugi/`). Amounts live in `src/data/prices.ts`. The large project is price on request.
 
 ## Approved renders
 

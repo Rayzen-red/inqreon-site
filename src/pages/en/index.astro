@@ -11,7 +11,8 @@ import Automations from '../../components/en/Automations.astro';
 import FinalCta from '../../components/en/FinalCta.astro';
 import Tail from '../../components/en/Tail.astro';
 import { EMAIL, FIX_TIERS, PAGE } from '../../data/offer';
-import { PRICES, formatRange } from '../../data/prices';
+import { automationOffers } from '../../data/automation';
+import { PRICES, SHOW_AUTOMATION_BLOCK, formatRange } from '../../data/prices';
 import { SITE } from '../../data/site';
 
 const schema = [
@@ -51,6 +52,7 @@ const schema = [
           unitText: 'hour',
         },
       },
+      ...(SHOW_AUTOMATION_BLOCK ? automationOffers('en') : []),
     ],
   },
 ];

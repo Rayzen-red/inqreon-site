@@ -6,7 +6,7 @@
  * Only the PUBLIC_ prefix is exposed to the browser.
  * Prices live in ./prices.ts — do not write a dollar amount in this file.
  */
-import { PRICES, formatPrice, formatRange } from './prices';
+import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice, formatRange } from './prices';
 
 const raw = (import.meta.env.PUBLIC_UPWORK_URL || '') as string;
 
@@ -19,7 +19,11 @@ export const TELEGRAM_URL = 'https://t.me/Inqreon_bot';
 export const PAGE = {
   title: 'Inqreon — I fix AI-built websites and apps',
   description:
-    `Your Lovable, Bolt, Cursor or v0 project works in preview but breaks for real users. I get it production-ready: login, security, payments and deploy. Written messages only, fixed price. A Scan is ${formatPrice(PRICES.scan)}.`,
+    `Your Lovable, Bolt, Cursor or v0 project works in preview but breaks for real users. I get it production-ready: login, security, payments and deploy. Written messages only, fixed price. A Scan is ${formatPrice(PRICES.scan)}.${
+      SHOW_AUTOMATION_BLOCK
+        ? ` Custom programs are ${formatPrice(PRICES.automation.light)} or ${formatPrice(PRICES.automation.medium)}, and a large project is price on request.`
+        : ''
+    }`,
 };
 
 function mailto(subject: string, body: string): string {

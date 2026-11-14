@@ -336,6 +336,9 @@ html.no-webgl .step { opacity: 1; }
 .pc li { display: flex; gap: 10px; }
 .pc li::before { content: "→"; color: var(--dim); font-family: var(--mono); }
 .pc .btn { margin-top: auto; }
+.card-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+.card-actions .btn { margin-top: 0; height: auto; min-height: 52px; padding-block: 14px; white-space: normal; text-align: center; }
+.programs-page { padding-top: 68px; }
 .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; border: 0; padding: 0; margin: 0; min-inline-size: 0; }
 .tiers legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .tiers label {

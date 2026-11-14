@@ -1,27 +1,45 @@
 ---
 import OrderLink from './OrderLink.astro';
 import { HAS_UPWORK } from '../../data/offer';
-import { PRICES, formatPrice } from '../../data/prices';
+import { SERVICE_PATH } from '../../data/automation';
+import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice } from '../../data/prices';
+
+interface Props {
+  lang?: 'en' | 'ru';
+}
+const { lang = 'en' } = Astro.props;
+const ruHref = SHOW_AUTOMATION_BLOCK ? SERVICE_PATH.ru : '/';
 ---
 <header class="nav" id="nav">
   <div class="wrap">
-    <a class="logo" href="/en/" aria-label="Inqreon"><span class="logo-mark" aria-hidden="true">iq</span>Inqreon</a>
-    <nav class="nav-links" aria-label="Main">
-      <a href="#rescue">How a rescue works</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#case">Case</a>
-      <a href="#faq">FAQ</a>
-    </nav>
+    <a class="logo" href={lang === 'ru' ? SERVICE_PATH.ru : SERVICE_PATH.en} aria-label="Inqreon"><span class="logo-mark" aria-hidden="true">iq</span>Inqreon</a>
+    {lang === 'en' && (
+      <nav class="nav-links" aria-label="Main">
+        <a href="#rescue">How a rescue works</a>
+        <a href="#pricing">Pricing</a>
+        {SHOW_AUTOMATION_BLOCK && <a href="#programs">Programs</a>}
+        <a href="#case">Case</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    )}
     <div class="nav-right">
-      <div class="lang" role="group" aria-label="Language">
-        <span lang="en" aria-current="true">EN</span>
-        <a href="/" lang="ru" hreflang="ru">RU</a>
+      <div class="lang" role="group" aria-label={lang === 'ru' ? 'Язык' : 'Language'}>
+        {lang === 'en' ? (
+          <span lang="en" aria-current="true">EN</span>
+        ) : (
+          <a href={SERVICE_PATH.en} lang="en" hreflang="en">EN</a>
+        )}
+        {lang === 'ru' ? (
+          <span lang="ru" aria-current="true">RU</span>
+        ) : (
+          <a href={ruHref} lang="ru" hreflang="ru">RU</a>
+        )}
       </div>
-      {HAS_UPWORK ? (
+      {lang === 'en' && (HAS_UPWORK ? (
         <OrderLink kind="hire" variant="cta" size="sm" label="Hire on Upwork" />
       ) : (
         <OrderLink kind="scan" variant="cta" size="sm" label={`Scan ${formatPrice(PRICES.scan)}`} />
-      )}
+      ))}
     </div>
   </div>
   <div class="progress" id="progress"></div>
