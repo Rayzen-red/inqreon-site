@@ -1,0 +1,47 @@
+---
+import { SHOW_AUTOMATION_BLOCK } from '../../data/prices';
+import { TELEGRAM_URL, automationCards, automationSection, type Lang } from '../../data/automation';
+
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'en' } = Astro.props;
+const section = automationSection(lang);
+const cards = automationCards(lang);
+---
+{SHOW_AUTOMATION_BLOCK && (
+  <section class="sec" id="programs" aria-labelledby="programs-h">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">{lang === 'ru' ? 'Программы' : 'Programs'}</span>
+        <h2 id="programs-h">{section.title}</h2>
+      </div>
+      <div class="prices reserve">
+        {cards.map((card) => (
+          <article class="pc rv">
+            <h3>{card.name}</h3>
+            <div class:list={['amt', card.words && 'words']}>{card.priceLabel}</div>
+            {card.text && <p class="tier-desc">{card.text}</p>}
+            {card.examples.length > 0 && (
+              <ul>
+                {card.examples.map((example) => <li>{example}</li>)}
+              </ul>
+            )}
+            <div class="card-actions">
+              <a
+                class="btn btn-cta"
+                href={card.href}
+                {...(card.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              >
+                {card.cta} <span class="arr" aria-hidden="true">{card.external ? '↗' : '→'}</span>
+              </a>
+              <a class="btn" href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">
+                Telegram <span class="arr" aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

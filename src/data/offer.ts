@@ -4,10 +4,24 @@
  * PUBLIC_UPWORK_URL is the only Upwork setting. When it is empty, the page
  * does not link to upwork.com. The order button opens email instead.
  * Only the PUBLIC_ prefix is exposed to the browser.
+ * Prices live in ./prices.ts — do not write a dollar amount in this file.
  */
+import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice, formatRange } from './prices';
+
 const raw = (import.meta.env.PUBLIC_UPWORK_URL || '') as string;
 
-export const UPWORK_URL = raw.trim();
+/** An http(s) URL, or empty so order buttons fall back to email. */
+function upworkUrl(value: string): string {
+  try {
+    const url = new URL(value.trim());
+    if (url.protocol === 'https:' || url.protocol === 'http:') return url.href;
+  } catch {
+    /* not a URL */
+  }
+  return '';
+}
+
+export const UPWORK_URL = upworkUrl(raw);
 export const HAS_UPWORK = UPWORK_URL.length > 0;
 
 export const EMAIL = 'raydzim.group@gmail.com';
@@ -16,7 +30,11 @@ export const TELEGRAM_URL = 'https://t.me/Inqreon_bot';
 export const PAGE = {
   title: 'Inqreon — I fix AI-built websites and apps',
   description:
-    'Your Lovable, Bolt, Cursor or v0 project works in preview but breaks for real users. I get it production-ready: login, security, payments and deploy. Written messages only, fixed price. A Scan is $79.',
+    `Your Lovable, Bolt, Cursor or v0 project works in preview but breaks for real users. I get it production-ready: login, security, payments and deploy. Written messages only, fixed price. A Scan is ${formatPrice(PRICES.scan)}.${
+      SHOW_AUTOMATION_BLOCK
+        ? ` Custom programs are ${formatPrice(PRICES.automation.light)} or ${formatPrice(PRICES.automation.medium)}, and a large project is price on request.`
+        : ''
+    }`,
 };
 
 function mailto(subject: string, body: string): string {
@@ -27,7 +45,7 @@ export const SCAN_MAIL = mailto(
   'Scan request — AI-built app',
   `Hi,
 
-I'd like a $79 Scan.
+I'd like a ${formatPrice(PRICES.scan)} Scan.
 
 Project link:
 Built with (Lovable, Bolt, Cursor, or v0):
@@ -51,46 +69,41 @@ I won't send passwords or secret keys in this email.
 `,
 );
 
-export const SUPPORT_MAIL = mailto(
-  'Support request — $19/month',
-  `Hi,
-
-I'd like Support at $19/month after the app is live.
-
-Project link:
-`,
-);
-
-export type OrderKind = 'scan' | 'fix' | 'support' | 'hire';
+export type OrderKind = 'scan' | 'fix' | 'hire';
 
 /** One switch: Upwork profile when set, otherwise a prefilled email. */
 export function orderHref(kind: OrderKind = 'scan'): string {
   if (HAS_UPWORK) return UPWORK_URL;
   if (kind === 'hire' || kind === 'scan') return SCAN_MAIL;
   if (kind === 'fix') return FIX_MAIL;
-  if (kind === 'support') return SUPPORT_MAIL;
   return SCAN_MAIL;
 }
 
-/**
- * Fix tiers. Prices are the agreed offer. The sentences are plain scope,
- * still waiting on a final owner sign-off.
- */
+/** Fix tiers. Amounts come from PRICES. Scope lines are the owner's. */
 export const FIX_TIERS = [
   {
-    id: 't249',
-    price: '$249',
-    description: 'One problem. Login, or deploy, or a single payment bug.',
+    id: 'small',
+    name: 'Small fix',
+    min: PRICES.fix.small.min,
+    max: PRICES.fix.small.max,
+    price: formatRange(PRICES.fix.small.min, PRICES.fix.small.max),
+    description: 'One bug, login, or one page.',
   },
   {
-    id: 't399',
-    price: '$399',
-    description: 'A few connected problems. For example login and database access.',
+    id: 'medium',
+    name: 'Medium fix',
+    min: PRICES.fix.medium.min,
+    max: PRICES.fix.medium.max,
+    price: formatRange(PRICES.fix.medium.min, PRICES.fix.medium.max),
+    description: 'Stripe, Supabase access and row-level security, or several bugs.',
   },
   {
-    id: 't599',
-    price: '$599',
-    description: 'The whole launch: login, security, payments, and deploy.',
+    id: 'launch',
+    name: 'Full launch',
+    min: PRICES.fix.launch.min,
+    max: PRICES.fix.launch.max,
+    price: formatRange(PRICES.fix.launch.min, PRICES.fix.launch.max),
+    description: 'Finish the app and publish it.',
   },
 ] as const;
 
