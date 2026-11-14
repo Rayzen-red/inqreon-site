@@ -6,6 +6,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import remarkMarkers from './src/plugins/remark-markers.mjs';
 import remarkInternalLinks from './src/plugins/remark-internal-links.mjs';
+import { applyHreflang, DEFAULT_LOCALE, LOCALES } from './src/data/translations.mjs';
+import { indexableNews } from './src/data/news-translations.mjs';
 
 // GitHub Pages + собственный домен inqreon.com:
 //   site = https://inqreon.com, base = '/' (домен в корне, не /<repo>/).
@@ -77,6 +79,19 @@ for (const u of lastmod.keys()) validPaths.add(u.slice(SITE.length));
 validPaths.add('/en/');
 validPaths.add('/en/privacy/');
 
+// /en/ is a real page. News URLs come from published files only (drafts stay out
+// unless SHOW_DRAFTS=1). hreflang pairs live in src/data/translations.mjs.
+validPaths.add('/en/');
+validPaths.add('/news/');
+validPaths.add('/en/news/');
+for (const page of indexableNews()) {
+  validPaths.add(page.path);
+  const iso = new Date(`${page.date}T00:00:00.000Z`).toISOString();
+  lastmod.set(`${SITE}${page.path}`, iso);
+  const feed = page.lang === 'en' ? `${SITE}/en/news/` : `${SITE}/news/`;
+  if (!lastmod.has(feed) || iso > lastmod.get(feed)) lastmod.set(feed, iso);
+}
+
 export default defineConfig({
   site: SITE,
   base: '/',
@@ -91,11 +106,17 @@ export default defineConfig({
     sitemap({
       // noindex-страницы (пустые рубрики, 404, старые адреса) в карту сайта не попадают.
       // Политика конфиденциальности в карте есть: на неё ссылается уведомление о cookie.
-      filter: (page) => !page.includes('/404') && !legacyUrls.has(page) && !emptyRubricUrls.has(page),
+      filter: (page) => !page.includes('/404') && !page.endsWith('/rss.xml') && !legacyUrls.has(page) && !emptyRubricUrls.has(page),
+      // hreflang only for registered pairs that both exist in this build.
+      // applyHreflang also joins news articles whose slugs differ. See translations.mjs.
+      i18n: {
+        defaultLocale: DEFAULT_LOCALE,
+        locales: LOCALES,
+      },
       serialize(item) {
         const lm = lastmod.get(item.url) ?? staticLastmod.get(item.url);
         if (lm) item.lastmod = lm;
-        return item;
+        return applyHreflang(item, SITE);
       },
     }),
   ],

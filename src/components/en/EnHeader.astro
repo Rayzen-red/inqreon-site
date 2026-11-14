@@ -5,31 +5,36 @@ import { HAS_UPWORK } from '../../data/offer';
 interface Props {
   /** Russian alternate for this page. The landing page pairs with the Russian home. */
   ruHref?: string;
+  ruPaired?: boolean;
+  ruTitle?: string;
+  news?: boolean;
   /** Section links stay on this page. Other English pages point them at the landing page. */
   here?: boolean;
 }
-const { ruHref = '/', here = true } = Astro.props;
-const to = (id: string) => (here ? `#${id}` : `/en/#${id}`);
+const { ruHref = '/', ruPaired = true, ruTitle, news = false, here = true } = Astro.props;
+const to = (hash: string) => (news || !here ? `/en/${hash}` : hash);
 ---
 <header class="nav" id="nav">
   <div class="wrap">
     <a class="logo" href="/en/" aria-label="Inqreon"><span class="logo-mark" aria-hidden="true">iq</span>Inqreon</a>
     <nav class="nav-links" aria-label="Main">
-      <a href={to('rescue')}>How a rescue works</a>
-      <a href={to('pricing')}>Pricing</a>
-      <a href={to('case')}>Case</a>
-      <a href={to('faq')}>FAQ</a>
+      <a class="nav-news" href="/en/news/" aria-current={news ? 'page' : undefined}>News</a>
+      <a href={to('#rescue')}>How a rescue works</a>
+      <a href={to('#pricing')}>Pricing</a>
+      <a href={to('#case')}>Case</a>
+      <a href={to('#faq')}>FAQ</a>
     </nav>
     <div class="nav-right">
+      <a class="nav-news nav-news-bar" href="/en/news/" aria-current={news ? 'page' : undefined}>News</a>
       <div class="lang" role="group" aria-label="Language">
         <span lang="en" aria-current="true">EN</span>
-        <a href={ruHref} lang="ru" hreflang="ru">RU</a>
+        <a href={ruHref} lang="ru" hreflang={ruPaired ? 'ru' : undefined} aria-label={ruTitle}>RU</a>
       </div>
-      {HAS_UPWORK ? (
+      {!news && (HAS_UPWORK ? (
         <OrderLink kind="hire" variant="cta" size="sm" label="Hire on Upwork" />
       ) : (
         <OrderLink kind="scan" variant="cta" size="sm" label="Scan $79" />
-      )}
+      ))}
     </div>
   </div>
   <div class="progress" id="progress"></div>

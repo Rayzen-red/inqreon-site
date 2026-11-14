@@ -105,6 +105,13 @@ section { position: relative; scroll-margin-top: 84px; }
 .nav-links { display: flex; gap: 26px; margin-left: 12px; }
 .nav-links a { font-size: 14px; color: var(--muted); text-decoration: none; }
 .nav-links a:hover { color: var(--text); }
+.nav-news { font-size: 14px; color: var(--muted); text-decoration: none; white-space: nowrap; }
+.nav-news:hover, .nav-news[aria-current="page"] { color: var(--text); }
+.nav-news-bar { display: none; }
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .nav-news-bar { display: inline; }
+}
 .nav-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
 .lang { display: inline-flex; border: 1px solid var(--line2); border-radius: 999px; padding: 3px; font: 600 12px/1 var(--mono); }
 .lang a, .lang span { padding: 8px 11px; border-radius: 999px; color: var(--muted); letter-spacing: 0.06em; text-decoration: none; }

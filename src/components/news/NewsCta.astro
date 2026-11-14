@@ -1,0 +1,92 @@
+---
+import { EMAIL, HAS_UPWORK, TELEGRAM_URL, UPWORK_URL } from '../../data/offer';
+import { SITE } from '../../data/site';
+import { resolveCta, type NewsEntry } from '../../lib/news';
+
+interface Props {
+  entry: NewsEntry;
+  variant: 'light' | 'end';
+}
+const { entry, variant } = Astro.props;
+const lang = entry.data.lang;
+const cta = resolveCta(entry);
+const placement = variant;
+const service = '/en/';
+
+const primary = {
+  scan: {
+    href: service,
+    cta: 'scan' as const,
+    label: lang === 'ru' ? 'Заказать проверку' : 'Scan your app',
+  },
+  fix: {
+    href: service,
+    cta: 'fix' as const,
+    label: lang === 'ru' ? 'Заказать починку' : 'Fix the app',
+  },
+  telegram: {
+    href: TELEGRAM_URL,
+    cta: 'telegram' as const,
+    label: lang === 'ru' ? 'Написать в бот' : 'Message on Telegram',
+  },
+}[cta];
+
+const copy =
+  lang === 'ru'
+    ? {
+        light:
+          cta === 'fix'
+            ? 'Если это уже сломалось на живом сайте, можно починить.'
+            : cta === 'scan'
+              ? 'Перед запуском стоит проверить вход, оплату и выкладку.'
+              : 'Если проект уже почти готов, напишите — подскажем, что проверить перед запуском.',
+        title: cta === 'fix' ? 'Починим то, что ломается после выкладки' : cta === 'scan' ? 'Проверим проект перед запуском' : 'Напишите, если проект почти готов',
+        text: 'Доводим до запуска сайты и приложения из Lovable, Bolt, Cursor и v0: вход, безопасность, оплата и выкладка.',
+      }
+    : {
+        light:
+          cta === 'fix'
+            ? 'If this is already broken in production, we can fix it.'
+            : 'Want this checked on a project you are about to launch?',
+        title: cta === 'fix' ? 'Fix what production broke' : cta === 'telegram' ? 'Message us on Telegram' : 'Check the app before it goes live',
+        text: 'We look at login, security, payments, and deploy on apps built with Lovable, Bolt, Cursor, or v0.',
+      };
+---
+
+<aside class:list={['news-cta', variant === 'light' ? 'news-cta-light' : 'news-cta-end']} aria-label={lang === 'ru' ? 'Что можно сделать дальше' : 'What to do next'}>
+  {variant === 'end' ? <h2>{copy.title}</h2> : <p>{copy.light}</p>}
+  {variant === 'end' && <p>{copy.text}</p>}
+  <div class="news-cta-actions">
+    <a
+      class="news-btn news-btn-primary"
+      href={primary.href}
+      data-cta={primary.cta}
+      data-placement={placement}
+      data-telegram={primary.cta === 'telegram' ? 'bot' : undefined}
+      {...(primary.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+    >
+      {primary.label}
+    </a>
+    {variant === 'end' && primary.cta !== 'telegram' && (
+      <a class="news-btn" href={TELEGRAM_URL} data-telegram="bot" data-placement={placement} target="_blank" rel="noopener noreferrer">
+        {lang === 'ru' ? 'В бот' : 'Telegram'}
+      </a>
+    )}
+    {variant === 'end' && lang === 'ru' && (
+      <a class="news-btn" href={SITE.telegram} data-telegram="channel" data-placement={placement} target="_blank" rel="noopener noreferrer">
+        Канал
+      </a>
+    )}
+    {variant === 'end' && primary.cta === 'telegram' && (
+      <a class="news-btn" href={service} data-cta="scan" data-placement={placement}>
+        {lang === 'ru' ? 'Страница услуг' : 'Scan your app'}
+      </a>
+    )}
+    {variant === 'end' && lang === 'en' && HAS_UPWORK && (
+      <a class="news-btn" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">Upwork</a>
+    )}
+    {variant === 'end' && lang === 'en' && !HAS_UPWORK && (
+      <a class="news-btn" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+    )}
+  </div>
+</aside>

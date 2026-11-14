@@ -1,0 +1,30 @@
+---
+import NewsEnLayout from '../../../layouts/NewsEnLayout.astro';
+import NewsArticle from '../../../components/news/NewsArticle.astro';
+import { allNews, buildNewsSchema, isPublic, newsImage } from '../../../lib/news';
+
+export async function getStaticPaths() {
+  const entries = await allNews();
+  return entries
+    .filter((entry) => entry.data.lang === 'en' && isPublic(entry))
+    .map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const image = newsImage(entry.data.image);
+const meta = buildNewsSchema(entry, image);
+---
+
+<NewsEnLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  slug={entry.data.slug}
+  ogType="article"
+  ogImage={image}
+  ogImageAlt={image ? entry.data.imageAlt : undefined}
+  publishedTime={meta.published}
+  schema={meta.schema}
+  rssPath="/en/news/rss.xml"
+>
+  <NewsArticle entry={entry} />
+</NewsEnLayout>

@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import '../styles/concept-motion.css';
+import '../styles/news.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import NewsClicks from '../components/news/NewsClicks.astro';
+import NewsMeta from '../components/news/NewsMeta.astro';
+import { languageSwitch } from '../data/translations.mjs';
+import { SITE } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  slug?: string;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  ogImageAlt?: string;
+  publishedTime?: string;
+  schema?: object[];
+  rssPath: string;
+  prev?: string;
+  next?: string;
+}
+const props = Astro.props;
+const sw = languageSwitch(Astro.url.pathname);
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href="/concepts/fonts/xn7gYHE41ni1AdIRggOxSuXd.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/concepts/fonts/Yq6W-LOTXCb04q32xlpwv8ZfrxE.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/concepts/fonts.css" />
+    <NewsMeta lang="ru" ogImage={SITE.ogImage} {...props} />
+    <Analytics />
+  </head>
+  <body class="news-ru" data-news-lang="ru" data-news-slug={props.slug ?? ''}>
+    <a class="skip-link" href="#main">К содержанию</a>
+    <canvas id="stars" aria-hidden="true"></canvas>
+    <div class="cosmos">
+      <Header enHref={sw.href} enPaired={sw.paired} enTitle={sw.label} />
+      <main id="main" class="news-main">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+    <CookieBanner />
+    <script is:inline src="/concepts/stars.js"></script>
+    <script is:inline src="/concepts/motion.js"></script>
+    <NewsClicks />
+  </body>
+</html>
