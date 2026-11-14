@@ -16,7 +16,7 @@ tags:
   - openai
   - agents
 cta: scan
-draft: true
+draft: false
 ---
 
 OpenAI has started rolling out ChatGPT Wallet, a way for its agents — called dots — to complete a purchase on a user’s behalf without ever seeing the real card number. The launch is narrow, but it matters for anyone whose site or app will soon meet an AI agent at checkout. A storefront that looks fine in a preview can still fail here: the agent never reaches the cart, or the payment is declined because the risk system does not recognize a legitimate agent-led order.

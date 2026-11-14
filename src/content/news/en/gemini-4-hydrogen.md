@@ -20,7 +20,7 @@ tags:
   - google
   - gemini
 cta: scan
-draft: true
+draft: false
 ---
 
 Google has opened Gemini 4 Hydrogen, a faster member of its Gemini 4 family, to developers, businesses, and everyday users. The company positions it as a daily driver for coding and agent workflows — the work that happens between the big architectural decisions. For anyone prototyping a site or app with AI tools, the question is whether it can iterate quickly without inventing APIs or rewriting extra files.

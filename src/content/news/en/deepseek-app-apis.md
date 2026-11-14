@@ -16,7 +16,7 @@ tags:
   - deepseek
   - api
 cta: scan
-draft: true
+draft: false
 ---
 
 On November 13, 2026, DeepSeek told developers they no longer have to rebuild the basics of its consumer app. Search, file reading, link fetching, safety checks, and voice features that already power the DeepSeek App are now available through the company’s API, so a custom product can offer a similar conversation — or just the pieces it needs. For teams assembling a product in an AI builder, that is a shortcut: less time spent wiring a search provider, a document parser, and a speech layer before the actual product logic begins.
