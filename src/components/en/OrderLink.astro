@@ -1,0 +1,19 @@
+---
+import { HAS_UPWORK, orderHref, type OrderKind } from '../../data/offer';
+
+interface Props {
+  kind?: OrderKind;
+  label: string;
+  variant?: 'cta' | 'ghost';
+  size?: 'sm';
+}
+const { kind = 'scan', label, variant = 'ghost', size } = Astro.props;
+const href = orderHref(kind);
+---
+<a
+  class:list={['btn', variant === 'cta' && 'btn-cta', size === 'sm' && 'btn-sm']}
+  href={href}
+  {...(HAS_UPWORK ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+>
+  {label} <span class="arr" aria-hidden="true">{HAS_UPWORK ? '↗' : '→'}</span>
+</a>

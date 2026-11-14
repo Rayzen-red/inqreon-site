@@ -1,5 +1,6 @@
 ---
-import { UPWORK_URL } from '../../data/offer';
+import OrderLink from './OrderLink.astro';
+import { HAS_UPWORK } from '../../data/offer';
 ---
 <header class="nav" id="nav">
   <div class="wrap">
@@ -15,9 +16,11 @@ import { UPWORK_URL } from '../../data/offer';
         <span lang="en" aria-current="true">EN</span>
         <a href="/" lang="ru" hreflang="ru">RU</a>
       </div>
-      <a class="btn btn-cta btn-sm" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">
-        <span>Hire</span><span class="t-long">&nbsp;on Upwork</span>
-      </a>
+      {HAS_UPWORK ? (
+        <OrderLink kind="hire" variant="cta" size="sm" label="Hire on Upwork" />
+      ) : (
+        <OrderLink kind="scan" variant="cta" size="sm" label="Scan $79" />
+      )}
     </div>
   </div>
   <div class="progress" id="progress"></div>

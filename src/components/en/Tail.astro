@@ -1,12 +1,44 @@
 ---
-import { UPWORK_URL } from '../../data/offer';
-const faqs = [
-  ['Which projects do you take?', 'Apps and websites built with Lovable, Bolt, Cursor or v0, usually with Supabase and Stripe. If yours is built differently, start with a Scan and I will tell you honestly whether I can help.'],
-  ['Why no calls?', 'Written messages keep every decision on record and work across time zones. You get a written update every day, so you never have to chase me.'],
-  ['Do I have to share my passwords?', 'No. You invite me as a collaborator to your repo, Supabase and hosting. Accounts and keys stay yours, and you can remove my access at any time.'],
-  ['What if the Scan finds more than expected?', 'The price is agreed before work starts. If something new comes up, I describe it and quote it first. Nothing extra happens without your OK.'],
-  ['How do I pay?', 'Through Upwork, by fixed-price contract. Work, files and payment stay on the platform.'],
-  ['Who owns the code after the fix?', 'You do. Everything lives in your own repository and accounts.'],
+import { HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
+
+const faqs: Array<[string, string]> = [
+  [
+    'Which projects do you take?',
+    'Apps and websites built with Lovable, Bolt, Cursor, or v0, usually with Supabase and Stripe. If yours is different, start with a Scan and I’ll tell you plainly whether I can help.',
+  ],
+  [
+    'Why no calls?',
+    'Written messages keep every decision on record, and they work across time zones. Once a fix starts, you get a written update every day.',
+  ],
+  [
+    'Do I have to share passwords?',
+    'No. You invite me as a collaborator on the repo, Supabase, and hosting. Accounts and keys stay yours. You can remove my access at any time. Do not send passwords or secret keys in the first email.',
+  ],
+  [
+    'How fast is the Scan?',
+    'You get the written report before any repair starts. I do not promise a date until I have seen the app. After you approve a fix, you get a written update every day.',
+  ],
+  [
+    'What if you cannot fix it?',
+    'I say so in the Scan, before you pay for a fix. I do not start a repair I cannot finish.',
+  ],
+  [
+    'What if the Scan finds more than I expected?',
+    'The price is agreed before work starts. If something new shows up, I describe it and quote it first. Nothing extra happens without your OK.',
+  ],
+  HAS_UPWORK
+    ? [
+        'How do I pay?',
+        'On Upwork, by a fixed-price contract. Work, files, and payment stay on the platform.',
+      ]
+    : [
+        'How do I pay?',
+        'Email me to start the Scan. I confirm the price in writing before I start. A project link and a short description are enough. Telegram works for the same conversation.',
+      ],
+  [
+    'Who owns the code after the fix?',
+    'You do. Everything stays in your repository and your accounts.',
+  ],
 ];
 ---
 <section class="sec" style="padding-top:0" aria-labelledby="rules-h">
@@ -18,9 +50,13 @@ const faqs = [
     <div class="rules">
       <div class="rule rv"><span class="ix">01</span><b>Written messages only</b><p>No calls. Every decision stays on record.</p></div>
       <div class="rule rv"><span class="ix">02</span><b>Fixed price</b><p>Agreed before work starts. No hourly meter.</p></div>
-      <div class="rule rv"><span class="ix">03</span><b>Daily updates</b><p>Every day you know what was done.</p></div>
-      <div class="rule rv"><span class="ix">04</span><b>Your keys stay yours</b><p>You invite me; you can remove access anytime.</p></div>
-      <div class="rule rv"><span class="ix">05</span><b>Stays on Upwork</b><p>Work and payment never leave the platform.</p></div>
+      <div class="rule rv"><span class="ix">03</span><b>Daily updates</b><p>Every day of a fix, you know what was done.</p></div>
+      <div class="rule rv"><span class="ix">04</span><b>Your keys stay yours</b><p>You invite me. You can remove access at any time.</p></div>
+      {HAS_UPWORK ? (
+        <div class="rule rv"><span class="ix">05</span><b>Stays on Upwork</b><p>Work and payment stay on the platform.</p></div>
+      ) : (
+        <div class="rule rv"><span class="ix">05</span><b>You approve first</b><p>A link and what is broken are enough to start. No code changes until you approve the plan.</p></div>
+      )}
     </div>
   </div>
 </section>
@@ -30,7 +66,7 @@ const faqs = [
     <div class="rv">
       <span class="eyebrow">Case · my own project</span>
       <h2 id="case-h" style="margin-top:16px">inqreon.com</h2>
-      <p class="lead" style="margin-top:16px">An AI-built website with a Telegram bot. I built it with Cursor and took it all the way to production.</p>
+      <p class="lead" style="margin-top:16px">An AI-built website with a Telegram bot. I built it with Cursor and took it through domain, deploy, and a mobile layout. The site and the bot are live.</p>
       <dl>
         <dt>Role</dt><dd>Developer and designer</dd>
         <dt>Stack</dt><dd>Astro · GitHub Actions · GitHub Pages</dd>
@@ -38,7 +74,7 @@ const faqs = [
         <dt>Status</dt><dd>Site and bot are live</dd>
       </dl>
       <a class="btn" href="https://inqreon.com/" target="_blank" rel="noopener noreferrer">Open inqreon.com <span class="arr" aria-hidden="true">↗</span></a>
-      <p class="price-note">The site itself is a Russian-language blog about AI tools.</p>
+      <p class="price-note">The site itself is a Russian-language blog about AI tools. This is my own project, not a client.</p>
     </div>
     <div class="pipe rv" id="pipe" role="img" aria-label="Deploy pipeline: Cursor, GitHub, Actions, Pages, inqreon.com. A Telegram bot auto-posts to the channel.">
       <div class="pipe-row">
@@ -62,7 +98,7 @@ const faqs = [
   <div class="wrap">
     <div class="sec-head rv">
       <span class="eyebrow">FAQ</span>
-      <h2 id="faq-h">Questions before you hire</h2>
+      <h2 id="faq-h">Questions before you order</h2>
     </div>
     <div class="faq">
       {faqs.map(([q, a]) => (
@@ -72,6 +108,10 @@ const faqs = [
         </details>
       ))}
     </div>
-    <p class="price-note">Work is booked on <a href={UPWORK_URL}>Upwork</a>.</p>
+    <p class="price-note">
+      {HAS_UPWORK ? 'Work is booked on Upwork.' : 'Start by email, or message '}
+      {HAS_UPWORK ? null : <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram</a>}
+      {HAS_UPWORK ? null : '.'}
+    </p>
   </div>
 </section>

@@ -1,7 +1,7 @@
 ---
-import { FIX_TIERS, UPWORK_URL } from '../../data/offer';
+import OrderLink from './OrderLink.astro';
+import { FIX_TIERS, HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
 ---
-<!-- TO CONFIRM: Fix tier descriptions are a draft. See src/data/offer.ts. -->
 <section class="sec" id="pricing" aria-labelledby="price-h">
   <div class="wrap">
     <div class="sec-head rv">
@@ -13,15 +13,17 @@ import { FIX_TIERS, UPWORK_URL } from '../../data/offer';
         <span class="tag">Start here</span>
         <h3>Scan</h3>
         <div class="amt">$79</div>
+        <p class="tier-desc">A written report before any code changes: what is broken, who owns each account, and a fixed price for the repair.</p>
         <ul>
-          <li>Plain-English report of what is broken</li>
-          <li>Who owns which account and key</li>
-          <li>Fixed-price repair plan</li>
+          <li>What is broken, in plain English</li>
+          <li>Who owns each account and key</li>
+          <li>A fixed price for the repair</li>
+          <li>Nothing changes until you approve it</li>
         </ul>
-        <a class="btn" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">Order a Scan <span class="arr" aria-hidden="true">↗</span></a>
+        <OrderLink kind="scan" label="Order a Scan" />
       </article>
       <article class="pc feat rv">
-        <span class="tag">Repair &amp; launch</span>
+        <span class="tag">Repair and launch</span>
         <h3>Fix</h3>
         <div class="amt" id="fixAmt">{FIX_TIERS[0].price}</div>
         <fieldset class="tiers">
@@ -36,23 +38,27 @@ import { FIX_TIERS, UPWORK_URL } from '../../data/offer';
         <p class="tier-desc" id="tierDesc" aria-live="polite">{FIX_TIERS[0].description}</p>
         <ul>
           <li>Login, Supabase security, Stripe, deploy</li>
-          <li>Daily written progress updates</li>
-          <li>Tier is set after the Scan, before work starts</li>
+          <li>A written update every day</li>
+          <li>The tier is set after the Scan, before work starts</li>
         </ul>
-        <a class="btn btn-cta" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">Get my app fixed <span class="arr" aria-hidden="true">↗</span></a>
+        <OrderLink kind="fix" variant="cta" label="Get my app fixed" />
       </article>
       <article class="pc rv">
         <span class="tag">After launch</span>
-        <h3>Vault</h3>
+        <h3>Support</h3>
         <div class="amt">$19<small>/ month</small></div>
         <ul>
           <li>Backups</li>
           <li>Uptime checks</li>
-          <li>Monthly “what changed” note</li>
+          <li>A monthly note on what changed</li>
         </ul>
-        <a class="btn" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">Add Vault <span class="arr" aria-hidden="true">↗</span></a>
+        <OrderLink kind="support" label="Add Support" />
       </article>
     </div>
-    <p class="price-note">All work and payments go through Upwork.</p>
+    {HAS_UPWORK ? (
+      <p class="price-note">Work and payment stay on Upwork.</p>
+    ) : (
+      <p class="price-note">Email to start. The price is agreed in writing before I change anything. <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram</a> works too.</p>
+    )}
   </div>
 </section>

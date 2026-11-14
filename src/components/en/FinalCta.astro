@@ -1,16 +1,17 @@
 ---
 import Picture from './Picture.astro';
-import { EMAIL, UPWORK_URL } from '../../data/offer';
+import OrderLink from './OrderLink.astro';
+import { HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
 ---
-<section class="final" aria-labelledby="final-h">
+<section class="final" id="order" aria-labelledby="final-h">
   <div class="wrap final-grid">
     <div>
       <span class="eyebrow rv">Stuck before launch?</span>
-      <h2 id="final-h" class="rv">Let's get your app live.</h2>
-      <p class="lead rv">Start with a $79 Scan. You get a clear report and a fixed price for the fix, and you decide what happens next.</p>
+      <h2 id="final-h" class="rv">Start with a $79 Scan.</h2>
+      <p class="lead rv">You get a written report and a fixed price for the fix. Then you decide. No call, and no code changes until you approve the plan.</p>
       <div class="hero-ctas rv">
-        <a class="btn btn-cta" href={UPWORK_URL} target="_blank" rel="noopener noreferrer">Hire me on Upwork <span class="arr" aria-hidden="true">↗</span></a>
-        <a class="btn" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        <OrderLink kind="scan" variant="cta" label={HAS_UPWORK ? 'Hire me on Upwork' : 'Order a Scan — $79'} />
+        <a class="btn" href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram <span class="arr" aria-hidden="true">↗</span></a>
       </div>
     </div>
     <Picture
