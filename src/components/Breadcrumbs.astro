@@ -1,8 +1,8 @@
 ---
 interface Crumb { name: string; href?: string }
-const { items } = Astro.props as { items: Crumb[] };
+const { items, label = 'Хлебные крошки' } = Astro.props as { items: Crumb[]; label?: string };
 ---
-<nav class="breadcrumbs" aria-label="Хлебные крошки">
+<nav class="breadcrumbs" aria-label={label}>
   <ol>
     {items.map((c, i) => (
       <li>

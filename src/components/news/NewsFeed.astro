@@ -1,0 +1,70 @@
+---
+import LangSwitch from './LangSwitch.astro';
+import NewsCard from './NewsCard.astro';
+import { PAGE_SIZE, feedCopy, pagePath, pageWindow, type Lang, type NewsEntry } from '../../lib/news';
+
+interface Props {
+  lang: Lang;
+  items: NewsEntry[];
+  page: number;
+}
+const { lang, items, page } = Astro.props;
+const copy = feedCopy(lang, page);
+const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+const slice = items.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+const pages = pageWindow(page, totalPages);
+const prev = page > 1 ? pagePath(lang, page - 1) : undefined;
+const next = page < totalPages ? pagePath(lang, page + 1) : undefined;
+const empty =
+  lang === 'ru'
+    ? 'Пока нет опубликованных новостей. Они появятся здесь после проверки.'
+    : 'No stories published yet. They show up here after a check.';
+---
+
+<section class="news-feed news-wrap" aria-labelledby="news-heading">
+  <header class="news-feed-head">
+    <div class="news-article-tools">
+      <p class="news-kicker">{lang === 'ru' ? 'ИИ' : 'AI'}</p>
+      <LangSwitch />
+    </div>
+    <h1 id="news-heading">{copy.title}</h1>
+    <p class="lead">{copy.lead}</p>
+    <p class="news-rss"><a href={copy.rssPath}>{lang === 'ru' ? 'Лента RSS' : 'RSS feed'}</a></p>
+  </header>
+
+  {slice.length === 0 ? (
+    <div class="empty-state news-empty">
+      <p>{empty}</p>
+    </div>
+  ) : (
+    <div class="news-grid">
+      {slice.map((entry, index) => (
+        <NewsCard entry={entry} priority={page === 1 && index === 0 && !!entry.data.image} />
+      ))}
+    </div>
+  )}
+
+  {totalPages > 1 && (
+    <nav class="news-pager" aria-label={lang === 'ru' ? 'Страницы новостей' : 'News pages'}>
+      {prev ? (
+        <a rel="prev" href={prev}>{lang === 'ru' ? 'Назад' : 'Previous'}</a>
+      ) : (
+        <span class="news-pager-edge" aria-hidden="true">{lang === 'ru' ? 'Назад' : 'Previous'}</span>
+      )}
+      <ol>
+        {pages.map((item) => item === 'gap' ? (
+          <li aria-hidden="true"><span>…</span></li>
+        ) : item === page ? (
+          <li><span aria-current="page">{item}</span></li>
+        ) : (
+          <li><a href={pagePath(lang, item)}>{item}</a></li>
+        ))}
+      </ol>
+      {next ? (
+        <a rel="next" href={next}>{lang === 'ru' ? 'Ещё новости' : 'More news'}</a>
+      ) : (
+        <span class="news-pager-edge" aria-hidden="true">{lang === 'ru' ? 'Ещё новости' : 'More news'}</span>
+      )}
+    </nav>
+  )}
+</section>
