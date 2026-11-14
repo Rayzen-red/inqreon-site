@@ -11,8 +11,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  # upload-artifact / download-artifact for the IndexNow sitemap.
-  actions: write
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -42,12 +40,15 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-  # После успешного деплоя Pages. Google IndexNow не поддерживает — см. docs/indexing.md.
+  # После успешного деплоя Pages, в том числе при ручном запуске не с main:
+  # этот workflow публикует выбранный ref на боевой домен. Google IndexNow не
+  # поддерживает — см. docs/indexing.md. timeout-minutes ограничивает ожидание,
+  # если api.indexnow.org завис: группа concurrency `pages` иначе держит следующий деплой.
   # continue-on-error: неудачный ping не краснит деплой.
   indexnow:
     needs: deploy
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
