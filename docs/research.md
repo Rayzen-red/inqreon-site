@@ -18,11 +18,11 @@ Short notes from the references used to build `/en/`. Nothing here is a client c
 
 ## What the page takes from that
 
-Inqreon’s offer stays the one in the brief: Scan $79, Fix $249 / $399 / $599, support $19 a month, written messages only. Those prices are lower than the three shops above, and the page does not borrow their guarantees (pay when it works, refunds, hour SLAs, review scores). The proof on the page is the teardown itself and one real case: this site, built and shipped by the owner. No testimonials, logos, or counts.
+Inqreon’s offer is the one in `src/data/prices.ts`: a Scan, three Fix ranges (small, medium, full launch), and an hourly rate, written messages only. Monthly support is not part of the offer. The page does not borrow the other shops’ guarantees (pay when it works, refunds, hour SLAs, review scores). The proof on the page is the teardown itself and one real case: this site, built and shipped by the owner. No testimonials, logos, or counts.
 
 The failure list (login, open data, payments, deploy) matches how those shops describe the work, and it was already the concept’s list.
 
-Fix tier sentences are still a draft. See the note in `src/data/offer.ts` and the pull request. The concept names the $19 plan “Vault”; the brief says “support.” The page uses Vault until the owner picks the name.
+Fix tiers are small, medium, and full launch. Amounts live in `src/data/prices.ts`. The concept’s monthly “Vault” plan is not offered. Custom programs are on the services page in English (`/en/`) and Russian (`/uslugi/`). Amounts live in `src/data/prices.ts`. The large project is price on request.
 
 ## Approved renders
 

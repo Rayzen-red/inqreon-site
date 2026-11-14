@@ -7,9 +7,12 @@ import Rescue from '../../components/en/Rescue.astro';
 import Rest from '../../components/en/Rest.astro';
 import Process from '../../components/en/Process.astro';
 import Pricing from '../../components/en/Pricing.astro';
+import Automations from '../../components/en/Automations.astro';
 import FinalCta from '../../components/en/FinalCta.astro';
 import Tail from '../../components/en/Tail.astro';
-import { EMAIL, PAGE } from '../../data/offer';
+import { EMAIL, FIX_TIERS, PAGE } from '../../data/offer';
+import { automationOffers } from '../../data/automation';
+import { PRICES, SHOW_AUTOMATION_BLOCK } from '../../data/prices';
 import { SITE } from '../../data/site';
 
 const schema = [
@@ -22,11 +25,33 @@ const schema = [
     email: EMAIL,
     image: `${SITE.url}/images/en/og-share-1200x630.webp`,
     inLanguage: 'en',
-    priceRange: '$79–$599',
     makesOffer: [
-      { '@type': 'Offer', name: 'Scan', price: '79', priceCurrency: 'USD' },
-      { '@type': 'Offer', name: 'Fix', price: '249', priceCurrency: 'USD', description: 'From $249. The tier depends on scope, agreed before work starts.' },
-      { '@type': 'Offer', name: 'Support', price: '19', priceCurrency: 'USD' },
+      { '@type': 'Offer', name: 'Scan', price: String(PRICES.scan), priceCurrency: PRICES.currency },
+      ...FIX_TIERS.map((tier) => ({
+        '@type': 'Offer',
+        name: tier.name,
+        description: tier.description,
+        priceCurrency: PRICES.currency,
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          minPrice: String(tier.min),
+          maxPrice: String(tier.max),
+          priceCurrency: PRICES.currency,
+        },
+      })),
+      {
+        '@type': 'Offer',
+        name: 'Hourly',
+        priceCurrency: PRICES.currency,
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          minPrice: String(PRICES.hourly.min),
+          maxPrice: String(PRICES.hourly.max),
+          priceCurrency: PRICES.currency,
+          unitText: 'hour',
+        },
+      },
+      ...(SHOW_AUTOMATION_BLOCK ? automationOffers('en') : []),
     ],
   },
 ];
@@ -40,6 +65,7 @@ const schema = [
       <Rest />
       <Process />
       <Pricing />
+      <Automations />
       <Tail />
       <FinalCta />
     </main>

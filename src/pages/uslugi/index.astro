@@ -1,0 +1,37 @@
+---
+import EnLayout from '../../layouts/EnLayout.astro';
+import EnHeader from '../../components/en/EnHeader.astro';
+import EnFooter from '../../components/en/EnFooter.astro';
+import Automations from '../../components/en/Automations.astro';
+import { EMAIL } from '../../data/offer';
+import { automationOffers, automationSection } from '../../data/automation';
+import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice } from '../../data/prices';
+import { SITE } from '../../data/site';
+
+const heading = automationSection('ru').title;
+const title = `Inqreon — ${heading}`;
+const description = SHOW_AUTOMATION_BLOCK
+  ? `${heading}. Лёгкая программа — ${formatPrice(PRICES.automation.light)}. Средняя автоматизация — ${formatPrice(PRICES.automation.medium)}. Большой проект — цена по договорённости.`
+  : heading;
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: 'Inqreon',
+    url: `${SITE.url}/uslugi/`,
+    description,
+    email: EMAIL,
+    inLanguage: 'ru',
+    makesOffer: SHOW_AUTOMATION_BLOCK ? automationOffers('ru') : [],
+  },
+];
+---
+<EnLayout lang="ru" path="/uslugi/" title={title} description={description} schema={schema}>
+  <div class="page">
+    <EnHeader lang="ru" />
+    <main id="main" class="programs-page">
+      <Automations lang="ru" />
+    </main>
+    <EnFooter lang="ru" />
+  </div>
+</EnLayout>
