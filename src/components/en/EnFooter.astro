@@ -19,6 +19,11 @@ const mailHref = HAS_UPWORK ? UPWORK_URL : plainMail ? `mailto:${EMAIL}` : SCAN_
       <a href={lang === 'ru' ? '/news/' : '/en/news/'}>{lang === 'ru' ? 'Новости' : 'News'}</a>
       <a href={mailHref}>{HAS_UPWORK ? 'Upwork' : EMAIL}</a>
       <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram</a>
+      {lang === 'ru' ? (
+        <a href="/politika-konfidencialnosti/">Политика конфиденциальности</a>
+      ) : (
+        <a href="/en/privacy/">Privacy policy</a>
+      )}
     </span>
   </div>
 </footer>

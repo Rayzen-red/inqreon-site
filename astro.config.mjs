@@ -62,6 +62,7 @@ const stamp = (urlPath, file) => {
   if (fs.existsSync(full)) staticLastmod.set(`${SITE}${urlPath}`, fs.statSync(full).mtime.toISOString());
 };
 stamp('/en/', 'src/pages/en/index.astro');
+stamp('/en/privacy/', 'src/pages/en/privacy.astro');
 stamp('/o-proekte/', 'src/pages/o-proekte.astro');
 stamp('/kontakty/', 'src/pages/kontakty.astro');
 stamp('/redakcionnaya-politika/', 'src/pages/redakcionnaya-politika.astro');
@@ -80,6 +81,7 @@ for (const u of lastmod.keys()) validPaths.add(u.slice(SITE.length));
 // /en/ is a real page. News URLs come from published files only (drafts stay out
 // unless SHOW_DRAFTS=1). hreflang pairs live in src/data/translations.mjs.
 validPaths.add('/en/');
+validPaths.add('/en/privacy/');
 validPaths.add('/news/');
 validPaths.add('/en/news/');
 for (const page of indexableNews()) {

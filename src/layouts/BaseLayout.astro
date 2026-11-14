@@ -6,7 +6,7 @@ import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import { SITE } from '../data/site';
-import { hreflangLinks } from '../data/translations.mjs';
+import { alternatePath, hreflangLinks } from '../data/translations.mjs';
 
 interface Props {
   title: string;
@@ -36,6 +36,7 @@ const is404 = Astro.url.pathname.replace(/\/$/, '').endsWith('/404');
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImageUrl = new URL(ogImage, SITE.url).href;
 const alternates = is404 ? [] : hreflangLinks(Astro.url.pathname, SITE.url);
+const enHref = (!is404 && alternatePath(Astro.url.pathname)) || '/en/';
 ---
 <!doctype html>
 <html lang={SITE.lang}>
@@ -78,7 +79,7 @@ const alternates = is404 ? [] : hreflangLinks(Astro.url.pathname, SITE.url);
     <a class="skip-link" href="#main">К содержанию</a>
     <canvas id="stars" aria-hidden="true"></canvas>
     <div class="cosmos">
-      <Header />
+      <Header enHref={enHref} />
       <main id="main">
         <slot />
       </main>

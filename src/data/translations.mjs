@@ -32,6 +32,8 @@ export const LOCALES = {
 export const TRANSLATIONS = [
   { translationKey: 'home', path: '/', xDefault: 'en' },
   { translationKey: 'news', path: '/news/', xDefault: 'en' },
+  // English slug is /privacy/, not /politika-konfidencialnosti/.
+  { translationKey: 'privacy', path: '/politika-konfidencialnosti/', xDefault: 'en', locales: { en: '/privacy/' } },
   ...newsTranslationRows(),
 ];
 

@@ -6,10 +6,13 @@ import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice } from '../../data/prices';
 
 interface Props {
   lang?: 'en' | 'ru';
+  /** Russian alternate for this page. Defaults to the Russian service page when that block is on. */
   ruHref?: string;
   ruPaired?: boolean;
   ruTitle?: string;
   news?: boolean;
+  /** Section links stay on this page. Other English pages point them at the landing page. */
+  here?: boolean;
 }
 const {
   lang = 'en',
@@ -17,8 +20,9 @@ const {
   ruPaired = true,
   ruTitle,
   news = false,
+  here = true,
 } = Astro.props;
-const to = (hash: string) => (news ? `/en/${hash}` : hash);
+const to = (hash: string) => (news || !here ? `/en/${hash}` : hash);
 const resolvedRu = ruHref ?? (SHOW_AUTOMATION_BLOCK ? SERVICE_PATH.ru : '/');
 ---
 <header class="nav" id="nav">
