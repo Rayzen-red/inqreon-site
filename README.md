@@ -18,5 +18,6 @@ npm run preview                             # локальный просмот�
 - `src/plugins/remark-internal-links.mjs` — скрывает внутренние ссылки на страницы, которых нет в сборке (список URL формируется в `astro.config.mjs`).
 - `src/lib/ad.mjs`, `src/components/AdCard.astro`, `src/data/ads.json` — рекламная карточка «Реклама» + рекламодатель + erid (`rel="sponsored nofollow"`); `[PARTNER: Имя]` в статье превращается в карточку, когда запись `Имя` в `ads.json` заполнена (href, erid, advertiser, title).
 - `scripts/check_links.py` — проверка, что внутренние ссылки в `dist/` не ведут на 404.
-- `public/` — CNAME, robots.txt, .nojekyll, favicon.svg, og-default.png.
+- `public/` — CNAME, robots.txt, ключ IndexNow (`<key>.txt`), .nojekyll, favicon.svg, og-default.png.
+- Индексация: каждый деплой заново собирает `sitemap-index.xml` (и копию `sitemap.xml`) и после публикации на Pages отправляет URL в IndexNow (Bing, Yandex и другие). Google IndexNow не поддерживает и больше не принимает ping карты сайта — карту нужно один раз отправить в [Google Search Console](https://search.google.com/search-console): `https://inqreon.com/sitemap-index.xml`. Дальше Google перечитывает её сам. Подробности: `docs/indexing.md`.
 - Файлы в `src/content/articles/` генерируются скриптом — правьте исходники `../article-XX.md`.

@@ -11,6 +11,8 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  # upload-artifact / download-artifact for the IndexNow sitemap.
+  actions: write
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -23,6 +25,14 @@ jobs:
         with:
           path: .
           node-version: 22
+      # IndexNow читает карту уже собранного сайта, а не пересобирает её.
+      - name: Upload sitemap for IndexNow
+        uses: actions/upload-artifact@v4
+        with:
+          name: sitemap
+          path: dist/sitemap*.xml
+          if-no-files-found: error
+          retention-days: 7
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -32,3 +42,21 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+  # После успешного деплоя Pages. Google IndexNow не поддерживает — см. docs/indexing.md.
+  # continue-on-error: неудачный ping не краснит деплой.
+  indexnow:
+    needs: deploy
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: sitemap
+          path: dist
+      - name: Submit sitemap URLs to IndexNow
+        continue-on-error: true
+        run: node scripts/indexnow.mjs

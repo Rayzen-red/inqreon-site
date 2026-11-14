@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import { SITE } from '../data/site';
+import { hreflangLinks } from '../data/translations.mjs';
 
 interface Props {
   title: string;
@@ -34,8 +35,7 @@ const fullTitle = withBrand && !title.includes(SITE.name) ? `${title} — ${SITE
 const is404 = Astro.url.pathname.replace(/\/$/, '').endsWith('/404');
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImageUrl = new URL(ogImage, SITE.url).href;
-const bare = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const paired = bare === '/';
+const alternates = is404 ? [] : hreflangLinks(Astro.url.pathname, SITE.url);
 ---
 <!doctype html>
 <html lang={SITE.lang}>
@@ -45,9 +45,7 @@ const paired = bare === '/';
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     {!is404 && <link rel="canonical" href={canonical} />}
-    {paired && <link rel="alternate" hreflang="ru" href={`${SITE.url}/`} />}
-    {paired && <link rel="alternate" hreflang="en" href={`${SITE.url}/en/`} />}
-    {paired && <link rel="alternate" hreflang="x-default" href={`${SITE.url}/en/`} />}
+    {alternates.map((alt) => <link rel="alternate" hreflang={alt.lang} href={alt.href} />)}
     {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="/concepts/fonts/xn7gYHE41ni1AdIRggOxSuXd.woff2" as="font" type="font/woff2" crossorigin />
@@ -59,7 +57,7 @@ const paired = bare === '/';
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:locale" content={SITE.locale} />
-    {paired && <meta property="og:locale:alternate" content="en_US" />}
+    {alternates.some((alt) => alt.lang === 'en') && <meta property="og:locale:alternate" content="en_US" />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {!is404 && <meta property="og:url" content={canonical} />}

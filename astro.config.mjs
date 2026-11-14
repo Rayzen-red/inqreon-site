@@ -4,8 +4,10 @@ import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import remarkMarkers from './src/plugins/remark-markers.mjs';
 import remarkInternalLinks from './src/plugins/remark-internal-links.mjs';
+import { DEFAULT_LOCALE, LOCALES, translationForPath } from './src/data/translations.mjs';
 
 // GitHub Pages + собственный домен inqreon.com:
 //   site = https://inqreon.com, base = '/' (домен в корне, не /<repo>/).
@@ -74,6 +76,25 @@ for (const f of fs.readdirSync(pagesDir)) {
 RUBRICS.filter((r) => filledRubrics.has(r)).forEach((r) => validPaths.add(`/${r}/`));
 for (const u of lastmod.keys()) validPaths.add(u.slice(SITE.length));
 
+// Many crawlers request /sitemap.xml. @astrojs/sitemap writes sitemap-index.xml.
+function sitemapXmlAlias() {
+  return {
+    name: 'sitemap-xml-alias',
+    hooks: {
+      'astro:build:done': async ({ dir, logger }) => {
+        const dest = fileURLToPath(dir);
+        const index = path.join(dest, 'sitemap-index.xml');
+        if (!fs.existsSync(index)) {
+          logger.warn('sitemap-index.xml missing; /sitemap.xml alias was not written.');
+          return;
+        }
+        fs.copyFileSync(index, path.join(dest, 'sitemap.xml'));
+        logger.info('Copied sitemap-index.xml to sitemap.xml');
+      },
+    },
+  };
+}
+
 export default defineConfig({
   site: SITE,
   base: '/',
@@ -86,14 +107,31 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      // Черновики не становятся страницами (getStaticPaths их отфильтровывает).
       // noindex-страницы (пустые рубрики, 404, старые адреса) в карту сайта не попадают.
       // Политика конфиденциальности в карте есть: на неё ссылается уведомление о cookie.
       filter: (page) => !page.includes('/404') && !legacyUrls.has(page) && !emptyRubricUrls.has(page),
+      // hreflang только у пар с общим translation key (path без префикса локали)
+      // и только если обе версии реально есть в сборке. См. src/data/translations.mjs.
+      i18n: {
+        defaultLocale: DEFAULT_LOCALE,
+        locales: LOCALES,
+      },
       serialize(item) {
         const lm = lastmod.get(item.url) ?? staticLastmod.get(item.url);
         if (lm) item.lastmod = lm;
+        const pair = translationForPath(new URL(item.url).pathname);
+        if (!pair || !item.links || item.links.length < 2) {
+          delete item.links;
+          return item;
+        }
+        const fallback = item.links.find((link) => link.lang === pair.xDefault);
+        if (fallback && !item.links.some((link) => link.lang === 'x-default')) {
+          item.links = [...item.links, { lang: 'x-default', url: fallback.url }];
+        }
         return item;
       },
     }),
+    sitemapXmlAlias(),
   ],
 });

@@ -13,6 +13,7 @@
     "astro": "astro",
     "sync": "python3 scripts/sync_articles.py",
     "check:links": "python3 scripts/check_links.py",
+    "indexnow": "node scripts/indexnow.mjs",
     "release-check": "python3 scripts/sync_articles.py && astro build && python3 scripts/check_links.py"
   },
   "dependencies": {

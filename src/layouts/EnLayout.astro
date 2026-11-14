@@ -5,6 +5,7 @@ import '../styles/en.css';
 import Analytics from '../components/Analytics.astro';
 import { SITE } from '../data/site';
 import { PAGE } from '../data/offer';
+import { hreflangLinks } from '../data/translations.mjs';
 
 interface Props {
   title?: string;
@@ -12,7 +13,9 @@ interface Props {
   schema?: object[];
 }
 const { title = PAGE.title, description = PAGE.description, schema = [] } = Astro.props;
-const canonical = new URL('/en/', SITE.url).href;
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const canonical = new URL(path, SITE.url).href;
+const alternates = hreflangLinks(path, SITE.url);
 const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
 ---
 <!doctype html>
@@ -23,16 +26,14 @@ const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en" href={canonical} />
-    <link rel="alternate" hreflang="ru" href={`${SITE.url}/`} />
-    <link rel="alternate" hreflang="x-default" href={canonical} />
+    {alternates.map((alt) => <link rel="alternate" hreflang={alt.lang} href={alt.href} />)}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#08090b" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:locale:alternate" content="ru_RU" />
+    {alternates.some((alt) => alt.lang === 'ru') && <meta property="og:locale:alternate" content="ru_RU" />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
