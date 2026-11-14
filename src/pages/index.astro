@@ -18,15 +18,19 @@ const articles = (await getCollection('articles', ({ data }) => !data.draft)).so
 const filled = new Set(articles.map((a) => a.data.rubric));
 const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
 const space = RUBRICS.find((r) => r.slug === 'kosmos-i-nauka');
+const showSpace = Boolean(space && filled.has(space.slug));
+const homeTitle = `${SITE.name} — Нейросети для работы и учёбы`;
+const homeDescription =
+  'Inqreon — нейросети для работы и учёбы: обзоры, сравнения, цены с датой проверки и промпты.';
 const schema = [
-  { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url + '/', inLanguage: 'ru', description: SITE.description },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url + '/', inLanguage: 'ru', description: homeDescription },
   { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url + '/', sameAs: [SITE.telegram, SITE.youtube] },
 ];
 ---
-<BaseLayout title={`${SITE.name} — ${SITE.tagline}`} description={SITE.description} withBrand={false} schema={schema}>
+<BaseLayout title={homeTitle} description={homeDescription} withBrand={false} schema={schema}>
   <header class="container home-intro">
-    <h1>Нейросети для работы и учёбы в России и СНГ</h1>
-    <p class="lead">{SITE.description}</p>
+    <h1>Нейросети для работы и учёбы</h1>
+    <p class="lead">{homeDescription}</p>
   </header>
   <section class="hero container" data-slider aria-roledescription="карусель" aria-label="Избранные материалы">
     <div class="hero-frame">
@@ -98,14 +102,14 @@ const schema = [
     </div>
   </section>
 
-  {space && (
+  {showSpace && space && (
     <section class="space-band container" data-reveal>
       <img src={SPACE_IMAGES[2].src} alt={SPACE_IMAGES[2].alt} width={SPACE_IMAGES[2].width} height={SPACE_IMAGES[2].height} loading="lazy" decoding="async" />
       <div>
         <p class="kicker"><RubricIcon slug={space.slug} /> {space.name}</p>
         <h2>Рубрика, в которую хочется возвращаться</h2>
         <p>{space.description}</p>
-        {filled.has(space.slug) && <a class="btn" href={`/${space.slug}/`}>Открыть рубрику</a>}
+        <a class="btn" href={`/${space.slug}/`}>Открыть рубрику</a>
       </div>
     </section>
   )}
