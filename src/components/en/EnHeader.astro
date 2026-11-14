@@ -1,26 +1,37 @@
 ---
 import OrderLink from './OrderLink.astro';
 import { HAS_UPWORK } from '../../data/offer';
+
+interface Props {
+  ruHref?: string;
+  ruPaired?: boolean;
+  ruTitle?: string;
+  news?: boolean;
+}
+const { ruHref = '/', ruPaired = true, ruTitle, news = false } = Astro.props;
+const to = (hash: string) => (news ? `/en/${hash}` : hash);
 ---
 <header class="nav" id="nav">
   <div class="wrap">
     <a class="logo" href="/en/" aria-label="Inqreon"><span class="logo-mark" aria-hidden="true">iq</span>Inqreon</a>
     <nav class="nav-links" aria-label="Main">
-      <a href="#rescue">How a rescue works</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#case">Case</a>
-      <a href="#faq">FAQ</a>
+      <a class="nav-news" href="/en/news/" aria-current={news ? 'page' : undefined}>News</a>
+      <a href={to('#rescue')}>How a rescue works</a>
+      <a href={to('#pricing')}>Pricing</a>
+      <a href={to('#case')}>Case</a>
+      <a href={to('#faq')}>FAQ</a>
     </nav>
     <div class="nav-right">
+      <a class="nav-news nav-news-bar" href="/en/news/" aria-current={news ? 'page' : undefined}>News</a>
       <div class="lang" role="group" aria-label="Language">
         <span lang="en" aria-current="true">EN</span>
-        <a href="/" lang="ru" hreflang="ru">RU</a>
+        <a href={ruHref} lang="ru" hreflang={ruPaired ? 'ru' : undefined} aria-label={ruTitle}>RU</a>
       </div>
-      {HAS_UPWORK ? (
+      {!news && (HAS_UPWORK ? (
         <OrderLink kind="hire" variant="cta" size="sm" label="Hire on Upwork" />
       ) : (
         <OrderLink kind="scan" variant="cta" size="sm" label="Scan $79" />
-      )}
+      ))}
     </div>
   </div>
   <div class="progress" id="progress"></div>

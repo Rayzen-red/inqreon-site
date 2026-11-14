@@ -7,7 +7,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import remarkMarkers from './src/plugins/remark-markers.mjs';
 import remarkInternalLinks from './src/plugins/remark-internal-links.mjs';
-import { DEFAULT_LOCALE, LOCALES, translationForPath } from './src/data/translations.mjs';
+import { applyHreflang, DEFAULT_LOCALE, LOCALES } from './src/data/translations.mjs';
+import { indexableNews } from './src/data/news-translations.mjs';
 
 // GitHub Pages + собственный домен inqreon.com:
 //   site = https://inqreon.com, base = '/' (домен в корне, не /<repo>/).
@@ -76,6 +77,19 @@ for (const f of fs.readdirSync(pagesDir)) {
 RUBRICS.filter((r) => filledRubrics.has(r)).forEach((r) => validPaths.add(`/${r}/`));
 for (const u of lastmod.keys()) validPaths.add(u.slice(SITE.length));
 
+// /en/ is a real page. News URLs come from published files only (drafts stay out
+// unless SHOW_DRAFTS=1). hreflang pairs live in src/data/translations.mjs.
+validPaths.add('/en/');
+validPaths.add('/news/');
+validPaths.add('/en/news/');
+for (const page of indexableNews()) {
+  validPaths.add(page.path);
+  const iso = new Date(`${page.date}T00:00:00.000Z`).toISOString();
+  lastmod.set(`${SITE}${page.path}`, iso);
+  const feed = page.lang === 'en' ? `${SITE}/en/news/` : `${SITE}/news/`;
+  if (!lastmod.has(feed) || iso > lastmod.get(feed)) lastmod.set(feed, iso);
+}
+
 // Many crawlers request /sitemap.xml. @astrojs/sitemap writes sitemap-index.xml.
 function sitemapXmlAlias() {
   return {
@@ -107,12 +121,11 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // Черновики не становятся страницами (getStaticPaths их отфильтровывает).
       // noindex-страницы (пустые рубрики, 404, старые адреса) в карту сайта не попадают.
       // Политика конфиденциальности в карте есть: на неё ссылается уведомление о cookie.
-      filter: (page) => !page.includes('/404') && !legacyUrls.has(page) && !emptyRubricUrls.has(page),
-      // hreflang только у пар с общим translation key (path без префикса локали)
-      // и только если обе версии реально есть в сборке. См. src/data/translations.mjs.
+      filter: (page) => !page.includes('/404') && !page.endsWith('/rss.xml') && !legacyUrls.has(page) && !emptyRubricUrls.has(page),
+      // hreflang only for registered pairs that both exist in this build.
+      // applyHreflang also joins news articles whose slugs differ. See translations.mjs.
       i18n: {
         defaultLocale: DEFAULT_LOCALE,
         locales: LOCALES,
@@ -120,16 +133,7 @@ export default defineConfig({
       serialize(item) {
         const lm = lastmod.get(item.url) ?? staticLastmod.get(item.url);
         if (lm) item.lastmod = lm;
-        const pair = translationForPath(new URL(item.url).pathname);
-        if (!pair || !item.links || item.links.length < 2) {
-          delete item.links;
-          return item;
-        }
-        const fallback = item.links.find((link) => link.lang === pair.xDefault);
-        if (fallback && !item.links.some((link) => link.lang === 'x-default')) {
-          item.links = [...item.links, { lang: 'x-default', url: fallback.url }];
-        }
-        return item;
+        return applyHreflang(item, SITE);
       },
     }),
     sitemapXmlAlias(),
