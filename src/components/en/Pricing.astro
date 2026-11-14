@@ -1,6 +1,7 @@
 ---
 import OrderLink from './OrderLink.astro';
 import { FIX_TIERS, HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
+import { PRICES, formatPrice } from '../../data/prices';
 ---
 <section class="sec" id="pricing" aria-labelledby="price-h">
   <div class="wrap">
@@ -12,7 +13,7 @@ import { FIX_TIERS, HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
       <article class="pc rv">
         <span class="tag">Start here</span>
         <h3>Scan</h3>
-        <div class="amt">$79</div>
+        <div class="amt">{formatPrice(PRICES.scan)}</div>
         <p class="tier-desc">A written report before any code changes: what is broken, who owns each account, and a fixed price for the repair.</p>
         <ul>
           <li>What is broken, in plain English</li>
@@ -46,7 +47,7 @@ import { FIX_TIERS, HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
       <article class="pc rv">
         <span class="tag">After launch</span>
         <h3>Support</h3>
-        <div class="amt">$19<small>/ month</small></div>
+        <div class="amt">{formatPrice(PRICES.support)}<small>/ month</small></div>
         <ul>
           <li>Backups</li>
           <li>Uptime checks</li>

@@ -1,6 +1,7 @@
 ---
 import OrderLink from './OrderLink.astro';
 import { HAS_UPWORK } from '../../data/offer';
+import { PRICES, formatPrice } from '../../data/prices';
 ---
 <header class="nav" id="nav">
   <div class="wrap">
@@ -19,7 +20,7 @@ import { HAS_UPWORK } from '../../data/offer';
       {HAS_UPWORK ? (
         <OrderLink kind="hire" variant="cta" size="sm" label="Hire on Upwork" />
       ) : (
-        <OrderLink kind="scan" variant="cta" size="sm" label="Scan $79" />
+        <OrderLink kind="scan" variant="cta" size="sm" label={`Scan ${formatPrice(PRICES.scan)}`} />
       )}
     </div>
   </div>

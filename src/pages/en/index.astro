@@ -10,6 +10,7 @@ import Pricing from '../../components/en/Pricing.astro';
 import FinalCta from '../../components/en/FinalCta.astro';
 import Tail from '../../components/en/Tail.astro';
 import { EMAIL, PAGE } from '../../data/offer';
+import { PRICES, formatPrice } from '../../data/prices';
 import { SITE } from '../../data/site';
 
 const schema = [
@@ -22,11 +23,11 @@ const schema = [
     email: EMAIL,
     image: `${SITE.url}/images/en/og-share-1200x630.webp`,
     inLanguage: 'en',
-    priceRange: '$79–$599',
+    priceRange: `${formatPrice(PRICES.scan)}–${formatPrice(PRICES.fix.high)}`,
     makesOffer: [
-      { '@type': 'Offer', name: 'Scan', price: '79', priceCurrency: 'USD' },
-      { '@type': 'Offer', name: 'Fix', price: '249', priceCurrency: 'USD', description: 'From $249. The tier depends on scope, agreed before work starts.' },
-      { '@type': 'Offer', name: 'Support', price: '19', priceCurrency: 'USD' },
+      { '@type': 'Offer', name: 'Scan', price: String(PRICES.scan), priceCurrency: PRICES.currency },
+      { '@type': 'Offer', name: 'Fix', price: String(PRICES.fix.low), priceCurrency: PRICES.currency, description: `From ${formatPrice(PRICES.fix.low)}. The tier depends on scope, agreed before work starts.` },
+      { '@type': 'Offer', name: 'Support', price: String(PRICES.support), priceCurrency: PRICES.currency },
     ],
   },
 ];

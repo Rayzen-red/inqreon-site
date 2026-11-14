@@ -1,11 +1,12 @@
 ---
 import Picture from './Picture.astro';
+import { PRICES, formatPrice } from '../../data/prices';
 const steps = [
   {
     n: '01',
     name: 'bot-scan',
     title: 'Scan',
-    price: '$79',
+    price: formatPrice(PRICES.scan),
     alt: 'Scan agent: a small glass robot with a lime scanning beam across its eyes.',
     text: 'You give me read-only access. I send a written report: what is broken, who owns each account, and a fixed price. Nothing changes until you approve it.',
   },
@@ -13,7 +14,7 @@ const steps = [
     n: '02',
     name: 'bot-fix',
     title: 'Fix',
-    price: '$249 / $399 / $599',
+    price: `${formatPrice(PRICES.fix.low)} / ${formatPrice(PRICES.fix.mid)} / ${formatPrice(PRICES.fix.high)}`,
     alt: 'Fix agent: the same glass robot, with stylus tools and lime sparks.',
     text: 'You approve the plan and the price. I repair the app and send a written update every day.',
   },
@@ -21,9 +22,9 @@ const steps = [
     n: '03',
     name: 'bot-launch',
     title: 'Launch',
-    price: 'Support $19/mo if you want it',
+    price: `Support ${formatPrice(PRICES.support)}/mo if you want it`,
     alt: 'Launch agent: the same glass robot, brighter, with a mint glow.',
-    text: 'The app goes live on your domain. You get a short handover note. Support is $19 a month for backups, uptime checks, and a monthly note.',
+    text: `The app goes live on your domain. You get a short handover note. Support is ${formatPrice(PRICES.support)} a month for backups, uptime checks, and a monthly note.`,
   },
 ];
 ---

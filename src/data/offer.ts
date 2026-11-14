@@ -4,7 +4,10 @@
  * PUBLIC_UPWORK_URL is the only Upwork setting. When it is empty, the page
  * does not link to upwork.com. The order button opens email instead.
  * Only the PUBLIC_ prefix is exposed to the browser.
+ * Prices live in ./prices.ts — do not write a dollar amount in this file.
  */
+import { PRICES, formatPrice } from './prices';
+
 const raw = (import.meta.env.PUBLIC_UPWORK_URL || '') as string;
 
 export const UPWORK_URL = raw.trim();
@@ -16,7 +19,7 @@ export const TELEGRAM_URL = 'https://t.me/Inqreon_bot';
 export const PAGE = {
   title: 'Inqreon — I fix AI-built websites and apps',
   description:
-    'Your Lovable, Bolt, Cursor or v0 project works in preview but breaks for real users. I get it production-ready: login, security, payments and deploy. Written messages only, fixed price. A Scan is $79.',
+    `Your Lovable, Bolt, Cursor or v0 project works in preview but breaks for real users. I get it production-ready: login, security, payments and deploy. Written messages only, fixed price. A Scan is ${formatPrice(PRICES.scan)}.`,
 };
 
 function mailto(subject: string, body: string): string {
@@ -27,7 +30,7 @@ export const SCAN_MAIL = mailto(
   'Scan request — AI-built app',
   `Hi,
 
-I'd like a $79 Scan.
+I'd like a ${formatPrice(PRICES.scan)} Scan.
 
 Project link:
 Built with (Lovable, Bolt, Cursor, or v0):
@@ -52,10 +55,10 @@ I won't send passwords or secret keys in this email.
 );
 
 export const SUPPORT_MAIL = mailto(
-  'Support request — $19/month',
+  `Support request — ${formatPrice(PRICES.support)}/month`,
   `Hi,
 
-I'd like Support at $19/month after the app is live.
+I'd like Support at ${formatPrice(PRICES.support)}/month after the app is live.
 
 Project link:
 `,
@@ -73,23 +76,23 @@ export function orderHref(kind: OrderKind = 'scan'): string {
 }
 
 /**
- * Fix tiers. Prices are the agreed offer. The sentences are plain scope,
+ * Fix tiers. Amounts come from PRICES. The sentences are plain scope,
  * still waiting on a final owner sign-off.
  */
 export const FIX_TIERS = [
   {
-    id: 't249',
-    price: '$249',
+    id: `t${PRICES.fix.low}`,
+    price: formatPrice(PRICES.fix.low),
     description: 'One problem. Login, or deploy, or a single payment bug.',
   },
   {
-    id: 't399',
-    price: '$399',
+    id: `t${PRICES.fix.mid}`,
+    price: formatPrice(PRICES.fix.mid),
     description: 'A few connected problems. For example login and database access.',
   },
   {
-    id: 't599',
-    price: '$599',
+    id: `t${PRICES.fix.high}`,
+    price: formatPrice(PRICES.fix.high),
     description: 'The whole launch: login, security, payments, and deploy.',
   },
 ] as const;
