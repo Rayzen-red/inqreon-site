@@ -1,0 +1,44 @@
+---
+import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice } from '../../data/prices';
+
+const lights = PRICES.automation.lightPrograms.map((amount, index) => ({
+  name: `Light program ${index + 1}`,
+  tag: amount === null ? 'Placeholder' : 'Fixed price',
+  words: amount === null,
+  price: amount === null ? 'Price not approved' : formatPrice(amount),
+  text: 'A small program or automation, at a fixed price. Scope is not set yet.',
+}));
+const pending = lights.some((item) => item.words);
+const cards = [
+  ...lights,
+  {
+    name: 'Large project',
+    tag: 'On request',
+    words: true,
+    price: 'Price on request',
+    text: 'A larger program or automation, quoted for the request.',
+  },
+];
+---
+{SHOW_AUTOMATION_BLOCK && (
+  <section class="sec" id="programs" aria-labelledby="programs-h">
+    <div class="wrap">
+      <div class="sec-head rv">
+        {pending && <span class="eyebrow">Preview</span>}
+        <h2 id="programs-h">Custom programs & automations</h2>
+        <p class="lead">Programs and automations for a specific request.</p>
+      </div>
+      <div class="prices reserve">
+        {cards.map((card) => (
+          <article class="pc rv">
+            <span class="tag">{card.tag}</span>
+            <h3>{card.name}</h3>
+            <div class:list={['amt', card.words && 'words']}>{card.price}</div>
+            <p class="tier-desc">{card.text}</p>
+          </article>
+        ))}
+      </div>
+      {pending && <p class="price-note">Preview. The package amounts are not approved.</p>}
+    </div>
+  </section>
+)}

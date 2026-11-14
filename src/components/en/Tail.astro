@@ -1,5 +1,8 @@
 ---
 import { HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
+import { PRICES, formatHourly } from '../../data/prices';
+
+const hourly = formatHourly(PRICES.hourly.min, PRICES.hourly.max);
 
 const faqs: Array<[string, string]> = [
   [
@@ -25,6 +28,10 @@ const faqs: Array<[string, string]> = [
   [
     'What if the Scan finds more than I expected?',
     'The price is agreed before work starts. If something new shows up, I describe it and quote it first. Nothing extra happens without your OK.',
+  ],
+  [
+    'What if the job doesn’t fit a tier?',
+    `Then it’s ${hourly}. I confirm the rate in writing before I start.`,
   ],
   HAS_UPWORK
     ? [

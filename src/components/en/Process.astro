@@ -1,7 +1,15 @@
 ---
 import Picture from './Picture.astro';
+import { FIX_TIERS } from '../../data/offer';
 import { PRICES, formatPrice } from '../../data/prices';
-const steps = [
+const steps: Array<{
+  n: string;
+  name: string;
+  title: string;
+  price?: string;
+  alt: string;
+  text: string;
+}> = [
   {
     n: '01',
     name: 'bot-scan',
@@ -14,7 +22,7 @@ const steps = [
     n: '02',
     name: 'bot-fix',
     title: 'Fix',
-    price: `${formatPrice(PRICES.fix.low)} / ${formatPrice(PRICES.fix.mid)} / ${formatPrice(PRICES.fix.high)}`,
+    price: FIX_TIERS.map((tier) => tier.price).join(' / '),
     alt: 'Fix agent: the same glass robot, with stylus tools and lime sparks.',
     text: 'You approve the plan and the price. I repair the app and send a written update every day.',
   },
@@ -22,9 +30,8 @@ const steps = [
     n: '03',
     name: 'bot-launch',
     title: 'Launch',
-    price: `Support ${formatPrice(PRICES.support)}/mo if you want it`,
     alt: 'Launch agent: the same glass robot, brighter, with a mint glow.',
-    text: `The app goes live on your domain. You get a short handover note. Support is ${formatPrice(PRICES.support)} a month for backups, uptime checks, and a monthly note.`,
+    text: 'The app goes live on your domain. You get a short handover note.',
   },
 ];
 ---
@@ -48,7 +55,7 @@ const steps = [
           />
           <div class="num">{step.n}</div>
           <h3>{step.title}</h3>
-          <div class="price">{step.price}</div>
+          {step.price ? <div class="price">{step.price}</div> : null}
           <p>{step.text}</p>
         </div>
       ))}

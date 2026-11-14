@@ -6,7 +6,7 @@
  * Only the PUBLIC_ prefix is exposed to the browser.
  * Prices live in ./prices.ts — do not write a dollar amount in this file.
  */
-import { PRICES, formatPrice } from './prices';
+import { PRICES, formatPrice, formatRange } from './prices';
 
 const raw = (import.meta.env.PUBLIC_UPWORK_URL || '') as string;
 
@@ -54,46 +54,41 @@ I won't send passwords or secret keys in this email.
 `,
 );
 
-export const SUPPORT_MAIL = mailto(
-  `Support request — ${formatPrice(PRICES.support)}/month`,
-  `Hi,
-
-I'd like Support at ${formatPrice(PRICES.support)}/month after the app is live.
-
-Project link:
-`,
-);
-
-export type OrderKind = 'scan' | 'fix' | 'support' | 'hire';
+export type OrderKind = 'scan' | 'fix' | 'hire';
 
 /** One switch: Upwork profile when set, otherwise a prefilled email. */
 export function orderHref(kind: OrderKind = 'scan'): string {
   if (HAS_UPWORK) return UPWORK_URL;
   if (kind === 'hire' || kind === 'scan') return SCAN_MAIL;
   if (kind === 'fix') return FIX_MAIL;
-  if (kind === 'support') return SUPPORT_MAIL;
   return SCAN_MAIL;
 }
 
-/**
- * Fix tiers. Amounts come from PRICES. The sentences are plain scope,
- * still waiting on a final owner sign-off.
- */
+/** Fix tiers. Amounts come from PRICES. Scope lines are the owner's. */
 export const FIX_TIERS = [
   {
-    id: `t${PRICES.fix.low}`,
-    price: formatPrice(PRICES.fix.low),
-    description: 'One problem. Login, or deploy, or a single payment bug.',
+    id: 'small',
+    name: 'Small fix',
+    min: PRICES.fix.small.min,
+    max: PRICES.fix.small.max,
+    price: formatRange(PRICES.fix.small.min, PRICES.fix.small.max),
+    description: 'One bug, login, or one page.',
   },
   {
-    id: `t${PRICES.fix.mid}`,
-    price: formatPrice(PRICES.fix.mid),
-    description: 'A few connected problems. For example login and database access.',
+    id: 'medium',
+    name: 'Medium fix',
+    min: PRICES.fix.medium.min,
+    max: PRICES.fix.medium.max,
+    price: formatRange(PRICES.fix.medium.min, PRICES.fix.medium.max),
+    description: 'Stripe, Supabase access and row-level security, or several bugs.',
   },
   {
-    id: `t${PRICES.fix.high}`,
-    price: formatPrice(PRICES.fix.high),
-    description: 'The whole launch: login, security, payments, and deploy.',
+    id: 'launch',
+    name: 'Full launch',
+    min: PRICES.fix.launch.min,
+    max: PRICES.fix.launch.max,
+    price: formatRange(PRICES.fix.launch.min, PRICES.fix.launch.max),
+    description: 'Finish the app and publish it.',
   },
 ] as const;
 

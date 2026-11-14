@@ -6,23 +6,49 @@
  * Amounts are whole US dollars. `symbol` is what the page shows; `currency`
  * is the JSON-LD priceCurrency. Set them together.
  *
- * scan — the written report
- * fix.low / fix.mid / fix.high — the three repair tiers, low to high
- * support — monthly, after launch
+ * Ranges render as $60–$120: a dollar sign on both sides and an en dash,
+ * so the top of the range still reads as a price.
+ *
+ * scan — the written report, one amount
+ * fix.small / fix.medium / fix.launch — repair tiers, each a min and max
+ * hourly — per hour, when a tier does not fit
+ *
+ * automation.lightPrograms — two fixed-price packages. null means the amount
+ * is not approved. Do not invent a number. The large project is quoted
+ * ("Price on request") and has no amount here.
+ * SHOW_AUTOMATION_BLOCK — /en/ omits that section while this is false.
  */
+const lightPrograms: [number | null, number | null] = [null, null];
+
 export const PRICES = {
-  currency: 'USD',
-  symbol: '$',
-  scan: 79,
+  currency: 'USD' as const,
+  symbol: '$' as const,
+  scan: 49,
   fix: {
-    low: 249,
-    mid: 399,
-    high: 599,
+    small: { min: 60, max: 120 },
+    medium: { min: 150, max: 300 },
+    launch: { min: 350, max: 600 },
   },
-  support: 19,
-} as const;
+  hourly: { min: 20, max: 25 },
+  automation: {
+    lightPrograms,
+  },
+};
+
+/** The custom-programs section stays off the live site while this is false. */
+export const SHOW_AUTOMATION_BLOCK = false;
 
 /** Whole-dollar amount with `PRICES.symbol`. No thousands separator. */
 export function formatPrice(amount: number): string {
   return `${PRICES.symbol}${amount}`;
+}
+
+/** "$60–$120". */
+export function formatRange(min: number, max: number): string {
+  return `${formatPrice(min)}–${formatPrice(max)}`;
+}
+
+/** "$20–$25/hour". */
+export function formatHourly(min: number, max: number): string {
+  return `${formatRange(min, max)}/hour`;
 }

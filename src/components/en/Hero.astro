@@ -1,7 +1,7 @@
 ---
 import OrderLink from './OrderLink.astro';
 import { HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
-import { PRICES, formatPrice } from '../../data/prices';
+import { PRICES, formatHourly, formatPrice, formatRange } from '../../data/prices';
 ---
 <section class="hero" id="top">
   <div class="wrap hero-grid">
@@ -9,7 +9,7 @@ import { PRICES, formatPrice } from '../../data/prices';
       <span class="eyebrow">For Lovable, Bolt, Cursor, and v0</span>
       <h1><span class="ln">I fix AI-built</span><span class="ln">websites and apps</span></h1>
       <p class="lead">It works in preview and breaks for real users. I make login, security, payments, and deploy hold up in production. Written messages only. The price is fixed before I start.</p>
-      <p class="hero-prices"><b>{formatPrice(PRICES.scan)}</b> Scan <span aria-hidden="true">·</span> <b>from {formatPrice(PRICES.fix.low)}</b> Fix <span aria-hidden="true">·</span> <b>{formatPrice(PRICES.support)}/mo</b> Support</p>
+      <p class="hero-prices"><b>{formatPrice(PRICES.scan)}</b> Scan <span aria-hidden="true">·</span> <b>{formatRange(PRICES.fix.small.min, PRICES.fix.launch.max)}</b> Fix <span aria-hidden="true">·</span> <b>{formatHourly(PRICES.hourly.min, PRICES.hourly.max)}</b> Hourly</p>
       <div class="hero-ctas">
         <OrderLink kind="scan" variant="cta" label={HAS_UPWORK ? 'Hire me on Upwork' : `Order a Scan — ${formatPrice(PRICES.scan)}`} />
         <a class="btn" href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram <span class="arr" aria-hidden="true">↗</span></a>

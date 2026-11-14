@@ -7,10 +7,11 @@ import Rescue from '../../components/en/Rescue.astro';
 import Rest from '../../components/en/Rest.astro';
 import Process from '../../components/en/Process.astro';
 import Pricing from '../../components/en/Pricing.astro';
+import Automations from '../../components/en/Automations.astro';
 import FinalCta from '../../components/en/FinalCta.astro';
 import Tail from '../../components/en/Tail.astro';
-import { EMAIL, PAGE } from '../../data/offer';
-import { PRICES, formatPrice } from '../../data/prices';
+import { EMAIL, FIX_TIERS, PAGE } from '../../data/offer';
+import { PRICES, formatRange } from '../../data/prices';
 import { SITE } from '../../data/site';
 
 const schema = [
@@ -23,11 +24,33 @@ const schema = [
     email: EMAIL,
     image: `${SITE.url}/images/en/og-share-1200x630.webp`,
     inLanguage: 'en',
-    priceRange: `${formatPrice(PRICES.scan)}–${formatPrice(PRICES.fix.high)}`,
+    priceRange: formatRange(PRICES.scan, PRICES.fix.launch.max),
     makesOffer: [
       { '@type': 'Offer', name: 'Scan', price: String(PRICES.scan), priceCurrency: PRICES.currency },
-      { '@type': 'Offer', name: 'Fix', price: String(PRICES.fix.low), priceCurrency: PRICES.currency, description: `From ${formatPrice(PRICES.fix.low)}. The tier depends on scope, agreed before work starts.` },
-      { '@type': 'Offer', name: 'Support', price: String(PRICES.support), priceCurrency: PRICES.currency },
+      ...FIX_TIERS.map((tier) => ({
+        '@type': 'Offer',
+        name: tier.name,
+        description: tier.description,
+        priceCurrency: PRICES.currency,
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          minPrice: String(tier.min),
+          maxPrice: String(tier.max),
+          priceCurrency: PRICES.currency,
+        },
+      })),
+      {
+        '@type': 'Offer',
+        name: 'Hourly',
+        priceCurrency: PRICES.currency,
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          minPrice: String(PRICES.hourly.min),
+          maxPrice: String(PRICES.hourly.max),
+          priceCurrency: PRICES.currency,
+          unitText: 'hour',
+        },
+      },
     ],
   },
 ];
@@ -41,6 +64,7 @@ const schema = [
       <Rest />
       <Process />
       <Pricing />
+      <Automations />
       <Tail />
       <FinalCta />
     </main>

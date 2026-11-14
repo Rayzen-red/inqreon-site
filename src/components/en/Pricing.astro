@@ -1,7 +1,9 @@
 ---
 import OrderLink from './OrderLink.astro';
 import { FIX_TIERS, HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
-import { PRICES, formatPrice } from '../../data/prices';
+import { PRICES, formatHourly, formatPrice } from '../../data/prices';
+
+const hourly = formatHourly(PRICES.hourly.min, PRICES.hourly.max);
 ---
 <section class="sec" id="pricing" aria-labelledby="price-h">
   <div class="wrap">
@@ -26,40 +28,28 @@ import { PRICES, formatPrice } from '../../data/prices';
       <article class="pc feat rv">
         <span class="tag">Repair and launch</span>
         <h3>Fix</h3>
-        <div class="amt" id="fixAmt">{FIX_TIERS[0].price}</div>
+        <div class="amt range" id="fixAmt">{FIX_TIERS[0].price}</div>
         <fieldset class="tiers">
           <legend>Scope</legend>
           {FIX_TIERS.map((tier, i) => (
             <>
               <input type="radio" name="tier" id={tier.id} value={String(i)} checked={i === 0} data-price={tier.price} data-desc={tier.description} />
-              <label for={tier.id}>{tier.price}</label>
+              <label for={tier.id}>{tier.name}</label>
             </>
           ))}
         </fieldset>
         <p class="tier-desc" id="tierDesc" aria-live="polite">{FIX_TIERS[0].description}</p>
         <ul>
-          <li>Login, Supabase security, Stripe, deploy</li>
           <li>A written update every day</li>
           <li>The tier is set after the Scan, before work starts</li>
         </ul>
         <OrderLink kind="fix" variant="cta" label="Get my app fixed" />
       </article>
-      <article class="pc rv">
-        <span class="tag">After launch</span>
-        <h3>Support</h3>
-        <div class="amt">{formatPrice(PRICES.support)}<small>/ month</small></div>
-        <ul>
-          <li>Backups</li>
-          <li>Uptime checks</li>
-          <li>A monthly note on what changed</li>
-        </ul>
-        <OrderLink kind="support" label="Add Support" />
-      </article>
     </div>
     {HAS_UPWORK ? (
-      <p class="price-note">Work and payment stay on Upwork.</p>
+      <p class="price-note">Work and payment stay on Upwork. Work that doesn’t fit a tier is {hourly}.</p>
     ) : (
-      <p class="price-note">Email to start. The price is agreed in writing before I change anything. <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram</a> works too.</p>
+      <p class="price-note">Email to start. The price is agreed in writing before I change anything. Work that doesn’t fit a tier is {hourly}. <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram</a> works too.</p>
     )}
   </div>
 </section>
