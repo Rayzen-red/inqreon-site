@@ -1,6 +1,7 @@
 ---
 import { SHOW_AUTOMATION_BLOCK } from '../../data/prices';
-import { TELEGRAM_URL, automationCards, automationSection, type Lang } from '../../data/automation';
+import { automationCards, automationSection, type Lang } from '../../data/automation';
+import { EMAIL } from '../../data/offer';
 
 interface Props {
   lang?: Lang;
@@ -27,21 +28,10 @@ const cards = automationCards(lang);
                 {card.examples.map((example) => <li>{example}</li>)}
               </ul>
             )}
-            <div class="card-actions">
-              <a
-                class="btn btn-cta"
-                href={card.href}
-                {...(card.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              >
-                {card.cta} <span class="arr" aria-hidden="true">{card.external ? '↗' : '→'}</span>
-              </a>
-              <a class="btn" href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">
-                Telegram <span class="arr" aria-hidden="true">↗</span>
-              </a>
-            </div>
           </article>
         ))}
       </div>
+      <p class="price-note"><a href={`mailto:${EMAIL}`}>{lang === 'ru' ? 'Написать про программу' : 'Write about a program'}</a></p>
     </div>
   </section>
 )}

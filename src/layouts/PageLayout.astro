@@ -1,12 +1,12 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import TelegramCta from '../components/TelegramCta.astro';
 const { title, description, h1, noindex = false } = Astro.props;
+const en = Astro.url.pathname.startsWith('/en/');
 ---
 <BaseLayout title={title} description={description} noindex={noindex}>
   <div class="container page-hero">
-    <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: h1 ?? title }]} />
+    <Breadcrumbs items={[{ name: en ? 'Home' : 'Главная', href: en ? '/en/' : '/' }, { name: h1 ?? title }]} />
     <p class="kicker">Inqreon</p>
     <h1>{h1 ?? title}</h1>
   </div>
@@ -14,8 +14,5 @@ const { title, description, h1, noindex = false } = Astro.props;
     <div class="prose glass-panel">
       <slot />
     </div>
-  </div>
-  <div class="container">
-    <TelegramCta />
   </div>
 </BaseLayout>

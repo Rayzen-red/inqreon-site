@@ -5,7 +5,6 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import PartnerDisclosure from '../../components/PartnerDisclosure.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
 import RubricIcon from '../../components/concepts/RubricIcon.astro';
-import TelegramCta from '../../components/TelegramCta.astro';
 import { getRubric } from '../../data/rubrics';
 import { SITE, COUNTRY_LABELS, formatDate } from '../../data/site';
 import { coverFor, ogImageFor } from '../../lib/media';
@@ -161,7 +160,4 @@ if (d.faq.length) {
     </section>
   )}
 
-  <div class="container">
-    <TelegramCta />
-  </div>
 </BaseLayout>

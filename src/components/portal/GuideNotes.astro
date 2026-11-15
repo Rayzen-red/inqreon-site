@@ -1,0 +1,47 @@
+---
+import { loadGuides, guidePath } from '../../lib/guides';
+import type { Lang } from '../../lib/news';
+
+interface Props {
+  lang: Lang;
+  /** Homepage shows a short set and links to the full listing. */
+  limit?: number;
+  /** The listing page already has its own title. */
+  heading?: boolean;
+}
+const { lang, limit, heading = true } = Astro.props;
+const ru = lang === 'ru';
+const all = await loadGuides(lang);
+const notes = typeof limit === 'number' ? all.slice(0, limit) : all;
+const listing = ru ? '/instrumenty/' : '/en/tools/';
+---
+<section class="guide-band" aria-labelledby={heading ? 'guide-h' : undefined}>
+  {heading && (
+    <header class="band-head">
+      <h2 id="guide-h">{ru ? 'Гид по инструментам' : 'Tool guide'}</h2>
+      <a href={listing}>{ru ? 'Весь гид' : 'Full guide'}</a>
+    </header>
+  )}
+  {notes.length === 0 ? (
+    <p class="empty-state">
+      {ru ? 'Обзоров пока нет.' : 'No reviews published yet.'}
+    </p>
+  ) : (
+    <div class="guide-grid">
+      {notes.map((note, index) => (
+        <a class="guide-card" href={guidePath(lang, note.data.slug)}>
+          <img
+            src={note.data.image}
+            alt={note.data.imageAlt}
+            width="1600"
+            height="900"
+            loading={index < 2 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+          <h3>{note.data.title}</h3>
+          <p>{note.data.description}</p>
+        </a>
+      ))}
+    </div>
+  )}
+</section>

@@ -11,18 +11,18 @@ const { entry, variant } = Astro.props;
 const lang = entry.data.lang;
 const cta = resolveCta(entry);
 const placement = variant;
-const service = '/en/';
+const service = lang === 'ru' ? '/uslugi/' : '/en/services/';
 
 const primary = {
   scan: {
     href: service,
     cta: 'scan' as const,
-    label: lang === 'ru' ? 'Заказать проверку' : 'Scan your app',
+    label: lang === 'ru' ? 'Страница починки' : 'Rescue page',
   },
   fix: {
     href: service,
     cta: 'fix' as const,
-    label: lang === 'ru' ? 'Заказать починку' : 'Fix the app',
+    label: lang === 'ru' ? 'Страница починки' : 'Rescue page',
   },
   telegram: {
     href: TELEGRAM_URL,

@@ -1,0 +1,191 @@
+---
+import { getCollection } from 'astro:content';
+import { PORTAL_GUIDES } from '../../data/portal-guides';
+import { AGGREGATORS } from '../../data/compare';
+import { loadNews, newsImage, newsPath, formatNewsDate, type Lang } from '../../lib/news';
+import GuideNotes from './GuideNotes.astro';
+import { formatDate } from '../../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ru = lang === 'ru';
+const articles = await getCollection('articles', ({ data }) => !data.draft);
+const byId = new Map(articles.map((entry) => [entry.id, entry]));
+const guides = PORTAL_GUIDES.filter((guide) => byId.has(guide.id) && (ru || !guide.regional));
+const regional = PORTAL_GUIDES.find((guide) => guide.regional && byId.has(guide.id));
+const news = (await loadNews(lang)).slice(0, 4);
+const lead = news[0];
+const rest = news.slice(1);
+const leadImage = lead ? newsImage(lead.data.image) : undefined;
+const serviceHref = ru ? '/uslugi/' : '/en/services/';
+const newsHref = ru ? '/news/' : '/en/news/';
+const guidesHref = ru ? '/neyroseti/' : '/en/guides/';
+const toolsHref = ru ? '/instrumenty/' : '/en/tools/';
+const compareHref = ru ? '/sravneniya/' : '/en/compare/';
+---
+<section class="mast">
+  <div>
+    <p class="kicker">{ru ? 'Inqreon' : 'Inqreon'}</p>
+    <h1>{ru ? 'Нейросети для работы и учёбы' : 'AI tools for work and study'}</h1>
+  </div>
+  <div class="mast-dek">
+    <p>
+      {ru
+        ? 'Гайды о том, для чего какой инструмент. Каталог. Сравнение сервисов, которые собирают много моделей в одном окне. Новости. В гайдах цены стоят рядом с датой проверки.'
+        : 'Guides to what each tool is for, a catalog, a comparison of sites that bundle many models, and news. Where a guide names a price, it also names the day that price was checked.'}
+    </p>
+    <p class="mast-links">
+      <a href={toolsHref}>{ru ? 'Гид' : 'Guide'}</a>
+      <a href={guidesHref}>{ru ? 'Статьи' : 'Articles'}</a>
+      <a href={compareHref}>{ru ? 'Агрегаторы' : 'Aggregators'}</a>
+      <a href={newsHref}>{ru ? 'Новости' : 'News'}</a>
+    </p>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="news-h">
+  <header class="band-head">
+    <h2 id="news-h">{ru ? 'Новости' : 'News'}</h2>
+    <a href={newsHref}>{ru ? 'Вся лента' : 'All stories'}</a>
+  </header>
+  {lead ? (
+    <div class="news-split">
+      <article class="news-lead">
+        {leadImage && (
+          <a href={newsPath(lang, lead.data.slug)} tabindex="-1">
+            <img src={leadImage} alt={lead.data.imageAlt ?? ''} width="1200" height="675" />
+          </a>
+        )}
+        <p class="meta">{formatNewsDate(lead.data.date, lang)}</p>
+        <h3><a href={newsPath(lang, lead.data.slug)}>{lead.data.title}</a></h3>
+        <p>{lead.data.description}</p>
+      </article>
+      {rest.length > 0 && (
+        <ol class="news-side">
+          {rest.map((item) => (
+            <li>
+              <p class="meta">{formatNewsDate(item.data.date, lang)}</p>
+              <a href={newsPath(lang, item.data.slug)}>{item.data.title}</a>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  ) : (
+    <p class="empty-state">{ru ? 'Опубликованных новостей пока нет.' : 'No stories published yet.'}</p>
+  )}
+</section>
+
+<GuideNotes lang={lang} limit={6} />
+
+<section class="band" aria-labelledby="guides-h">
+  <header class="band-head">
+    <h2 id="guides-h">{ru ? 'Гайды' : 'Guides'}</h2>
+    <a href={guidesHref}>{ru ? 'Все материалы рубрики' : 'How the list is organized'}</a>
+  </header>
+  <p class="band-lead">
+    {ru
+      ? 'Тексты, которые уже лежат на сайте. Это не рейтинг: у каждого гайда своя задача, дата проверки и ссылки на первоисточники.'
+      : 'These pages already exist, in Russian. The titles here are the English names of those same pages. Nothing below is a score.'}
+  </p>
+  <ol class="rows">
+    {guides.map((guide, index) => {
+      const entry = byId.get(guide.id);
+      const title = ru ? entry?.data.title : guide.en.title;
+      const description = ru ? entry?.data.description : guide.en.description;
+      const when = entry ? formatDate(entry.data.checkedAt) : '';
+      return (
+        <li>
+          <span class="idx">{String(index + 1).padStart(2, '0')}</span>
+          <div>
+            <h3><a href={guide.href} hreflang="ru" lang="ru">{title}</a></h3>
+            <p>{description}</p>
+            {when && <p class="meta">{ru ? `Проверено ${when}` : `Checked ${when} · Russian`}</p>}
+          </div>
+        </li>
+      );
+    })}
+  </ol>
+  {!ru && regional && (
+    <p class="aside-note">
+      <a href={regional.href} hreflang="ru" lang="ru">{regional.en.title}</a>
+      {' '}{regional.en.description}
+    </p>
+  )}
+</section>
+
+<section class="band" aria-labelledby="agg-h">
+  <header class="band-head">
+    <h2 id="agg-h">{ru ? 'Агрегаторы' : 'Aggregators'}</h2>
+    <a href={compareHref}>{ru ? 'Таблица' : 'The table'}</a>
+  </header>
+  <p class="band-lead">
+    {ru
+      ? 'Сервис, который собирает чужие модели в одном окне: чат для человека или ключ API. Ниже имена из опубликованного сравнения. Оценок нет.'
+      : 'A site that resells access to other companies’ models, either as a chat or as an API key. Names below are from the published comparison. No scores.'}
+  </p>
+  <ul class="name-row">
+    {AGGREGATORS.map((item) => (
+      <li><a href={`${compareHref}#${item.id}`}>{item.name}</a></li>
+    ))}
+  </ul>
+</section>
+
+<section class="band check" aria-labelledby="check-h">
+  <header class="band-head">
+    <h2 id="check-h">{ru ? 'Если сайт собрал ИИ' : 'If an AI built the site'}</h2>
+  </header>
+  <p class="band-lead">
+    {ru
+      ? 'Превью часто врёт. Четыре проверки, которые ловят обычные поломки, до того как звать кого-то чинить.'
+      : 'The preview is a poor witness. Four checks catch the usual failures before anyone is asked to fix the project.'}
+  </p>
+  <ol class="checks">
+    <li>
+      <strong>{ru ? 'Войдите заново' : 'Sign in again'}</strong>
+      <span>{ru ? 'Выйдите и зайдите. В превью сессия уже открыта, и петля редиректа не видна.' : 'Sign out, then sign in. A preview session hides a redirect loop.'}</span>
+    </li>
+    <li>
+      <strong>{ru ? 'Секрет не в браузере' : 'No secret in the browser'}</strong>
+      <span>{ru ? 'В коде, который уехал в браузер, не должно быть сервисного ключа.' : 'A service-role or secret key should not be in the bundle the browser downloads.'}</span>
+    </li>
+    <li>
+      <strong>{ru ? 'Тестовая оплата' : 'A test payment'}</strong>
+      <span>{ru ? 'Проведите тестовый платёж и проверьте, что вебхук пришёл и подпись сверена.' : 'Pay in test mode and see whether the webhook arrives and the signature is checked.'}</span>
+    </li>
+    <li>
+      <strong>{ru ? 'Боевой адрес' : 'The live URL'}</strong>
+      <span>{ru ? 'Откройте выложенный сайт с телефона, а не окно превью.' : 'Open the deployed address on a phone, not the preview window.'}</span>
+    </li>
+  </ol>
+  <p class="band-lead">
+    <a href={serviceHref}>{ru ? 'Как устроена починка, если проверки не хватило' : 'How a rescue works, if the checks are not enough'}</a>
+  </p>
+</section>
+
+<section class="band" aria-labelledby="faq-h">
+  <h2 id="faq-h">{ru ? 'Коротко' : 'Short answers'}</h2>
+  <div class="faq">
+    <details>
+      <summary>{ru ? 'Что такое агрегатор?' : 'What is an aggregator?'}</summary>
+      <p>{ru ? 'Сервис, где в одном окне несколько моделей. Платите ему, а к компаниям, которые сделали модели, ходит он.' : 'A service that puts several models in one window. You pay that service. It calls the companies that made the models.'}</p>
+    </details>
+    <details>
+      <summary>{ru ? 'Здесь есть рейтинг?' : 'Is there a ranking?'}</summary>
+      <p>{ru ? 'Нет. Нет оценок, числа клиентов и места, которое можно купить. Гайд говорит, для чего инструмент.' : 'No. No scores, no client counts, and no place a company can buy. A guide says what a tool is for.'}</p>
+    </details>
+    <details>
+      <summary>{ru ? 'Где цены?' : 'Where are the prices?'}</summary>
+      <p>{ru ? 'В гайде, рядом с датой проверки. Они меняются. Перед оплатой сверьте официальный сайт.' : 'In the guide, next to the day they were checked. They change. Confirm the official site before you pay.'}</p>
+    </details>
+    <details>
+      <summary>{ru ? 'Сайт после генерации не работает. Что дальше?' : 'The generated site does not work. Then what?'}</summary>
+      <p>
+        {ru ? 'Сначала четыре проверки выше. Если поломка осталась, на странице починки написано, как устроен письменный разбор и когда называется цена.' : 'Start with the four checks above. If it is still broken, the rescue page says how a written look works and when a price is named.'}
+        {' '}<a href={serviceHref}>{ru ? 'Страница починки' : 'Rescue page'}</a>
+      </p>
+    </details>
+  </div>
+</section>

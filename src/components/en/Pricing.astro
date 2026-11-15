@@ -3,53 +3,62 @@ import OrderLink from './OrderLink.astro';
 import { FIX_TIERS, HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
 import { PRICES, formatHourly, formatPrice } from '../../data/prices';
 
+interface Props { lang?: 'en' | 'ru' }
+const { lang = 'en' } = Astro.props;
+const ru = lang === 'ru';
 const hourly = formatHourly(PRICES.hourly.min, PRICES.hourly.max);
+const ruTier: Record<string, { name: string; description: string }> = {
+  small: { name: 'Маленькая правка', description: 'Один баг, вход или одна страница.' },
+  medium: { name: 'Средняя правка', description: 'Stripe, доступ в Supabase и политики строк, или несколько багов.' },
+  launch: { name: 'Запуск целиком', description: 'Доделать приложение и выложить его.' },
+};
+const tiers = FIX_TIERS.map((tier) => ru ? { ...tier, ...ruTier[tier.id] } : tier);
 ---
 <section class="sec" id="pricing" aria-labelledby="price-h">
   <div class="wrap">
     <div class="sec-head rv">
-      <span class="eyebrow">Pricing</span>
-      <h2 id="price-h">Fixed prices. Agreed before I start.</h2>
+      <span class="eyebrow">{ru ? 'Цены' : 'Pricing'}</span>
+      <h2 id="price-h">{ru ? 'Цены фиксируются до начала работы.' : 'Fixed prices. Agreed before I start.'}</h2>
     </div>
     <div class="prices">
       <article class="pc rv">
-        <span class="tag">Start here</span>
-        <h3>Scan</h3>
+        <span class="tag">{ru ? 'С этого начинают' : 'Start here'}</span>
+        <h3>{ru ? 'Разбор' : 'Scan'}</h3>
         <div class="amt">{formatPrice(PRICES.scan)}</div>
-        <p class="tier-desc">A written report before any code changes: what is broken, who owns each account, and a fixed price for the repair.</p>
+        <p class="tier-desc">{ru ? 'Письмо до любых правок в коде: что сломано, кто владеет аккаунтами и фиксированная цена починки.' : 'A written report before any code changes: what is broken, who owns each account, and a fixed price for the repair.'}</p>
         <ul>
-          <li>What is broken, in plain English</li>
-          <li>Who owns each account and key</li>
-          <li>A fixed price for the repair</li>
-          <li>Nothing changes until you approve it</li>
+          <li>{ru ? 'Что сломано, обычными словами' : 'What is broken, in plain English'}</li>
+          <li>{ru ? 'Кто владеет каждым аккаунтом и ключом' : 'Who owns each account and key'}</li>
+          <li>{ru ? 'Фиксированная цена починки' : 'A fixed price for the repair'}</li>
+          <li>{ru ? 'До вашего согласия ничего не меняется' : 'Nothing changes until you approve it'}</li>
         </ul>
-        <OrderLink kind="scan" label="Order a Scan" />
+        <OrderLink kind="scan" label={ru ? 'Написать про разбор' : 'Write about a scan'} />
       </article>
       <article class="pc feat rv">
-        <span class="tag">Repair and launch</span>
-        <h3>Fix</h3>
-        <div class="amt range" id="fixAmt">{FIX_TIERS[0].price}</div>
+        <span class="tag">{ru ? 'Починка и запуск' : 'Repair and launch'}</span>
+        <h3>{ru ? 'Починка' : 'Fix'}</h3>
+        <div class="amt range" id="fixAmt">{tiers[0].price}</div>
         <fieldset class="tiers">
-          <legend>Scope</legend>
-          {FIX_TIERS.map((tier, i) => (
+          <legend>{ru ? 'Объём' : 'Scope'}</legend>
+          {tiers.map((tier, i) => (
             <>
               <input type="radio" name="tier" id={tier.id} value={String(i)} checked={i === 0} data-price={tier.price} data-desc={tier.description} />
               <label for={tier.id}>{tier.name}</label>
             </>
           ))}
         </fieldset>
-        <p class="tier-desc" id="tierDesc" aria-live="polite">{FIX_TIERS[0].description}</p>
+        <p class="tier-desc" id="tierDesc" aria-live="polite">{tiers[0].description}</p>
         <ul>
-          <li>A written update every day</li>
-          <li>The tier is set after the Scan, before work starts</li>
+          <li>{ru ? 'Каждый день короткое письмо, что сделано' : 'A written update every day'}</li>
+          <li>{ru ? 'Объём называется после разбора и до начала работы' : 'The tier is set after the Scan, before work starts'}</li>
         </ul>
-        <OrderLink kind="fix" variant="cta" label="Get my app fixed" />
+        <OrderLink kind="fix" variant="cta" label={ru ? 'Написать про починку' : 'Write about a fix'} />
       </article>
     </div>
     {HAS_UPWORK ? (
-      <p class="price-note">Work and payment stay on Upwork. Work that doesn’t fit a tier is {hourly}.</p>
+      <p class="price-note">{ru ? `Работа и оплата остаются на Upwork. Если объём не ложится в ступень, ставка ${hourly}.` : `Work and payment stay on Upwork. Work that doesn’t fit a tier is ${hourly}.`}</p>
     ) : (
-      <p class="price-note">Email to start. The price is agreed in writing before I change anything. Work that doesn’t fit a tier is {hourly}. <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram</a> works too.</p>
+      <p class="price-note">{ru ? `Напишите на почту. Цена согласуется письмом до любых правок. Если объём не ложится в ступень, ставка ${hourly}.` : `Email to start. The price is agreed in writing before I change anything. Work that doesn’t fit a tier is ${hourly}.`} <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram</a>.</p>
     )}
   </div>
 </section>

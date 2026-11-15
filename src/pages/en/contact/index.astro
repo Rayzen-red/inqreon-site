@@ -1,0 +1,14 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import { SITE } from '../../../data/site';
+import { TELEGRAM_URL } from '../../../data/offer';
+---
+<PageLayout title="Contact Inqreon" description="Write to Inqreon by email or the Telegram bot. There is no form on the site." h1="Contact">
+  <p><strong>Support bot:</strong> <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">t.me/Inqreon_bot</a></p>
+  <p><strong>Channel:</strong> <a href={SITE.telegram} target="_blank" rel="noopener noreferrer">t.me/Inqreon</a></p>
+  <p><strong>YouTube:</strong> <a href={SITE.youtube} target="_blank" rel="noopener noreferrer">youtube.com/@inqreon</a></p>
+  <p><strong>Email:</strong> <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+  <p>Inqreon is a project of {SITE.owner}.</p>
+  <p>Found a wrong price or a stale limit? Write. We will check it and update the page.</p>
+  <p>There is no contact form. The site does not need to store a message you have not sent yet.</p>
+</PageLayout>

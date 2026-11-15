@@ -2,6 +2,7 @@
 import { PRICES, formatRange } from '../data/prices';
 
 const reduce = () => document.documentElement.classList.contains('reduce-motion');
+const ru = () => document.documentElement.lang === 'ru';
 
 const canObserve = () => typeof IntersectionObserver === 'function';
 
@@ -77,7 +78,7 @@ function initTerminal(): void {
 
   const setStatus = (good: boolean) => {
     status.className = `status ${good ? 'good' : 'bad'}`;
-    status.textContent = good ? 'LIVE' : 'BROKEN';
+    status.textContent = good ? (ru() ? 'ЖИВО' : 'LIVE') : (ru() ? 'СБОЙ' : 'BROKEN');
   };
 
   const finish = () => {
@@ -90,7 +91,7 @@ function initTerminal(): void {
     }
     setStatus(true);
     playing = false;
-    toggle.textContent = '↻ Replay';
+    toggle.textContent = ru() ? '↻ Ещё раз' : '↻ Replay';
   };
 
   const play = () => {
@@ -103,7 +104,7 @@ function initTerminal(): void {
     }
     playing = true;
     setStatus(false);
-    toggle.textContent = 'Skip';
+    toggle.textContent = ru() ? 'Пропустить' : 'Skip';
     let delay = 180;
     for (const [kind, text] of lines) {
       if (kind === 'fix') {
@@ -132,7 +133,7 @@ function initTerminal(): void {
       window.setTimeout(() => {
         setStatus(true);
         playing = false;
-        toggle.textContent = '↻ Replay';
+        toggle.textContent = ru() ? '↻ Ещё раз' : '↻ Replay';
       }, delay + 160),
     );
   };

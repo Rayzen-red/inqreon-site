@@ -1,36 +1,22 @@
 ---
-import EnLayout from '../../layouts/EnLayout.astro';
-import EnHeader from '../../components/en/EnHeader.astro';
-import EnFooter from '../../components/en/EnFooter.astro';
+import PageLayout from '../../layouts/PageLayout.astro';
 import { EMAIL, TELEGRAM_URL } from '../../data/offer';
-import { SITE } from '../../data/site';
-
-const path = '/en/privacy/';
 const ruPath = '/politika-konfidencialnosti/';
-const canonical = new URL(path, SITE.url).href;
-const ru = new URL(ruPath, SITE.url).href;
 const mail = `mailto:${EMAIL}`;
 ---
-<EnLayout
+<PageLayout
   title="Privacy policy — Inqreon"
-  description="What the English pages of inqreon.com collect, which services receive it, and how to ask Inqreon for access or deletion."
-  path={path}
-  alternates={{ en: canonical, ru, xDefault: canonical }}
+  description="What inqreon.com collects, which services receive it, and how to ask for access or deletion."
+  h1="Privacy policy"
 >
-  <div class="page">
-    <EnHeader ruHref={ruPath} here={false} />
-    <main id="main" class="legal">
-      <article class="wrap legal-col">
-        <p class="eyebrow">Privacy</p>
-        <h1>Privacy policy</h1>
-        <p class="legal-date">Effective <time datetime="2026-11-15">15 November 2026</time>. This policy covers the English pages under /en/.</p>
+        <p class="legal-date">Effective <time datetime="2026-11-15">15 November 2026</time>. This policy covers inqreon.com.</p>
         <p>The <a href={ruPath} hreflang="ru" lang="ru">privacy policy in Russian</a> is the other language version. That page marks itself as a draft.</p>
 
         <h2>Who operates this site</h2>
         <p>Inqreon operates this site. For a privacy question, email <a href={mail}>{EMAIL}</a>.</p>
 
         <h2>What the English pages do</h2>
-        <p>These pages describe a service for fixing AI-built websites and apps. They are static files. The page has no account, no comment form, and no card checkout.</p>
+        <p>The site is an AI tools portal (guides, a catalog, comparisons, news) plus one page about fixing an AI-built website or app. The pages are static files. There is no account, no comment form, and no card checkout.</p>
         <p>Order and contact buttons open your email program with a draft to {EMAIL}, unless the build uses an Upwork link instead. The draft can include a project link, what the app was built with, and what is broken, and it asks you to leave out passwords and secret keys. The message stays on your device until you send it.</p>
         <p>Type and images on these pages are files on this site. The pages do not load a separate font service.</p>
 
@@ -74,17 +60,4 @@ const mail = `mailto:${EMAIL}`;
           Inqreon<br />
           <a href={mail}>{EMAIL}</a>
         </address>
-      </article>
-    </main>
-    <EnFooter />
-  </div>
-  <script is:inline>
-    (function () {
-      var nav = document.getElementById('nav');
-      if (!nav) return;
-      var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive: true });
-    })();
-  </script>
-</EnLayout>
+</PageLayout>

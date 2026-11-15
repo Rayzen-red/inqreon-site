@@ -8,6 +8,9 @@ const before = `<span class="c">// src/lib/supabase.ts  (runs in the browser)</s
 <span class="c">-- database</span>
 <span class="k2">alter table</span> profiles
   <span class="bad">disable row level security</span>;`;
+interface Props { lang?: 'en' | 'ru' }
+const { lang = 'en' } = Astro.props;
+const ru = lang === 'ru';
 const after = `<span class="c">// src/lib/supabase.ts  (runs in the browser)</span>
 <span class="k2">const</span> supabase = createClient(
   url,
@@ -22,14 +25,14 @@ const after = `<span class="c">// src/lib/supabase.ts  (runs in the browser)</sp
 <section class="sec" aria-labelledby="prob-h">
   <div class="wrap">
     <div class="sec-head rv">
-      <span class="eyebrow">What usually breaks</span>
-      <h2 id="prob-h">Works in preview. Breaks in production.</h2>
+      <span class="eyebrow">{ru ? 'Что обычно ломается' : 'What usually breaks'}</span>
+      <h2 id="prob-h">{ru ? 'В превью работает. В бою — нет.' : 'Works in preview. Breaks in production.'}</h2>
     </div>
     <div class="prob-grid">
-      <div class="prob rv"><span class="k">Login</span><h3>Users can't stay signed in</h3><p>Redirect loops, lost sessions, password reset that never arrives.</p></div>
-      <div class="prob rv"><span class="k">Security</span><h3>Data is open to anyone</h3><p>Supabase row-level security off, secret keys shipped to the browser.</p></div>
-      <div class="prob rv"><span class="k">Payments</span><h3>The charge doesn't go through</h3><p>Stripe checkout works in test mode, but webhooks and subscriptions fail live.</p></div>
-      <div class="prob rv"><span class="k">Deploy</span><h3>It won't go live</h3><p>Builds fail, environment variables are missing, the domain isn't connected.</p></div>
+      <div class="prob rv"><span class="k">{ru ? 'Вход' : 'Login'}</span><h3>{ru ? 'Человек не остаётся в аккаунте' : "Users can't stay signed in"}</h3><p>{ru ? 'Петля редиректа, пропадающая сессия, письмо для сброса пароля не приходит.' : 'Redirect loops, lost sessions, password reset that never arrives.'}</p></div>
+      <div class="prob rv"><span class="k">{ru ? 'Доступ' : 'Security'}</span><h3>{ru ? 'Данные открыты всем' : 'Data is open to anyone'}</h3><p>{ru ? 'В Supabase выключена защита строк, секретный ключ уехал в браузер.' : 'Supabase row-level security off, secret keys shipped to the browser.'}</p></div>
+      <div class="prob rv"><span class="k">{ru ? 'Оплата' : 'Payments'}</span><h3>{ru ? 'Платёж не доходит' : "The charge doesn't go through"}</h3><p>{ru ? 'Stripe в тестовом режиме проходит, а вебхук и подписка на бою нет.' : 'Stripe checkout works in test mode, but webhooks and subscriptions fail live.'}</p></div>
+      <div class="prob rv"><span class="k">{ru ? 'Деплой' : 'Deploy'}</span><h3>{ru ? 'Сайт не выкладывается' : "It won't go live"}</h3><p>{ru ? 'Сборка падает, нет переменных окружения, домен не подключён.' : "Builds fail, environment variables are missing, the domain isn't connected."}</p></div>
     </div>
   </div>
 </section>
@@ -37,24 +40,24 @@ const after = `<span class="c">// src/lib/supabase.ts  (runs in the browser)</sp
 <section class="sec" style="padding-top:0" aria-labelledby="ba-h">
   <div class="wrap">
     <div class="sec-head rv">
-      <span class="eyebrow">Before / after</span>
-      <h2 id="ba-h">Drag to see the fix</h2>
-      <p class="lead">A typical security fix in a Supabase app built with AI: the secret key leaves the browser and every table gets its own access rules.</p>
+      <span class="eyebrow">{ru ? 'До и после' : 'Before / after'}</span>
+      <h2 id="ba-h">{ru ? 'Потяните, чтобы увидеть правку' : 'Drag to see the fix'}</h2>
+      <p class="lead">{ru ? 'Обычная правка доступа в приложении на Supabase: секретный ключ уходит из браузера, у таблицы появляются свои правила.' : 'A typical security fix in a Supabase app built with AI: the secret key leaves the browser and every table gets its own access rules.'}</p>
     </div>
     <div class="ba-wrap rv">
       <div class="ba" id="ba">
         <div class="ba-pane ba-before">
-          <span class="ba-label">Before · AI build</span>
+          <span class="ba-label">{ru ? 'До · сборка ИИ' : 'Before · AI build'}</span>
           <code class="ba-code" set:html={before} />
         </div>
         <div class="ba-pane ba-after">
-          <span class="ba-label">After · production-ready</span>
+          <span class="ba-label">{ru ? 'После · можно выкладывать' : 'After · production-ready'}</span>
           <code class="ba-code" set:html={after} />
         </div>
         <div class="ba-handle" aria-hidden="true"></div>
-        <input class="ba-range" id="baRange" type="range" min="0" max="100" value="50" aria-label="Before / after comparison" />
+        <input class="ba-range" id="baRange" type="range" min="0" max="100" value="50" aria-label={ru ? 'Сравнение до и после' : 'Before / after comparison'} />
       </div>
-      <p class="ba-note">Illustrative code. Real fixes depend on your project.</p>
+      <p class="ba-note">{ru ? 'Пример кода. Настоящая правка зависит от проекта.' : 'Illustrative code. Real fixes depend on your project.'}</p>
     </div>
   </div>
 </section>

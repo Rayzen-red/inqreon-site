@@ -1,51 +1,56 @@
 ---
-import { getCollection } from 'astro:content';
-import { SITE } from '../data/site';
-import { SHOW_AUTOMATION_BLOCK } from '../data/prices';
-import { RUBRICS } from '../data/rubrics';
-import RubricIcon from './concepts/RubricIcon.astro';
-interface Props {
-  enHref?: string;
-  enPaired?: boolean;
-  enTitle?: string;
-}
-const { enHref = '/en/', enPaired = true, enTitle } = Astro.props;
-const current = Astro.url.pathname.split('/')[1] ?? '';
-const articles = await getCollection('articles', ({ data }) => !data.draft);
-const filled = new Set(articles.map((a) => a.data.rubric));
-const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
+import Support from './portal/Support.astro';
+import { alternatePath } from '../data/translations.mjs';
+
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const lang = path === '/en' || path.startsWith('/en/') ? 'en' : 'ru';
+const pairedHref = alternatePath(path);
+let href = pairedHref;
+if (!href && lang === 'ru' && path.startsWith('/neyroseti/')) href = '/en/guides/';
+if (!href && lang === 'en' && path.startsWith('/en/guides')) href = '/neyroseti/';
+if (!href) href = lang === 'en' ? '/' : '/en/';
+const paired = Boolean(pairedHref);
+
+const items = lang === 'en'
+  ? [
+      { href: '/en/news/', label: 'News', match: (p: string) => p.startsWith('/en/news') },
+      { href: '/en/guides/', label: 'Articles', match: (p: string) => p.startsWith('/en/guides') },
+      { href: '/en/tools/', label: 'Guide', match: (p: string) => p.startsWith('/en/tools') },
+      { href: '/en/compare/', label: 'Compare', match: (p: string) => p.startsWith('/en/compare') },
+      { href: '/en/services/', label: 'Services', match: (p: string) => p.startsWith('/en/services') },
+    ]
+  : [
+      { href: '/news/', label: 'Новости', match: (p: string) => p.startsWith('/news') },
+      { href: '/neyroseti/', label: 'Статьи', match: (p: string) => p.startsWith('/neyroseti') },
+      { href: '/instrumenty/', label: 'Гид', match: (p: string) => p.startsWith('/instrumenty') },
+      { href: '/sravneniya/', label: 'Сравнение', match: (p: string) => p.startsWith('/sravneniya') },
+      { href: '/uslugi/', label: 'Услуги', match: (p: string) => p.startsWith('/uslugi') },
+    ];
 ---
 <header class="site-header">
   <div class="topbar">
-    <a href="/" class="logo" aria-label="Inqreon — на главную">
-      <span class="logo-orb" aria-hidden="true"></span> Inqreon
+    <a href={lang === 'en' ? '/en/' : '/'} class="logo" aria-label="Inqreon">
+      <span class="logo-mark" aria-hidden="true">iq</span> Inqreon
     </a>
-    <nav class="lang-switch" aria-label="Язык">
-      <span lang="ru" aria-current="true">RU</span>
-      <a href={enHref} hreflang={enPaired ? 'en' : undefined} lang="en" aria-label={enTitle}>EN</a>
+    <nav class="site-nav" aria-label={lang === 'en' ? 'Sections' : 'Разделы'}>
+      {items.map((item) => (
+        <a href={item.href} aria-current={item.match(path) ? 'page' : undefined}>{item.label}</a>
+      ))}
     </nav>
-    {SHOW_AUTOMATION_BLOCK && (
-      <nav class="social-links" aria-label="Услуги">
-        <a href="/uslugi/">Услуги</a>
+    <div class="head-tools">
+      <nav class="lang-switch" aria-label={lang === 'en' ? 'Language' : 'Язык'}>
+        {lang === 'en' ? (
+          <span lang="en" aria-current="true">EN</span>
+        ) : (
+          <a href={href} hreflang={paired ? 'en' : undefined} lang="en">EN</a>
+        )}
+        {lang === 'ru' ? (
+          <span lang="ru" aria-current="true">RU</span>
+        ) : (
+          <a href={href} hreflang={paired ? 'ru' : undefined} lang="ru">RU</a>
+        )}
       </nav>
-    )}
-    <nav class="social-links" aria-label="Соцсети">
-      <a href={SITE.youtube} target="_blank" rel="noopener">YouTube</a>
-      <a href={SITE.telegram} target="_blank" rel="noopener">Telegram</a>
-    </nav>
+      <Support />
+    </div>
   </div>
-  <nav class="rubric-nav" aria-label="Рубрики">
-    <a href="/news/" aria-current={current === 'news' ? 'page' : undefined}>
-      <svg class="rico" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M5 4h11l3 3v13H5V4zM15 4v4h4M8 11h8M8 15h5" />
-      </svg>
-      <span>Новости</span>
-    </a>
-    {nav.map((r) => (
-      <a href={`/${r.slug}/`} aria-current={current === r.slug ? 'page' : undefined}>
-        <RubricIcon slug={r.slug} />
-        <span>{r.name}</span>
-      </a>
-    ))}
-  </nav>
 </header>

@@ -1,14 +1,34 @@
 ---
 import { TOOLS } from '../lib/media';
+
+interface Props {
+  lang?: 'en' | 'ru';
+}
+const { lang = 'ru' } = Astro.props;
+const enText: Record<string, { text: string; href: string }> = {
+  DeepSeek: { text: 'Registration, modes, prompts, and the API. Guide in Russian.', href: '/neyroseti/deepseek/' },
+  'Алиса AI': { text: 'Named in the free-tier guide. That guide is in Russian.', href: '/neyroseti/besplatnye-neyroseti/' },
+  'ГигаЧат': { text: 'Named in the free-tier guide. That guide is in Russian.', href: '/neyroseti/besplatnye-neyroseti/' },
+  Qwen: { text: 'Named in the free-tier guide. That guide is in Russian.', href: '/neyroseti/besplatnye-neyroseti/' },
+  ChatGPT: { text: 'Free tier and limits, in the Russian guide.', href: '/neyroseti/besplatnye-neyroseti/' },
+  Claude: { text: 'Free tier and limits, in the Russian guide.', href: '/neyroseti/besplatnye-neyroseti/' },
+  Gemini: { text: 'Free tier and limits, in the Russian guide.', href: '/neyroseti/besplatnye-neyroseti/' },
+  BotHub: { text: 'Bundles many models. See the comparison.', href: '/en/compare/#bothub' },
+  GPTunneL: { text: 'Bundles many models. See the comparison.', href: '/en/compare/#gptunnel' },
+  Chad: { text: 'Bundles many models. See the comparison.', href: '/en/compare/#chad' },
+};
 ---
 <div class="tool-grid">
-  {TOOLS.map((tool) => (
-    <a class={`tool tone-${tool.tone}`} href={tool.href}>
-      <span class="mark" aria-hidden="true">{tool.mark}</span>
-      <span>
-        <strong>{tool.name}</strong>
-        <em>{tool.text}</em>
-      </span>
-    </a>
-  ))}
+  {TOOLS.map((tool) => {
+    const alt = lang === 'en' ? enText[tool.name] : undefined;
+    return (
+      <a class={`tool tone-${tool.tone}`} href={alt?.href ?? tool.href} hreflang={alt && alt.href.startsWith('/neyroseti') ? 'ru' : undefined}>
+        <span class="mark" aria-hidden="true">{tool.mark}</span>
+        <span>
+          <strong>{tool.name}</strong>
+          <em>{alt?.text ?? tool.text}</em>
+        </span>
+      </a>
+    );
+  })}
 </div>

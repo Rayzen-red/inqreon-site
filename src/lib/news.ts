@@ -127,16 +127,16 @@ export function feedCopy(lang: Lang, page: number) {
   const title = lang === 'ru' ? 'Новости' : 'News';
   const description =
     lang === 'ru'
-      ? 'Короткие новости об ИИ и о том, что проверить перед запуском сайта или приложения.'
-      : 'Short AI news, and what to check before a generated site or app meets real users.';
+      ? 'Короткие новости об инструментах и моделях.'
+      : 'Short news about AI tools and models.';
   return {
     title: page > 1 ? (lang === 'ru' ? `${title}, страница ${page}` : `${title}, page ${page}`) : title,
     description,
     rssPath: lang === 'ru' ? '/news/rss.xml' : '/en/news/rss.xml',
     lead:
       lang === 'ru'
-        ? 'Модели, инструменты и то, что обычно ломается, когда проект из Lovable, Bolt, Cursor или v0 встречает живых пользователей.'
-        : 'Models, tools, and what usually breaks when a project built in Lovable, Bolt, Cursor, or v0 meets real users.',
+        ? 'Короткие разборы новостей об инструментах. Источники указаны в каждой заметке.'
+        : 'Short reads on tool news. Each story names its sources.',
   };
 }
 

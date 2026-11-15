@@ -1,0 +1,45 @@
+---
+import { render } from 'astro:content';
+import GuideCta from './GuideCta.astro';
+import { guidePath, loadGuides, type GuideEntry } from '../../lib/guides';
+import { formatNewsDate, isoDay } from '../../lib/news';
+
+interface Props {
+  entry: GuideEntry;
+}
+const { entry } = Astro.props;
+const lang = entry.data.lang;
+const ru = lang === 'ru';
+const { Content } = await render(entry);
+const listing = ru ? '/instrumenty/' : '/en/tools/';
+const others = (await loadGuides(lang)).filter((item) => item.data.slug !== entry.data.slug).slice(0, 3);
+---
+<article class="container narrow prose guide-article">
+  <p class="kicker"><a href={listing}>{ru ? 'Гид' : 'Guide'}</a></p>
+  <h1>{entry.data.title}</h1>
+  <p class="meta"><time datetime={isoDay(entry.data.date)}>{formatNewsDate(entry.data.date, lang)}</time></p>
+  <figure class="guide-hero">
+    <img src={entry.data.image} alt={entry.data.imageAlt} width="1600" height="900" fetchpriority="high" decoding="async" />
+  </figure>
+  <p class="lead">{entry.data.description}</p>
+  <Content />
+  <section class="sources">
+    <h2>{ru ? 'Источники' : 'Sources'}</h2>
+    <ul>
+      {entry.data.sources.map((source) => (
+        <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a></li>
+      ))}
+    </ul>
+  </section>
+  <GuideCta lang={lang} cta={entry.data.cta} />
+  {others.length > 0 && (
+    <section class="related">
+      <h2>{ru ? 'Ещё в гиде' : 'More in the guide'}</h2>
+      <ul>
+        {others.map((item) => (
+          <li><a href={guidePath(lang, item.data.slug)}>{item.data.title}</a></li>
+        ))}
+      </ul>
+    </section>
+  )}
+</article>

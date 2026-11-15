@@ -1,0 +1,31 @@
+---
+import { TELEGRAM_URL } from '../../data/offer';
+
+interface Props {
+  lang: 'en' | 'ru';
+  cta: 'scan' | 'fix' | 'telegram';
+}
+const { lang, cta } = Astro.props;
+const service = lang === 'ru' ? '/uslugi/' : '/en/services/';
+const href = cta === 'telegram' ? TELEGRAM_URL : service;
+const external = cta === 'telegram';
+const text =
+  cta === 'fix'
+    ? 'If a build already fails for real people, the rescue page describes a fix whose price is agreed before any change.'
+    : cta === 'scan'
+      ? 'If a generated project is about to meet real people, the rescue page is a written check before any code changes.'
+      : 'Вопрос по обзору можно задать в поддержку. Это бот, не рассылка.';
+const label =
+  cta === 'telegram' ? 'Написать в Telegram' : lang === 'ru' ? 'Страница починки' : 'The rescue page';
+---
+<aside class="guide-cta">
+  <p>
+    {text}{' '}
+    <a
+      href={href}
+      data-cta={cta}
+      data-placement="guide-end"
+      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+    >{label}</a>
+  </p>
+</aside>

@@ -1,25 +1,43 @@
 ---
 import Picture from './Picture.astro';
 
+interface Props {
+  lang?: 'en' | 'ru';
+}
+const { lang = 'en' } = Astro.props;
+const ru = lang === 'ru';
+const steps = ru
+  ? [
+      ['Сломано', 'В превью выглядит целым. Живой человек упирается в петлю входа, открытые данные и оплату, которая не доходит.'],
+      ['Разбор', 'Я прохожу слой за слоем и записываю, что сломано, обычными словами.'],
+      ['Починка', 'Каждый слой чинится по плану, который вы уже согласовали.'],
+      ['Запуск', 'Всё собирается обратно и открывается на вашем домене.'],
+    ]
+  : [
+      ['Broken', 'Looks fine in preview. Real users hit login loops, open data and failed payments.'],
+      ['Scan', 'I go layer by layer and write down what is broken, in plain English.'],
+      ['Fix', 'Each layer gets repaired by a fixed plan you approved.'],
+      ['Launch', 'Everything goes back together and goes live on your domain.'],
+    ];
+
 const frames = [
-  { name: 'layers-broken', label: 'Broken', alt: 'Illustration of a glass app split into five layers, with a red glitch. Not a client project.' },
-  { name: 'layers-scanning', label: 'Scan', alt: 'The same glass layers, with a lime scanning light and a small robot. Not a client project.' },
-  { name: 'layers-fixing', label: 'Fix', alt: 'Robots repairing the glass layers. The upper plates glow lime, the lower ones still show red. Not a client project.' },
-  { name: 'layers-reassembled', label: 'Launch', alt: 'The glass app assembled again, with a lime glow. Not a client project.' },
+  { name: 'layers-broken', label: ru ? 'Сломано' : 'Broken', alt: ru ? 'Рисунок: стеклянное приложение разобрано на пять слоёв, с красным сбоем. Не проект клиента.' : 'Illustration of a glass app split into five layers, with a red glitch. Not a client project.' },
+  { name: 'layers-scanning', label: ru ? 'Разбор' : 'Scan', alt: ru ? 'Те же слои, по ним идёт зелёный луч и маленький робот. Не проект клиента.' : 'The same glass layers, with a lime scanning light and a small robot. Not a client project.' },
+  { name: 'layers-fixing', label: ru ? 'Починка' : 'Fix', alt: ru ? 'Роботы чинят слои. Верхние светятся зелёным, нижние ещё красные. Не проект клиента.' : 'Robots repairing the glass layers. The upper plates glow lime, the lower ones still show red. Not a client project.' },
+  { name: 'layers-reassembled', label: ru ? 'Запуск' : 'Launch', alt: ru ? 'Приложение собрано снова, с зелёным свечением. Не проект клиента.' : 'The glass app assembled again, with a lime glow. Not a client project.' },
 ];
 ---
 <section class="rescue" id="rescue" aria-labelledby="rescue-h">
   <div class="wrap rescue-intro sec-head">
-    <span class="eyebrow">Scroll to watch a rescue</span>
-    <h2 id="rescue-h">Broken → Scan → Fix → Launch</h2>
-    <p class="lead">An AI-built app is a stack of layers. When one is wrong, the whole thing fails for real users. I take it apart, fix each layer and put it back together.</p>
+    <span class="eyebrow">{ru ? 'Прокрутите, чтобы увидеть разбор' : 'Scroll to watch a rescue'}</span>
+    <h2 id="rescue-h">{ru ? 'Сломано → Разбор → Починка → Запуск' : 'Broken → Scan → Fix → Launch'}</h2>
+    <p class="lead">{ru ? 'Приложение, собранное ИИ, — это стопка слоёв. Если один слой врёт, у живого человека ломается всё. Я разбираю стопку, чиню слой и собираю обратно.' : 'An AI-built app is a stack of layers. When one is wrong, the whole thing fails for real users. I take it apart, fix each layer and put it back together.'}</p>
   </div>
   <div class="pin wrap" id="pin">
     <ol class="steps" id="steps">
-      <li class="step on"><b>Broken</b><span>Looks fine in preview. Real users hit login loops, open data and failed payments.</span></li>
-      <li class="step"><b>Scan</b><span>I go layer by layer and write down what is broken, in plain English.</span></li>
-      <li class="step"><b>Fix</b><span>Each layer gets repaired by a fixed plan you approved.</span></li>
-      <li class="step"><b>Launch</b><span>Everything goes back together and goes live on your domain.</span></li>
+      {steps.map(([name, text], i) => (
+        <li class:list={['step', { on: i === 0 }]}><b>{name}</b><span>{text}</span></li>
+      ))}
     </ol>
     <div>
       <div class="scene" id="scene">
@@ -49,7 +67,7 @@ const frames = [
           ))}
         </div>
         <p class="live" id="live"><span class="status good">LIVE</span><span>Ready for real users</span></p>
-        <p class="scene-cap">Illustration · not a real client project</p>
+        <p class="scene-cap">{ru ? 'Рисунок · не проект клиента' : 'Illustration · not a real client project'}</p>
       </div>
       <p class="mcap" id="mcap" aria-hidden="true"></p>
     </div>

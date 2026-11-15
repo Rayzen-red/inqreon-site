@@ -1,14 +1,13 @@
 ---
 import '../styles/global.css';
-import '../styles/concept-motion.css';
 import '../styles/news.css';
+import '../styles/portal.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import NewsClicks from '../components/news/NewsClicks.astro';
 import NewsMeta from '../components/news/NewsMeta.astro';
-import { languageSwitch } from '../data/translations.mjs';
 import { SITE } from '../data/site';
 
 interface Props {
@@ -25,7 +24,6 @@ interface Props {
   next?: string;
 }
 const props = Astro.props;
-const sw = languageSwitch(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -41,17 +39,14 @@ const sw = languageSwitch(Astro.url.pathname);
   </head>
   <body class="news-ru" data-news-lang="ru" data-news-slug={props.slug ?? ''}>
     <a class="skip-link" href="#main">К содержанию</a>
-    <canvas id="stars" aria-hidden="true"></canvas>
     <div class="cosmos">
-      <Header enHref={sw.href} enPaired={sw.paired} enTitle={sw.label} />
+      <Header />
       <main id="main" class="news-main">
         <slot />
       </main>
       <Footer />
     </div>
     <CookieBanner />
-    <script is:inline src="/concepts/stars.js"></script>
-    <script is:inline src="/concepts/motion.js"></script>
     <NewsClicks />
   </body>
 </html>

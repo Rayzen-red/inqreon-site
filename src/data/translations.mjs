@@ -15,6 +15,7 @@
 // `applyHreflang` fills those sitemap links, because prefix matching cannot.
 
 import { newsTranslationRows } from './news-translations.mjs';
+import { guideTranslationRows } from './guide-translations.mjs';
 
 export const DEFAULT_LOCALE = 'ru';
 
@@ -32,9 +33,18 @@ export const LOCALES = {
 export const TRANSLATIONS = [
   { translationKey: 'home', path: '/', xDefault: 'en' },
   { translationKey: 'news', path: '/news/', xDefault: 'en' },
+  { translationKey: 'tools', path: '/instrumenty/', xDefault: 'en', locales: { en: '/tools/' } },
+  { translationKey: 'guides', path: '/neyroseti/', xDefault: 'en', locales: { en: '/guides/' } },
+  { translationKey: 'compare', path: '/sravneniya/', xDefault: 'en', locales: { en: '/compare/' } },
+  { translationKey: 'service', path: '/uslugi/', xDefault: 'en', locales: { en: '/services/' } },
+  { translationKey: 'about', path: '/o-proekte/', xDefault: 'en', locales: { en: '/about/' } },
+  { translationKey: 'contact', path: '/kontakty/', xDefault: 'en', locales: { en: '/contact/' } },
+  { translationKey: 'editorial', path: '/redakcionnaya-politika/', xDefault: 'en', locales: { en: '/editorial/' } },
+  { translationKey: 'affiliates', path: '/raskrytie-partnerskih-ssylok/', xDefault: 'en', locales: { en: '/affiliates/' } },
   // English slug is /privacy/, not /politika-konfidencialnosti/.
   { translationKey: 'privacy', path: '/politika-konfidencialnosti/', xDefault: 'en', locales: { en: '/privacy/' } },
   ...newsTranslationRows(),
+  ...guideTranslationRows(),
 ];
 
 /**

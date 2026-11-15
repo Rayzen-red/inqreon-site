@@ -1,0 +1,14 @@
+---
+import { EMAIL, TELEGRAM_URL } from '../../data/offer';
+
+const path = Astro.url.pathname;
+const lang = path === '/en' || path.startsWith('/en/') ? 'en' : 'ru';
+const label = lang === 'ru' ? 'Написать в поддержку' : 'Contact support';
+---
+<details class="support">
+  <summary>{label}</summary>
+  <div class="support-menu">
+    <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram · @Inqreon_bot</a>
+    <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+  </div>
+</details>

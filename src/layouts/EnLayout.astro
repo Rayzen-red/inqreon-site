@@ -6,22 +6,21 @@ import Analytics from '../components/Analytics.astro';
 import { SITE } from '../data/site';
 import { PAGE } from '../data/offer';
 import { SERVICE_PATH } from '../data/automation';
-import { SHOW_AUTOMATION_BLOCK } from '../data/prices';
 
 interface Props {
   title?: string;
   description?: string;
   schema?: object[];
   lang?: 'en' | 'ru';
-  /** Site path for canonical and og:url. Defaults to the English landing. */
+  /** Site path for canonical and og:url. Defaults to the English service page. */
   path?: string;
   /** Replaces the service-page hreflang pair. The privacy page uses this. */
   alternates?: { en: string; ru: string; xDefault: string };
 }
-const { title = PAGE.title, description = PAGE.description, schema = [], lang = 'en', path = '/en/', alternates } = Astro.props;
+const { title = PAGE.title, description = PAGE.description, schema = [], lang = 'en', path = '/en/services/', alternates } = Astro.props;
 const canonical = new URL(path, SITE.url).href;
 const enHref = alternates?.en ?? new URL(SERVICE_PATH.en, SITE.url).href;
-const ruHref = alternates?.ru ?? new URL(SHOW_AUTOMATION_BLOCK ? SERVICE_PATH.ru : '/', SITE.url).href;
+const ruHref = alternates?.ru ?? new URL(SERVICE_PATH.ru, SITE.url).href;
 const xDefault = alternates?.xDefault ?? enHref;
 const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
 ---
