@@ -1,6 +1,8 @@
 ---
 import { AGGREGATORS, COMPARE_ARTICLE } from '../../data/compare';
 import { partnerOutbound } from '../../data/partners';
+import BrandLogo from './BrandLogo.astro';
+import { logoForName } from '../../data/logos';
 
 interface Props {
   lang?: 'en' | 'ru';
@@ -38,7 +40,12 @@ const ru = lang === 'ru';
           const link = partnerOutbound(item.id);
           return (
             <tr id={item.id}>
-              <th scope="row">{item.name}</th>
+              <th scope="row">
+                <span class="compare-name">
+                  {logoForName(item.name) && <BrandLogo name={item.name} size={18} />}
+                  {item.name}
+                </span>
+              </th>
               <td>{ru ? item.kind.ru : item.kind.en}</td>
               <td>{ru ? item.role.ru : item.role.en}</td>
               <td>

@@ -1,7 +1,7 @@
 ---
 import EnLayout from '../../../layouts/EnLayout.astro';
-import EnHeader from '../../../components/en/EnHeader.astro';
-import EnFooter from '../../../components/en/EnFooter.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
 import Hero from '../../../components/en/Hero.astro';
 import Rescue from '../../../components/en/Rescue.astro';
 import Rest from '../../../components/en/Rest.astro';
@@ -45,7 +45,7 @@ const schema = [
 ---
 <EnLayout path={SERVICE_PATH.en} title="Inqreon — when an AI-built site breaks" description={PAGE.description} schema={schema}>
   <div class="page">
-    <EnHeader lang="en" />
+    <Header />
     <main id="main">
       <Hero lang="en" />
       <Rescue lang="en" />
@@ -55,7 +55,7 @@ const schema = [
       <Automations lang="en" />
       <Tail lang="en" />
     </main>
-    <EnFooter lang="en" />
+    <Footer />
   </div>
 </EnLayout>
 <script>

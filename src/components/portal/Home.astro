@@ -5,6 +5,8 @@ import { AGGREGATORS } from '../../data/compare';
 import { loadNews, newsImage, newsPath, formatNewsDate, type Lang } from '../../lib/news';
 import GuideNotes from './GuideNotes.astro';
 import { formatDate } from '../../data/site';
+import BrandLogo from './BrandLogo.astro';
+import { logoForName } from '../../data/logos';
 
 interface Props {
   lang: Lang;
@@ -95,7 +97,7 @@ const compareHref = ru ? '/sravneniya/' : '/en/compare/';
       const entry = byId.get(guide.id);
       const title = ru ? entry?.data.title : guide.en.title;
       const description = ru ? entry?.data.description : guide.en.description;
-      const when = entry ? formatDate(entry.data.checkedAt) : '';
+      const when = entry ? formatDate(entry.data.checkedAt, lang) : '';
       return (
         <li>
           <span class="idx">{String(index + 1).padStart(2, '0')}</span>
@@ -128,7 +130,12 @@ const compareHref = ru ? '/sravneniya/' : '/en/compare/';
   </p>
   <ul class="name-row">
     {AGGREGATORS.map((item) => (
-      <li><a href={`${compareHref}#${item.id}`}>{item.name}</a></li>
+      <li>
+        <a href={`${compareHref}#${item.id}`}>
+          {logoForName(item.name) && <BrandLogo name={item.name} size={16} />}
+          {item.name}
+        </a>
+      </li>
     ))}
   </ul>
 </section>

@@ -16,7 +16,7 @@ export function initEnPage(): void {
   initCompare();
   initReveals();
   initPipe();
-  void bootScene();
+  initRescue();
 }
 
 function initNav(): void {
@@ -251,23 +251,42 @@ function initPipe(): void {
   io.observe(pipe);
 }
 
-async function bootScene(): Promise<void> {
-  const root = document.documentElement;
-  if (root.classList.contains('reduce-motion') || root.classList.contains('no-webgl')) return;
-  const start = async () => {
-    try {
-      const mod = await import('./rescue-scene');
-      await mod.mountRescue();
-    } catch (err) {
-      console.warn('Rescue scene unavailable', err);
-      root.classList.add('no-webgl');
-    }
+function initRescue(): void {
+  const scroller = document.querySelector<HTMLElement>('#rescue-scroll');
+  if (!scroller) return;
+  scroller.querySelectorAll('img').forEach((img) => {
+    if (typeof img.decode === 'function') void img.decode().catch(() => {});
+  });
+
+  const narrow = window.matchMedia('(max-width: 899px)');
+  const coarse = window.matchMedia('(pointer: coarse)');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const supported =
+    CSS.supports('animation-timeline: scroll()') && CSS.supports('animation-range: 0% 100%');
+  if (narrow.matches || coarse.matches || reduce.matches || supported) return;
+
+  scroller.classList.add('is-fallback');
+  let ticking = false;
+  const paint = () => {
+    ticking = false;
+    if (!scroller.classList.contains('is-fallback')) return;
+    const rect = scroller.getBoundingClientRect();
+    const total = rect.height - window.innerHeight;
+    const p = total <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / total));
+    scroller.style.setProperty('--p', p.toFixed(4));
   };
-  if ('requestIdleCallback' in window) {
-    window.requestIdleCallback(() => void start(), { timeout: 1600 });
-  } else {
-    window.setTimeout(() => void start(), 400);
-  }
+  const request = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(paint);
+  };
+  paint();
+  window.addEventListener('scroll', request, { passive: true });
+  narrow.addEventListener('change', () => {
+    scroller.classList.toggle('is-fallback', !narrow.matches && !reduce.matches);
+    if (narrow.matches) scroller.style.removeProperty('--p');
+    else request();
+  });
 }
 
 function ease(t: number): number {

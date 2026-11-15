@@ -24,8 +24,10 @@ const cover = coverFor(entry.id);
       decoding="async"
     />
   </figure>
-  {showRubric && <p class="tag">{getRubric(d.rubric).name}</p>}
-  <h3>{d.title}</h3>
-  <p>{d.description}</p>
-  <p class="meta">Проверено {formatDate(d.updatedAt ?? d.checkedAt)}</p>
+  <div class="card-copy">
+    {showRubric && <p class="tag">{getRubric(d.rubric).name}</p>}
+    <h3>{d.title}</h3>
+    <p>{d.description}</p>
+    <p class="meta">Проверено {formatDate(d.updatedAt ?? d.checkedAt)}</p>
+  </div>
 </a>

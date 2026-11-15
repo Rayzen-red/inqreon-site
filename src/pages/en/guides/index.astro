@@ -3,34 +3,43 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { PORTAL_GUIDES } from '../../../data/portal-guides';
 import { formatDate } from '../../../data/site';
+import { coverFor } from '../../../lib/media';
 
 const articles = await getCollection('articles', ({ data }) => !data.draft);
 const byId = new Map(articles.map((entry) => [entry.id, entry]));
 const guides = PORTAL_GUIDES.filter((guide) => byId.has(guide.id));
 const title = 'Guides — Inqreon';
-const description = 'English names for the AI tool guides published in Russian: what each tool is for, with the check date on the original page.';
+const description = 'English titles for the AI tool guides, with a cover and the day each guide was checked.';
 ---
 <BaseLayout title={title} description={description}>
   <div class="container page-hero">
     <p class="kicker">Guides</p>
     <h1>Guides</h1>
-    <p class="lead">The articles are written in Russian. This page is the same list, with English titles, so the two languages point at the same texts. A regional check of Russia, Uzbekistan, and Kazakhstan stays marked as regional.</p>
+    <p class="lead">What each tool is for, in the same order as the Russian articles. The day on the card is the day that article was checked.</p>
   </div>
   <div class="container">
-    <ol class="rows">
+    <div class="guide-index">
       {guides.map((guide, index) => {
         const entry = byId.get(guide.id);
+        const cover = coverFor(guide.id);
+        const checked = entry?.data.checkedAt;
         return (
-          <li>
-            <span class="idx">{String(index + 1).padStart(2, '0')}</span>
-            <div>
-              <h3><a href={guide.href} hreflang="ru" lang="ru">{guide.en.title}</a></h3>
-              <p>{guide.en.description}</p>
-              {entry && <p class="meta">Checked {formatDate(entry.data.checkedAt)}</p>}
-            </div>
-          </li>
+          <a class="guide-card" href={guide.href} hreflang="ru">
+            <img
+              src={cover.src}
+              alt=""
+              width={cover.width}
+              height={cover.height}
+              loading={index < 2 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+            <h2>{guide.en.title}</h2>
+            <p>{guide.en.description}</p>
+            {checked && <p class="meta">Checked <time datetime={checked.toISOString().slice(0, 10)}>{formatDate(checked, 'en')}</time></p>}
+          </a>
         );
       })}
-    </ol>
+    </div>
+    <p class="aside-note">The full text of each guide is in Russian. The titles here are the English names of those same pages.</p>
   </div>
 </BaseLayout>

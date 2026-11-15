@@ -4,7 +4,7 @@ slug: "gemini-decisions-api"
 date: 2026-11-15
 lang: ru
 description: "11 ноября Google открыла Gemini Decisions API: Decision 1 за один проход оценивает до 1 000 вопросов «да/нет», с выбором или по рубрике и даёт вероятности, не текст."
-image: "/images/news/gemini-decisions-api.png"
+image: "/images/news/gemini-decisions-api.webp"
 imageAlt: "Абстрактное дерево решений из светящихся ветвей и полос вероятности над стопкой документов, фото и звуковых волн, без логотипов и текста."
 sources:
   - title: "Gemini Decisions API: Fast, calibrated multimodal decisions"

@@ -1,6 +1,8 @@
 ---
 import { loadGuides, guidePath } from '../../lib/guides';
 import type { Lang } from '../../lib/news';
+import { logoForSlug } from '../../data/logos';
+import BrandLogo from './BrandLogo.astro';
 
 interface Props {
   lang: Lang;
@@ -38,6 +40,9 @@ const listing = ru ? '/instrumenty/' : '/en/tools/';
             loading={index < 2 ? 'eager' : 'lazy'}
             decoding="async"
           />
+          {logoForSlug(note.data.slug) && (
+            <span class="brand-badge"><BrandLogo slug={note.data.slug} size={20} /></span>
+          )}
           <h3>{note.data.title}</h3>
           <p>{note.data.description}</p>
         </a>
