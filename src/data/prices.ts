@@ -51,7 +51,8 @@ export function formatRange(min: number, max: number): string {
   return `${formatPrice(min)}–${formatPrice(max)}`;
 }
 
-/** "$20–$25/hour". */
-export function formatHourly(min: number, max: number): string {
-  return `${formatRange(min, max)}/hour`;
+/** "$20–$25/hour" in English, "$20–$25 в час" in Russian. */
+export function formatHourly(min: number, max: number, lang: 'en' | 'ru' = 'en'): string {
+  const range = formatRange(min, max);
+  return lang === 'ru' ? `${range} в час` : `${range}/hour`;
 }

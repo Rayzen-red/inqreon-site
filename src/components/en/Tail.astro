@@ -5,7 +5,7 @@ import { PRICES, formatHourly } from '../../data/prices';
 interface Props { lang?: 'en' | 'ru' }
 const { lang = 'en' } = Astro.props;
 const ru = lang === 'ru';
-const hourly = formatHourly(PRICES.hourly.min, PRICES.hourly.max);
+const hourly = formatHourly(PRICES.hourly.min, PRICES.hourly.max, ru ? 'ru' : 'en');
 
 const faqs: Array<[string, string]> = ru
   ? [

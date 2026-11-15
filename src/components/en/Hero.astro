@@ -28,7 +28,7 @@ const ru = lang === 'ru';
         <span aria-hidden="true">·</span>
         <b>{formatRange(PRICES.fix.small.min, PRICES.fix.launch.max)}</b> {ru ? 'починка' : 'Fix'}
         <span aria-hidden="true">·</span>
-        <b>{formatHourly(PRICES.hourly.min, PRICES.hourly.max)}</b> {ru ? 'час' : 'Hourly'}
+        <b>{formatHourly(PRICES.hourly.min, PRICES.hourly.max, ru ? 'ru' : 'en')}</b>
       </p>
       <p class="hero-quiet"><a href="#pricing">{ru ? 'Цены и как написать' : 'Prices, and how to write'}</a></p>
       <div class="hero-meta">
