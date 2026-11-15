@@ -1,16 +1,18 @@
 /**
  * English service page constants.
  *
- * PUBLIC_UPWORK_URL is the only Upwork setting. When it is empty, the page
- * does not link to upwork.com. The order button opens email instead.
+ * DEFAULT_UPWORK_URL is the profile every Upwork button uses.
+ * PUBLIC_UPWORK_URL overrides it when the value is an http(s) URL.
+ * An empty or invalid override keeps the default, so those buttons stay visible.
  * Only the PUBLIC_ prefix is exposed to the browser.
  * Prices live in ./prices.ts — do not write a dollar amount in this file.
  */
 import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice, formatRange } from './prices';
 
-const raw = (import.meta.env.PUBLIC_UPWORK_URL || '') as string;
+/** Real Upwork profile. The only profile URL in the site. */
+export const DEFAULT_UPWORK_URL = 'https://www.upwork.com/freelancers/~01b29d79029b8b2b12';
 
-/** An http(s) URL, or empty so order buttons fall back to email. */
+/** An http(s) URL, or empty when the value is not one. */
 function upworkUrl(value: string): string {
   try {
     const url = new URL(value.trim());
@@ -21,7 +23,8 @@ function upworkUrl(value: string): string {
   return '';
 }
 
-export const UPWORK_URL = upworkUrl(raw);
+const override = upworkUrl((import.meta.env.PUBLIC_UPWORK_URL || '') as string);
+export const UPWORK_URL = override || DEFAULT_UPWORK_URL;
 export const HAS_UPWORK = UPWORK_URL.length > 0;
 
 export const EMAIL = 'raydzim.group@gmail.com';
@@ -71,7 +74,7 @@ I won't send passwords or secret keys in this email.
 
 export type OrderKind = 'scan' | 'fix' | 'hire';
 
-/** One switch: Upwork profile when set, otherwise a prefilled email. */
+/** Upwork profile for an order button: PUBLIC_UPWORK_URL when that is an http(s) URL, otherwise DEFAULT_UPWORK_URL. */
 export function orderHref(kind: OrderKind = 'scan'): string {
   if (HAS_UPWORK) return UPWORK_URL;
   if (kind === 'hire' || kind === 'scan') return SCAN_MAIL;
