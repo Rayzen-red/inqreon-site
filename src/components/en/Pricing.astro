@@ -6,7 +6,7 @@ import { PRICES, formatHourly, formatPrice } from '../../data/prices';
 interface Props { lang?: 'en' | 'ru' }
 const { lang = 'en' } = Astro.props;
 const ru = lang === 'ru';
-const hourly = formatHourly(PRICES.hourly.min, PRICES.hourly.max);
+const hourly = formatHourly(PRICES.hourly.min, PRICES.hourly.max, ru ? 'ru' : 'en');
 const ruTier: Record<string, { name: string; description: string }> = {
   small: { name: 'Маленькая правка', description: 'Один баг, вход или одна страница.' },
   medium: { name: 'Средняя правка', description: 'Stripe, доступ в Supabase и политики строк, или несколько багов.' },
