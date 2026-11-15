@@ -74,7 +74,7 @@ I won't send passwords or secret keys in this email.
 
 export type OrderKind = 'scan' | 'fix' | 'hire';
 
-/** One switch: Upwork profile when set, otherwise a prefilled email. */
+/** Upwork profile for an order button: PUBLIC_UPWORK_URL when that is an http(s) URL, otherwise DEFAULT_UPWORK_URL. */
 export function orderHref(kind: OrderKind = 'scan'): string {
   if (HAS_UPWORK) return UPWORK_URL;
   if (kind === 'hire' || kind === 'scan') return SCAN_MAIL;
