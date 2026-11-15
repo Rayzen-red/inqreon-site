@@ -419,19 +419,21 @@ footer a { color: var(--muted); text-decoration: none; }
 footer a:hover { color: var(--text); }
 .foot-links { display: inline-flex; flex-wrap: wrap; gap: 10px 16px; }
 
-.cookie-banner[hidden] { display: none; }
+.cookie-banner[hidden] { display: none !important; }
 .cookie-banner {
-  position: fixed; z-index: 40; left: 16px; right: 16px; bottom: 16px;
-  width: min(760px, calc(100% - 32px)); margin-inline: auto;
-  display: flex; gap: 16px; align-items: center; justify-content: space-between;
-  padding: 14px 16px; border-radius: 16px; border: 1px solid var(--line2);
-  background: rgba(12, 14, 18, 0.92); backdrop-filter: blur(16px);
+  position: fixed; z-index: 50; left: auto; right: 16px; bottom: 16px;
+  width: min(320px, calc(100% - 32px)); margin: 0;
+  display: grid; gap: 10px;
+  padding: 12px 14px; border-radius: 0; border: 1px solid #1c1b17;
+  background: #fffdf8; color: #1c1b17; backdrop-filter: none;
+  box-shadow: 0 16px 36px rgba(28, 27, 23, 0.14);
 }
-.cookie-banner p { margin: 0; font-size: 14.5px; color: #d5dbe3; }
-.cookie-banner a { color: var(--cta); }
-.cookie-banner button {
-  flex: none; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; cursor: pointer;
-  background: var(--cta); color: var(--cta-ink); font: 600 14px/1 var(--sans);
+.cookie-banner p { margin: 0; font-size: 13px; line-height: 1.45; color: #1c1b17; }
+.cookie-banner a { color: #1c1b17; }
+.cookie-banner button,
+.cookie-banner .btn {
+  width: 100%; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; cursor: pointer;
+  background: #1c1b17; color: #f3f0e8; font: 650 14px/1 Manrope, system-ui, sans-serif;
 }
 
 .js:not(.reduce-motion):not(.no-io) .rv { opacity: 0; transform: translateY(18px); }
@@ -462,7 +464,8 @@ footer a:hover { color: var(--text); }
 @media (max-width: 560px) {
   .prob-grid, .rules { grid-template-columns: 1fr; }
   .prob { border-right: 0; margin-right: 0; border-bottom: 1px solid var(--line); }
-  .cookie-banner { flex-direction: column; align-items: stretch; }
+  .cookie-banner { left: 12px; right: 12px; width: auto; display: flex; flex-direction: row; align-items: center; gap: 10px; }
+  .cookie-banner button, .cookie-banner .btn { width: auto; flex: none; }
   .ba { font-size: 11px; }
   .ba-pane { min-height: 280px; }
 }

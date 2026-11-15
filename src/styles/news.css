@@ -11,7 +11,7 @@
 }
 
 .news-wrap {
-  width: min(1160px, calc(100% - 32px));
+  width: min(var(--maxw, 1120px), calc(100% - 32px));
   margin-inline: auto;
 }
 .news-wrap.narrow { width: min(740px, calc(100% - 40px)); }

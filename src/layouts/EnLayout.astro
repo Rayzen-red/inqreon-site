@@ -1,8 +1,11 @@
 ---
-import '@fontsource-variable/geist/wght.css';
 import '@fontsource-variable/geist-mono/wght.css';
 import '../styles/en.css';
+import '../styles/portal.css';
+import '../styles/rescue.css';
+import '../styles/services-theme.css';
 import Analytics from '../components/Analytics.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 import { SITE } from '../data/site';
 import { PAGE } from '../data/offer';
 import { SERVICE_PATH } from '../data/automation';
@@ -36,8 +39,11 @@ const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
     <link rel="alternate" hreflang="ru" href={ruHref} />
     <link rel="alternate" hreflang="x-default" href={xDefault} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/concepts/fonts/xn7gYHE41ni1AdIRggOxSuXd.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/concepts/fonts/Yq6W-LOTXCb04q32xlpwv8ZfrxE.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/concepts/fonts.css" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="theme-color" content="#08090b" />
+    <meta name="theme-color" content="#f3f0e8" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'} />
@@ -62,34 +68,9 @@ const ogImage = new URL('/images/en/og-share-1200x630.webp', SITE.url).href;
     </script>
     <Analytics />
   </head>
-  <body>
+  <body class="svc-page">
     <a class="skip" href="#main">{lang === 'ru' ? 'К содержанию' : 'Skip to content'}</a>
-    <div class="bg-grid" aria-hidden="true"></div>
-    <div class="bg-noise" aria-hidden="true"></div>
     <slot />
-    <aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label={lang === 'ru' ? 'Уведомление о куки' : 'Cookie notice'}>
-      <p>
-        {lang === 'ru' ? (
-          <>Этот сайт использует куки и аналитику (Google Analytics и Яндекс Метрику), чтобы видеть, какие страницы читают. <a href="/politika-konfidencialnosti/">Политика конфиденциальности</a>.</>
-        ) : (
-          <>This site uses cookies and analytics (Google Analytics and Yandex Metrica) to see which pages are read. <a href="/en/privacy/">Privacy policy</a>.</>
-        )}
-      </p>
-      <button type="button">OK</button>
-    </aside>
-    <script is:inline>
-      (function () {
-        var KEY = 'inqreon-cookie-consent';
-        var banner = document.getElementById('cookie-banner');
-        if (!banner) return;
-        var button = banner.querySelector('button');
-        try { if (localStorage.getItem(KEY) === 'accepted') return; } catch (e) {}
-        banner.hidden = false;
-        button.addEventListener('click', function () {
-          try { localStorage.setItem(KEY, 'accepted'); } catch (e) {}
-          banner.hidden = true;
-        });
-      })();
-    </script>
+    <CookieBanner />
   </body>
 </html>

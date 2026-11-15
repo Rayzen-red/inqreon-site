@@ -1,0 +1,257 @@
+/* Services sit on the same paper as the rest of the portal.
+   The terminal, the rescue plate, the code compare, and the deploy
+   diagram stay dark, and they stay inside their own boxes. */
+
+html:has(.svc-page) { scroll-behavior: auto; }
+.svc-page { overflow-x: visible; }
+
+.svc-page {
+  --line2: #cfc6b6;
+  --dim: #6f685c;
+  --cta: #1c1b17;
+  --cta-ink: #f3f0e8;
+  --ok: #246b45;
+  --err: #9d2c32;
+  --sans: Manrope, system-ui, sans-serif;
+  --wrap: 1120px;
+  background: #f3f0e8;
+  color: #1c1b17;
+  font-family: Manrope, system-ui, sans-serif;
+}
+.svc-page h1,
+.svc-page h2,
+.svc-page h3 {
+  font-family: Manrope, system-ui, sans-serif;
+  font-weight: 760;
+  letter-spacing: -0.045em;
+  color: #1c1b17;
+}
+.svc-page h2 { font-size: clamp(1.7rem, 3vw, 2.45rem); }
+.svc-page .wrap {
+  width: min(1120px, calc(100% - 32px));
+  max-width: none;
+  padding-inline: 0;
+}
+.svc-page .site-header .logo,
+.svc-page .site-header .logo-mark {
+  font-family: Manrope, system-ui, sans-serif;
+}
+.svc-page .site-header .logo-mark {
+  border-radius: 0;
+  background: #1c1b17;
+  color: #f3f0e8;
+}
+.svc-page .lang-switch {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: 0;
+  border: 1px solid #cfc6b6;
+  background: #fffdf8;
+  border-radius: 999px;
+  padding: 2px;
+}
+.svc-page .lang-switch a,
+.svc-page .lang-switch span {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  line-height: 1;
+  text-decoration: none;
+  color: #5e584e;
+}
+.svc-page .lang-switch [aria-current="true"] {
+  background: #1c1b17;
+  color: #f3f0e8;
+}
+.svc-page .eyebrow {
+  font-family: Manrope, system-ui, sans-serif;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  color: #5e584e;
+}
+.svc-page .eyebrow::before { background: #cfc6b6; }
+.svc-page .lead { color: #5e584e; }
+.svc-page .sec { padding-block: clamp(48px, 7vw, 84px); }
+.svc-page .sec-head { gap: 10px; margin-bottom: 22px; }
+
+.svc-page .hero {
+  padding-top: 28px;
+  padding-bottom: 28px;
+  background: none;
+}
+.svc-page .hero h1 {
+  font-size: clamp(2.5rem, 5.2vw, 4.4rem);
+  margin: 10px 0 14px;
+  letter-spacing: -0.05em;
+}
+.svc-page .hero-prices { color: #1c1b17; }
+.svc-page .hero-meta {
+  font-family: Manrope, system-ui, sans-serif;
+  color: #5e584e;
+}
+.svc-page .hero-quiet a { text-underline-offset: 0.18em; }
+
+.svc-page .tools {
+  background: transparent;
+  border-block: 1px solid #ddd6c8;
+  color: #1c1b17;
+}
+.svc-page .tools .lbl {
+  font-family: Manrope, system-ui, sans-serif;
+  color: #5e584e;
+}
+.svc-page .tools ul { color: #1c1b17; }
+
+.svc-page .btn {
+  height: 46px;
+  border-radius: 999px;
+  border: 1px solid #1c1b17;
+  background: transparent;
+  color: #1c1b17;
+  font-family: Manrope, system-ui, sans-serif;
+}
+.svc-page .btn:hover {
+  background: #1c1b17;
+  color: #f3f0e8;
+  border-color: #1c1b17;
+}
+.svc-page .btn-cta,
+.svc-page .btn-cta:hover {
+  background: #1c1b17;
+  color: #f3f0e8;
+  border-color: #1c1b17;
+}
+
+.svc-page .prob-grid { border-top-color: #1c1b17; }
+.svc-page .prob h3 { color: #1c1b17; }
+.svc-page .prob p,
+.svc-page .rule p,
+.svc-page .ps p,
+.svc-page .tier-desc,
+.svc-page .price-note { color: #5e584e; }
+.svc-page .prob .k { color: #9d2c32; }
+
+.svc-page .proc::before { background: #cfc6b6; }
+.svc-page .ps .num {
+  background: #f3f0e8;
+  border-color: #cfc6b6;
+  font-family: Manrope, system-ui, sans-serif;
+}
+.svc-page .ps h3 { font-size: clamp(1.6rem, 2vw, 2rem); }
+.svc-page .ps .price { color: #1c1b17; font-family: Manrope, system-ui, sans-serif; }
+.svc-page .mascot img { filter: none; border-radius: 0; }
+
+.svc-page .pc {
+  background: #fffdf8;
+  border: 1px solid #1c1b17;
+  border-radius: 0;
+  box-shadow: none;
+  color: #1c1b17;
+}
+.svc-page .pc::before { display: none; }
+.svc-page .pc:hover { border-color: #1c1b17; }
+.svc-page .pc.feat {
+  border-color: #1c1b17;
+  box-shadow: none;
+}
+.svc-page .pc .tag {
+  color: #5e584e;
+  font-family: Manrope, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+}
+.svc-page .pc.feat .tag {
+  width: fit-content;
+  padding: 3px 8px;
+  background: #e2f56a;
+  color: #1c2408;
+}
+.svc-page .pc ul,
+.svc-page .case dd { color: #1c1b17; }
+.svc-page .amt { font-family: Manrope, system-ui, sans-serif; color: #1c1b17; }
+.svc-page .tiers label {
+  background: #f3f0e8;
+  color: #1c1b17;
+  border-color: #cfc6b6;
+  font-family: Manrope, system-ui, sans-serif;
+}
+.svc-page .tiers input:checked + label {
+  background: #1c1b17;
+  color: #f3f0e8;
+  border-color: #1c1b17;
+}
+.svc-page .tiers input:focus-visible + label { outline-color: #1c1b17; }
+
+.svc-page .rules { border-color: #1c1b17; }
+.svc-page .rule b { color: #1c1b17; }
+.svc-page .rule .ix { font-family: Manrope, system-ui, sans-serif; color: #5e584e; }
+
+.svc-page .faq summary {
+  font-family: Manrope, system-ui, sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: -0.03em;
+}
+.svc-page .faq summary::before {
+  border-color: #cfc6b6;
+  color: #5e584e;
+}
+.svc-page .faq details[open] summary::before {
+  color: #1c1b17;
+  border-color: #1c1b17;
+}
+.svc-page .faq details p { color: #5e584e; }
+
+.svc-page footer.site-foot {
+  border-top: 0;
+  padding: 0;
+  color: #5e584e;
+  font-size: inherit;
+  background: transparent;
+}
+
+.svc-page .cookie-banner {
+  position: fixed;
+  z-index: 50;
+  top: auto;
+  left: auto;
+  right: 16px;
+  bottom: 16px;
+  width: min(320px, calc(100% - 32px));
+  margin: 0;
+  display: grid;
+  gap: 10px;
+  align-items: stretch;
+  padding: 12px 14px;
+  border-radius: 0;
+  border: 1px solid #1c1b17;
+  background: #fffdf8;
+  color: #1c1b17;
+  box-shadow: 0 16px 36px rgba(28, 27, 23, 0.14);
+  backdrop-filter: none;
+}
+.svc-page .cookie-banner[hidden] { display: none !important; }
+.svc-page .cookie-banner p { margin: 0; font-size: 13px; line-height: 1.45; color: #1c1b17; }
+.svc-page .cookie-banner a { color: #1c1b17; }
+.svc-page .cookie-banner .btn {
+  width: 100%;
+  min-height: 40px;
+  height: 40px;
+  background: #1c1b17;
+  color: #f3f0e8;
+}
+@media (max-width: 560px) {
+  .svc-page .cookie-banner {
+    left: 12px;
+    right: 12px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .svc-page .cookie-banner .btn { width: auto; flex: none; }
+  .svc-page .hero-grid,
+  .svc-page .case,
+  .svc-page .prices,
+  .svc-page .prices.reserve { grid-template-columns: 1fr; }
+}

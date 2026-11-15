@@ -7,34 +7,34 @@ export type Picture = {
 
 const COVERS: Record<string, Picture> = {
   deepseek: {
-    src: '/concepts/covers/deepseek.svg',
-    alt: 'Обложка обзора DeepSeek',
-    width: 1600,
-    height: 1000,
+    src: '/images/guides/deepseek.webp',
+    alt: 'Синее стекло на деревянном столе, без надписей',
+    width: 1280,
+    height: 720,
   },
   'besplatnye-neyroseti': {
-    src: '/concepts/covers/free.svg',
-    alt: 'Обложка обзора бесплатных нейросетей',
-    width: 1600,
-    height: 1000,
+    src: '/images/guides/free.webp',
+    alt: 'Четыре чистые карточки на льне, без надписей',
+    width: 1280,
+    height: 720,
   },
   'agregatory-neyrosetey': {
-    src: '/concepts/covers/hubs.svg',
-    alt: 'Обложка обзора агрегаторов нейросетей',
-    width: 1600,
-    height: 1000,
+    src: '/images/guides/hubs.webp',
+    alt: 'Пустые рамки разного размера на полке, без картин и надписей',
+    width: 1280,
+    height: 720,
   },
   'neyroseti-dostupnye-v-rossii-i-sng': {
-    src: '/concepts/covers/access.svg',
-    alt: 'Обложка сравнения нейросетей для России и СНГ',
-    width: 1600,
-    height: 1000,
+    src: '/images/guides/access.webp',
+    alt: 'Приоткрытая дверь, льняная занавеска и закрытый блокнот на пороге',
+    width: 1280,
+    height: 720,
   },
   gigachat: {
-    src: '/concepts/covers/gigachat.svg',
-    alt: 'Обложка гайда по ГигаЧату',
-    width: 1600,
-    height: 1000,
+    src: '/images/guides/gigachat.webp',
+    alt: 'Зелёный телефон и стопка чистых карточек на столе, без надписей',
+    width: 1280,
+    height: 720,
   },
 };
 
@@ -45,10 +45,10 @@ export function ogImageFor(id: string): string {
 export function coverFor(id: string): Picture {
   return (
     COVERS[id] ?? {
-      src: '/concepts/covers/access.svg',
+      src: '/images/guides/access.webp',
       alt: 'Обложка материала Inqreon',
-      width: 1600,
-      height: 1000,
+      width: 1280,
+      height: 720,
     }
   );
 }

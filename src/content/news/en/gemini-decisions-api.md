@@ -4,7 +4,7 @@ slug: "gemini-decisions-api"
 date: 2026-11-15
 lang: en
 description: "On Nov 11 Google launched the Gemini Decisions API: Decision 1 scores up to 1,000 yes/no, choice, or rubric questions in one pass and returns probabilities, not prose."
-image: "/images/news/gemini-decisions-api.png"
+image: "/images/news/gemini-decisions-api.webp"
 imageAlt: "An abstract decision tree of glowing branches and probability bars over a shared stack of documents, photos, and sound waves, with no logos or text."
 sources:
   - title: "Gemini Decisions API: Fast, calibrated multimodal decisions"

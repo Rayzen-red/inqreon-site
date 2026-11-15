@@ -21,8 +21,8 @@ export const COUNTRY_LABELS: Record<string, string> = {
   kz: 'Казахстан',
 };
 
-export function formatDate(d: Date): string {
-  return new Intl.DateTimeFormat('ru-RU', {
+export function formatDate(d: Date, lang: 'ru' | 'en' = 'ru'): string {
+  return new Intl.DateTimeFormat(lang === 'en' ? 'en-US' : 'ru-RU', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',

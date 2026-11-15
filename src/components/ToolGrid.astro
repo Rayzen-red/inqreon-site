@@ -1,5 +1,7 @@
 ---
 import { TOOLS } from '../lib/media';
+import BrandLogo from './portal/BrandLogo.astro';
+import { logoForName } from '../data/logos';
 
 interface Props {
   lang?: 'en' | 'ru';
@@ -23,7 +25,9 @@ const enText: Record<string, { text: string; href: string }> = {
     const alt = lang === 'en' ? enText[tool.name] : undefined;
     return (
       <a class={`tool tone-${tool.tone}`} href={alt?.href ?? tool.href} hreflang={alt && alt.href.startsWith('/neyroseti') ? 'ru' : undefined}>
-        <span class="mark" aria-hidden="true">{tool.mark}</span>
+        <span class="mark" aria-hidden="true">
+          {logoForName(tool.name) ? <BrandLogo name={tool.name} size={22} /> : tool.mark}
+        </span>
         <span>
           <strong>{tool.name}</strong>
           <em>{alt?.text ?? tool.text}</em>

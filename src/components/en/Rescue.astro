@@ -21,55 +21,52 @@ const steps = ru
     ];
 
 const frames = [
-  { name: 'layers-broken', label: ru ? 'Сломано' : 'Broken', alt: ru ? 'Рисунок: стеклянное приложение разобрано на пять слоёв, с красным сбоем. Не проект клиента.' : 'Illustration of a glass app split into five layers, with a red glitch. Not a client project.' },
-  { name: 'layers-scanning', label: ru ? 'Разбор' : 'Scan', alt: ru ? 'Те же слои, по ним идёт зелёный луч и маленький робот. Не проект клиента.' : 'The same glass layers, with a lime scanning light and a small robot. Not a client project.' },
-  { name: 'layers-fixing', label: ru ? 'Починка' : 'Fix', alt: ru ? 'Роботы чинят слои. Верхние светятся зелёным, нижние ещё красные. Не проект клиента.' : 'Robots repairing the glass layers. The upper plates glow lime, the lower ones still show red. Not a client project.' },
-  { name: 'layers-reassembled', label: ru ? 'Запуск' : 'Launch', alt: ru ? 'Приложение собрано снова, с зелёным свечением. Не проект клиента.' : 'The glass app assembled again, with a lime glow. Not a client project.' },
+  { name: 'layers-broken', label: steps[0][0], alt: ru ? 'Рисунок: стеклянное приложение разобрано на пять слоёв, с красным сбоем. Не проект клиента.' : 'Illustration of a glass app split into five layers, with a red glitch. Not a client project.' },
+  { name: 'layers-scanning', label: steps[1][0], alt: ru ? 'Те же слои, по ним идёт зелёный луч и маленький робот. Не проект клиента.' : 'The same glass layers, with a lime scanning light and a small robot. Not a client project.' },
+  { name: 'layers-fixing', label: steps[2][0], alt: ru ? 'Роботы чинят слои. Верхние светятся зелёным, нижние ещё красные. Не проект клиента.' : 'Robots repairing the glass layers. The upper plates glow lime, the lower ones still show red. Not a client project.' },
+  { name: 'layers-reassembled', label: steps[3][0], alt: ru ? 'Приложение собрано снова, с зелёным свечением. Не проект клиента.' : 'The glass app assembled again, with a lime glow. Not a client project.' },
 ];
 ---
 <section class="rescue" id="rescue" aria-labelledby="rescue-h">
-  <div class="wrap rescue-intro sec-head">
-    <span class="eyebrow">{ru ? 'Прокрутите, чтобы увидеть разбор' : 'Scroll to watch a rescue'}</span>
+  <div class="wrap rescue-intro">
+    <p class="eyebrow">
+      <span class="when-scroll">{ru ? 'Прокрутите, чтобы увидеть разбор' : 'Scroll to watch a rescue'}</span>
+      <span class="when-still">{ru ? 'Четыре шага' : 'Four steps'}</span>
+    </p>
     <h2 id="rescue-h">{ru ? 'Сломано → Разбор → Починка → Запуск' : 'Broken → Scan → Fix → Launch'}</h2>
     <p class="lead">{ru ? 'Приложение, собранное ИИ, — это стопка слоёв. Если один слой врёт, у живого человека ломается всё. Я разбираю стопку, чиню слой и собираю обратно.' : 'An AI-built app is a stack of layers. When one is wrong, the whole thing fails for real users. I take it apart, fix each layer and put it back together.'}</p>
   </div>
-  <div class="pin wrap" id="pin">
-    <ol class="steps" id="steps">
-      {steps.map(([name, text], i) => (
-        <li class:list={['step', { on: i === 0 }]}><b>{name}</b><span>{text}</span></li>
-      ))}
-    </ol>
-    <div>
-      <div class="scene" id="scene">
-        <canvas id="rescue-canvas" aria-hidden="true"></canvas>
-        <Picture
-          class="scene-poster"
-          name="layers-broken"
-          widths={[800, 1600]}
-          width={1600}
-          height={900}
-          alt=""
-          sizes="(max-width: 860px) 92vw, 640px"
-        />
-        <div class="scene-story" id="scene-story">
-          {frames.map((frame) => (
-            <figure class="story-card">
-              <Picture
-                name={frame.name}
-                widths={[800, 1600]}
-                width={1600}
-                height={900}
-                alt={frame.alt}
-                sizes="(max-width: 860px) 92vw, 640px"
-              />
-              <figcaption>{frame.label}</figcaption>
-            </figure>
-          ))}
-        </div>
-        <p class="live" id="live"><span class="status good">LIVE</span><span>Ready for real users</span></p>
+  <div class="rescue-scroll wrap" id="rescue-scroll">
+    <div class="rescue-sticky">
+      <ol class="rescue-steps">
+        {steps.map(([name, text], i) => (
+          <li class="rescue-step">
+            <b><span class="n">{String(i + 1).padStart(2, '0')}</span> {name}</b>
+            <span>{text}</span>
+          </li>
+        ))}
+      </ol>
+      <div class="stage">
+        {frames.map((frame, i) => (
+          <figure class="frame">
+            <Picture
+              name={frame.name}
+              widths={[800, 1600]}
+              width={1600}
+              height={900}
+              alt={frame.alt}
+              sizes="(max-width: 899px) 92vw, 640px"
+              loading="eager"
+              fetchpriority={i === 0 ? 'auto' : 'low'}
+            />
+            <figcaption>
+              <b><span class="n">{String(i + 1).padStart(2, '0')}</span> {frame.label}</b>
+              <span>{steps[i][1]}</span>
+            </figcaption>
+          </figure>
+        ))}
         <p class="scene-cap">{ru ? 'Рисунок · не проект клиента' : 'Illustration · not a real client project'}</p>
       </div>
-      <p class="mcap" id="mcap" aria-hidden="true"></p>
     </div>
   </div>
 </section>

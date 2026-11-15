@@ -1,0 +1,17 @@
+---
+import { logoForName, logoForSlug, type Logo } from '../../data/logos';
+
+interface Props {
+  slug?: string;
+  name?: string;
+  logo?: Logo;
+  size?: number;
+}
+const logo = Astro.props.logo
+  ?? (Astro.props.slug ? logoForSlug(Astro.props.slug) : undefined)
+  ?? (Astro.props.name ? logoForName(Astro.props.name) : undefined);
+const size = Astro.props.size ?? 20;
+---
+{logo && (
+  <img class="brand-logo" src={logo.src} alt="" width={size} height={size} decoding="async" />
+)}

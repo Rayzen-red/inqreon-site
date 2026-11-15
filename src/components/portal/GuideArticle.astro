@@ -1,6 +1,8 @@
 ---
 import { render } from 'astro:content';
 import GuideCta from './GuideCta.astro';
+import BrandLogo from './BrandLogo.astro';
+import { logoForSlug } from '../../data/logos';
 import { guidePath, loadGuides, type GuideEntry } from '../../lib/guides';
 import { formatNewsDate, isoDay } from '../../lib/news';
 
@@ -16,7 +18,10 @@ const others = (await loadGuides(lang)).filter((item) => item.data.slug !== entr
 ---
 <article class="container narrow prose guide-article">
   <p class="kicker"><a href={listing}>{ru ? 'Гид' : 'Guide'}</a></p>
-  <h1>{entry.data.title}</h1>
+  <h1 class:list={[{ 'with-logo': logoForSlug(entry.data.slug) }]}>
+    <BrandLogo slug={entry.data.slug} size={32} />
+    <span>{entry.data.title}</span>
+  </h1>
   <p class="meta"><time datetime={isoDay(entry.data.date)}>{formatNewsDate(entry.data.date, lang)}</time></p>
   <figure class="guide-hero">
     <img src={entry.data.image} alt={entry.data.imageAlt} width="1600" height="900" fetchpriority="high" decoding="async" />
