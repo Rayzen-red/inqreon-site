@@ -55,10 +55,15 @@
   font-size: 0.95rem;
 }
 .scene-cap {
+  position: static;
+  inset: auto;
+  z-index: auto;
   grid-column: 1 / -1;
-  margin: 0;
+  margin: 4px 0 0;
+  text-align: left;
   color: #5e584e;
-  font-size: 0.82rem;
+  font: 500 0.82rem/1.4 Manrope, system-ui, sans-serif;
+  letter-spacing: 0;
 }
 
 @media (max-width: 640px) {
