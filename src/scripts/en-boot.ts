@@ -262,7 +262,9 @@ function initRescue(): void {
   const coarse = window.matchMedia('(pointer: coarse)');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const supported =
-    CSS.supports('animation-timeline: scroll()') && CSS.supports('animation-range: 0% 100%');
+    CSS.supports('animation-timeline: view()') &&
+    CSS.supports('animation-range: 0% 100%') &&
+    CSS.supports('view-timeline: --rescue block');
   if (narrow.matches || coarse.matches || reduce.matches || supported) return;
 
   scroller.classList.add('is-fallback');
