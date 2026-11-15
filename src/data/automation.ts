@@ -11,7 +11,7 @@ export type Lang = 'en' | 'ru';
 export type AutoId = 'light' | 'medium' | 'large';
 
 export const SERVICE_PATH = {
-  en: '/en/',
+  en: '/en/services/',
   ru: '/uslugi/',
 } as const;
 

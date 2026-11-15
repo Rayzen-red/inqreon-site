@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PartnerDisclosure from '../../../components/PartnerDisclosure.astro';
+import ToolGrid from '../../../components/ToolGrid.astro';
+import GuideNotes from '../../../components/portal/GuideNotes.astro';
+
+const title = 'AI tools guide — Inqreon';
+const description = 'Reviews of ChatGPT, Claude, Gemini, and other AI tools: what each one is for, where it falls short, and prices with the day they were checked.';
+---
+<BaseLayout title={title} description={description}>
+  <div class="container page-hero">
+    <p class="kicker">Guide</p>
+    <h1>AI tools guide</h1>
+    <p class="lead">What each tool is good at, what it is for, and what to check before you pay. No scores.</p>
+  </div>
+  <div class="container">
+    <GuideNotes lang="en" heading={false} />
+    <h2>Also linked from older pages</h2>
+    <PartnerDisclosure lang="en" />
+    <ToolGrid lang="en" />
+  </div>
+</BaseLayout>

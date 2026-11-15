@@ -1,40 +1,75 @@
 ---
-import { getCollection } from 'astro:content';
 import { SITE } from '../data/site';
-import { RUBRICS } from '../data/rubrics';
+import { EMAIL, TELEGRAM_URL } from '../data/offer';
+
 const year = new Date().getFullYear();
-const articles = await getCollection('articles', ({ data }) => !data.draft);
-const filled = new Set(articles.map((a) => a.data.rubric));
-const rubrics = RUBRICS.filter((r) => r.slug === 'instrumenty' || filled.has(r.slug));
+const path = Astro.url.pathname;
+const lang = path === '/en' || path.startsWith('/en/') ? 'en' : 'ru';
+const ru = lang === 'ru';
 ---
 <footer class="site-foot">
   <div class="foot-grid">
     <div>
       <p class="foot-brand">Inqreon</p>
-      <p>{SITE.tagline}. Проверяем доступность по странам и указываем дату проверки цен.</p>
+      <p>
+        {ru
+          ? 'Гайды, каталог, сравнение агрегаторов и новости об инструментах для работы и учёбы.'
+          : 'Guides, a catalog, aggregator comparisons, and news about AI tools for work and study.'}
+      </p>
       <ul class="foot-social">
-        <li><a href={SITE.telegram} target="_blank" rel="noopener">Telegram</a></li>
+        <li><a href={TELEGRAM_URL} target="_blank" rel="noopener">Telegram</a></li>
         <li><a href={SITE.youtube} target="_blank" rel="noopener">YouTube</a></li>
-      </ul>
-      <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
-    </div>
-    <div>
-      <p class="foot-title">Рубрики</p>
-      <ul>
-        {rubrics.map((r) => <li><a href={`/${r.slug}/`}>{r.name}</a></li>)}
+        <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
       </ul>
     </div>
     <div>
-      <p class="foot-title">О сайте</p>
+      <p class="foot-title">{ru ? 'Разделы' : 'Sections'}</p>
       <ul>
-        <li><a href="/news/">Новости</a></li>
-        <li><a href="/o-proekte/">О проекте</a></li>
-        <li><a href="/redakcionnaya-politika/">Как мы проверяем информацию</a></li>
-        <li><a href="/raskrytie-partnerskih-ssylok/">Раскрытие партнёрских ссылок</a></li>
-        <li><a href="/politika-konfidencialnosti/">Политика конфиденциальности</a></li>
-        <li><a href="/kontakty/">Контакты</a></li>
+        {ru ? (
+          <>
+            <li><a href="/news/">Новости</a></li>
+            <li><a href="/neyroseti/">Статьи</a></li>
+            <li><a href="/instrumenty/">Гид</a></li>
+            <li><a href="/sravneniya/">Сравнение</a></li>
+            <li><a href="/uslugi/">Услуги</a></li>
+          </>
+        ) : (
+          <>
+            <li><a href="/en/news/">News</a></li>
+            <li><a href="/en/guides/">Articles</a></li>
+            <li><a href="/en/tools/">Guide</a></li>
+            <li><a href="/en/compare/">Compare</a></li>
+            <li><a href="/en/services/">Services</a></li>
+          </>
+        )}
+      </ul>
+    </div>
+    <div>
+      <p class="foot-title">{ru ? 'О сайте' : 'About'}</p>
+      <ul>
+        {ru ? (
+          <>
+            <li><a href="/o-proekte/">О проекте</a></li>
+            <li><a href="/redakcionnaya-politika/">Как проверяем</a></li>
+            <li><a href="/raskrytie-partnerskih-ssylok/">Партнёрские ссылки</a></li>
+            <li><a href="/politika-konfidencialnosti/">Конфиденциальность</a></li>
+            <li><a href="/kontakty/">Контакты</a></li>
+          </>
+        ) : (
+          <>
+            <li><a href="/en/about/">About</a></li>
+            <li><a href="/en/editorial/">How we check</a></li>
+            <li><a href="/en/affiliates/">Affiliate links</a></li>
+            <li><a href="/en/privacy/">Privacy</a></li>
+            <li><a href="/en/contact/">Contact</a></li>
+          </>
+        )}
       </ul>
     </div>
   </div>
-  <p class="foot-legal">© {year} Inqreon — проект {SITE.owner} ({SITE.ownerCountry}). Материалы носят справочный характер и не являются юридической или финансовой консультацией. Цены и условия сервисов меняются — перед оплатой сверяйтесь с официальным сайтом.</p>
+  <p class="foot-legal">
+    © {year} Inqreon — {SITE.owner}. {ru
+      ? 'Материалы справочные. Цены меняются: перед оплатой сверьте официальный сайт сервиса.'
+      : 'The guides are reference material. Prices change: check the service’s own site before you pay.'}
+  </p>
 </footer>

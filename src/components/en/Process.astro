@@ -2,6 +2,10 @@
 import Picture from './Picture.astro';
 import { FIX_TIERS } from '../../data/offer';
 import { PRICES, formatPrice } from '../../data/prices';
+
+interface Props { lang?: 'en' | 'ru' }
+const { lang = 'en' } = Astro.props;
+const ru = lang === 'ru';
 const steps: Array<{
   n: string;
   name: string;
@@ -13,33 +17,33 @@ const steps: Array<{
   {
     n: '01',
     name: 'bot-scan',
-    title: 'Scan',
+    title: ru ? 'Разбор' : 'Scan',
     price: formatPrice(PRICES.scan),
-    alt: 'Scan agent: a small glass robot with a lime scanning beam across its eyes.',
-    text: 'You give me read-only access. I send a written report: what is broken, who owns each account, and a fixed price. Nothing changes until you approve it.',
+    alt: ru ? 'Маленький стеклянный робот с зелёным лучом.' : 'Scan agent: a small glass robot with a lime scanning beam across its eyes.',
+    text: ru ? 'Вы даёте доступ только на чтение. Я присылаю письмо: что сломано, кто владеет каждым аккаунтом и фиксированная цена. До вашего согласия ничего не меняется.' : 'You give me read-only access. I send a written report: what is broken, who owns each account, and a fixed price. Nothing changes until you approve it.',
   },
   {
     n: '02',
     name: 'bot-fix',
-    title: 'Fix',
+    title: ru ? 'Починка' : 'Fix',
     price: FIX_TIERS.map((tier) => tier.price).join(' / '),
-    alt: 'Fix agent: the same glass robot, with stylus tools and lime sparks.',
-    text: 'You approve the plan and the price. I repair the app and send a written update every day.',
+    alt: ru ? 'Тот же робот, с инструментами.' : 'Fix agent: the same glass robot, with stylus tools and lime sparks.',
+    text: ru ? 'Вы соглашаете план и цену. Я чиню и каждый день пишу, что сделано.' : 'You approve the plan and the price. I repair the app and send a written update every day.',
   },
   {
     n: '03',
     name: 'bot-launch',
-    title: 'Launch',
-    alt: 'Launch agent: the same glass robot, brighter, with a mint glow.',
-    text: 'The app goes live on your domain. You get a short handover note.',
+    title: ru ? 'Запуск' : 'Launch',
+    alt: ru ? 'Тот же робот, уже светлее.' : 'Launch agent: the same glass robot, brighter, with a mint glow.',
+    text: ru ? 'Приложение открывается на вашем домене. Вы получаете короткую записку, что куда положено.' : 'The app goes live on your domain. You get a short handover note.',
   },
 ];
 ---
 <section class="sec" id="process" aria-labelledby="proc-h">
   <div class="wrap">
     <div class="sec-head rv">
-      <span class="eyebrow">Process</span>
-      <h2 id="proc-h">Three steps. No surprises.</h2>
+      <span class="eyebrow">{ru ? 'Как идёт работа' : 'Process'}</span>
+      <h2 id="proc-h">{ru ? 'Три шага. Цена известна заранее.' : 'Three steps. No surprises.'}</h2>
     </div>
     <div class="proc">
       {steps.map((step) => (

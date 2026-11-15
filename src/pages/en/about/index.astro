@@ -1,0 +1,19 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import { SITE } from '../../../data/site';
+---
+<PageLayout title="About Inqreon" description="Inqreon is a site about AI tools for work and study: guides, a catalog, comparisons, and news." h1="About Inqreon">
+  <p><strong>Inqreon</strong> writes about AI tools people actually use for work and study. A guide says what a tool is for. A price in a guide is dated. Sources are linked. Anything we could not confirm is marked as unchecked.</p>
+  <h2>What is on the site</h2>
+  <ul>
+    <li>Guides to individual tools. The long ones are written in Russian; the English site names the same pages.</li>
+    <li>A catalog of those tools.</li>
+    <li>A comparison of aggregators, the sites that bundle many models.</li>
+    <li>News.</li>
+    <li>One page about fixing a site that an AI builder broke after launch.</li>
+  </ul>
+  <h2>How the site is paid for</h2>
+  <p>Some links can be affiliate links. If you pay through one, Inqreon may earn a commission. That does not change your price, and it does not buy a place in a ranking. There is no ranking. Details are on the <a href="/en/affiliates/">affiliate disclosure</a>.</p>
+  <h2>Who runs it</h2>
+  <p>Inqreon is a project of {SITE.owner}. Mail <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. The Telegram bot for support is <a href="https://t.me/Inqreon_bot" target="_blank" rel="noopener noreferrer">@Inqreon_bot</a>.</p>
+</PageLayout>

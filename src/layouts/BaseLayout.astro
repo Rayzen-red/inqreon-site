@@ -1,12 +1,13 @@
 ---
 import '../styles/global.css';
 import '../styles/concept-motion.css';
+import '../styles/portal.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import { SITE } from '../data/site';
-import { alternatePath, hreflangLinks } from '../data/translations.mjs';
+import { hreflangLinks } from '../data/translations.mjs';
 
 interface Props {
   title: string;
@@ -33,13 +34,13 @@ const {
 
 const fullTitle = withBrand && !title.includes(SITE.name) ? `${title} — ${SITE.name}` : title;
 const is404 = Astro.url.pathname.replace(/\/$/, '').endsWith('/404');
+const lang = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/') ? 'en' : 'ru';
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImageUrl = new URL(ogImage, SITE.url).href;
 const alternates = is404 ? [] : hreflangLinks(Astro.url.pathname, SITE.url);
-const enHref = (!is404 && alternatePath(Astro.url.pathname)) || '/en/';
 ---
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -57,8 +58,8 @@ const enHref = (!is404 && alternatePath(Astro.url.pathname)) || '/en/';
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
-    <meta property="og:locale" content={SITE.locale} />
-    {alternates.some((alt) => alt.lang === 'en') && <meta property="og:locale:alternate" content="en_US" />}
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'ru_RU'} />
+    <meta property="og:locale:alternate" content={lang === 'en' ? 'ru_RU' : 'en_US'} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {!is404 && <meta property="og:url" content={canonical} />}
@@ -76,17 +77,14 @@ const enHref = (!is404 && alternatePath(Astro.url.pathname)) || '/en/';
     <Analytics />
   </head>
   <body>
-    <a class="skip-link" href="#main">К содержанию</a>
-    <canvas id="stars" aria-hidden="true"></canvas>
+    <a class="skip-link" href="#main">{lang === 'en' ? 'Skip to content' : 'К содержанию'}</a>
     <div class="cosmos">
-      <Header enHref={enHref} />
+      <Header />
       <main id="main">
         <slot />
       </main>
       <Footer />
     </div>
     <CookieBanner />
-    <script is:inline src="/concepts/stars.js"></script>
-    <script is:inline src="/concepts/motion.js"></script>
   </body>
 </html>

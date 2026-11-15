@@ -9,6 +9,7 @@ import remarkMarkers from './src/plugins/remark-markers.mjs';
 import remarkInternalLinks from './src/plugins/remark-internal-links.mjs';
 import { applyHreflang, DEFAULT_LOCALE, LOCALES } from './src/data/translations.mjs';
 import { indexableNews } from './src/data/news-translations.mjs';
+import { indexableGuides } from './src/data/guide-translations.mjs';
 
 // GitHub Pages + собственный домен inqreon.com:
 //   site = https://inqreon.com, base = '/' (домен в корне, не /<repo>/).
@@ -42,7 +43,9 @@ if (fs.existsSync(articlesDir)) {
   }
 }
 const RUBRICS = ['neyroseti', 'dlya-raboty', 'dlya-ucheby', 'prompty', 'sravneniya', 'dostup-i-oplata', 'kosmos-i-nauka', 'instrumenty'];
-const emptyRubricUrls = new Set(RUBRICS.filter((r) => !filledRubrics.has(r) && r !== 'instrumenty').map((r) => `${SITE}/${r}/`));
+const emptyRubricUrls = new Set(
+  RUBRICS.filter((r) => !filledRubrics.has(r) && r !== 'instrumenty' && r !== 'sravneniya').map((r) => `${SITE}/${r}/`),
+);
 const legacyDir = path.resolve('./src/pages/neyroseti');
 const legacyUrls = new Set(
   fs.existsSync(legacyDir)
@@ -82,8 +85,19 @@ for (const u of lastmod.keys()) validPaths.add(u.slice(SITE.length));
 // unless SHOW_DRAFTS=1). hreflang pairs live in src/data/translations.mjs.
 validPaths.add('/en/');
 validPaths.add('/en/privacy/');
+validPaths.add('/en/services/');
+validPaths.add('/en/tools/');
+validPaths.add('/en/guides/');
+validPaths.add('/en/compare/');
+validPaths.add('/en/about/');
+validPaths.add('/en/contact/');
+validPaths.add('/en/editorial/');
+validPaths.add('/en/affiliates/');
+validPaths.add('/sravneniya/');
+validPaths.add('/uslugi/');
 validPaths.add('/news/');
 validPaths.add('/en/news/');
+for (const page of indexableGuides()) validPaths.add(page.path);
 for (const page of indexableNews()) {
   validPaths.add(page.path);
   const iso = new Date(`${page.date}T00:00:00.000Z`).toISOString();

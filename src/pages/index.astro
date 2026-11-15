@@ -1,130 +1,15 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ArticleCard from '../components/ArticleCard.astro';
-import RubricIcon from '../components/concepts/RubricIcon.astro';
-import PartnerDisclosure from '../components/PartnerDisclosure.astro';
-import ToolGrid from '../components/ToolGrid.astro';
-import TelegramCta from '../components/TelegramCta.astro';
-import SyntxAffiliate from '../components/SyntxAffiliate.astro';
-import { RUBRICS } from '../data/rubrics';
-import { SITE, formatDate } from '../data/site';
-import { coverFor, SPACE_IMAGES } from '../lib/media';
+import Home from '../components/portal/Home.astro';
+import { SITE } from '../data/site';
 
-const articles = (await getCollection('articles', ({ data }) => !data.draft)).sort((a, b) => {
-  const byDate = +b.data.checkedAt - +a.data.checkedAt;
-  return byDate || a.id.localeCompare(b.id, 'ru');
-});
-const filled = new Set(articles.map((a) => a.data.rubric));
-const nav = RUBRICS.filter((r) => r.inNav && filled.has(r.slug));
-const space = RUBRICS.find((r) => r.slug === 'kosmos-i-nauka');
-const showSpace = Boolean(space && filled.has(space.slug));
-const homeTitle = `${SITE.name} — Нейросети для работы и учёбы`;
-const homeDescription =
-  'Inqreon — нейросети для работы и учёбы: обзоры, сравнения, цены с датой проверки и промпты.';
+const title = 'Inqreon — Нейросети для работы и учёбы';
+const description = 'Гайды по ИИ-инструментам, каталог, сравнение агрегаторов и новости. Цены в материалах указаны с датой проверки.';
 const schema = [
-  { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url + '/', inLanguage: 'ru', description: homeDescription },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url + '/', inLanguage: 'ru', description },
   { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url + '/', sameAs: [SITE.telegram, SITE.youtube] },
 ];
 ---
-<BaseLayout title={homeTitle} description={homeDescription} withBrand={false} schema={schema}>
-  <header class="container home-intro">
-    <h1>Нейросети для работы и учёбы</h1>
-    <p class="lead">{homeDescription}</p>
-  </header>
-  <section class="hero container" data-slider aria-roledescription="карусель" aria-label="Избранные материалы">
-    <div class="hero-frame">
-      {articles.map((article, i) => {
-        const photo = SPACE_IMAGES[i % SPACE_IMAGES.length];
-        const cover = coverFor(article.id);
-        const href = `/${article.data.rubric}/${article.id}/`;
-        return (
-          <article class:list={['slide', 'hero-slide', { 'is-active': i === 0 }]} data-slide aria-hidden={i === 0 ? 'false' : 'true'}>
-            <div class="hero-copy">
-              <p class="kicker"><RubricIcon slug={article.data.rubric} /> {RUBRICS.find((r) => r.slug === article.data.rubric)?.name}</p>
-              <h2><a href={href}>{article.data.title}</a></h2>
-              <p class="dek">{article.data.description}</p>
-              <p class="meta">Проверено {formatDate(article.data.checkedAt)}</p>
-              <a class="btn" href={href}>Читать материал</a>
-              <figure class="mini-cover">
-                <img
-                  src={cover.src}
-                  alt={cover.alt}
-                  width={cover.width}
-                  height={cover.height}
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                  decoding="async"
-                />
-              </figure>
-            </div>
-            <figure class="hero-photo">
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                width={photo.width}
-                height={photo.height}
-                loading={i === 0 ? 'eager' : 'lazy'}
-                fetchpriority={i === 0 ? 'high' : 'low'}
-                decoding="async"
-              />
-            </figure>
-          </article>
-        );
-      })}
-    </div>
-    <div class="hero-ui">
-      <button type="button" data-prev aria-label="Предыдущий материал">←</button>
-      <div class="dots" role="tablist" aria-label="Слайды">
-        {articles.map((_, i) => (
-          <button type="button" data-dot class:list={[{ 'is-active': i === 0 }]} aria-label={`Слайд ${i + 1}`} aria-selected={i === 0 ? 'true' : 'false'}></button>
-        ))}
-      </div>
-      <button type="button" data-next aria-label="Следующий материал">→</button>
-    </div>
-  </section>
-
-  <nav class="rubric-nav" aria-label="Рубрики" data-reveal>
-    {nav.map((r) => (
-      <a href={`/${r.slug}/`}>
-        <RubricIcon slug={r.slug} />
-        <span>{r.name}</span>
-      </a>
-    ))}
-  </nav>
-
-  <section class="container" data-reveal>
-    <header class="sec-head">
-      <h2>Свежие материалы</h2>
-      <p>Обзоры с датой проверки и ссылками на первоисточники.</p>
-    </header>
-    <div class="cards">
-      {articles.map((article) => <ArticleCard entry={article} />)}
-    </div>
-  </section>
-
-  {showSpace && space && (
-    <section class="space-band container" data-reveal>
-      <img src={SPACE_IMAGES[2].src} alt={SPACE_IMAGES[2].alt} width={SPACE_IMAGES[2].width} height={SPACE_IMAGES[2].height} loading="lazy" decoding="async" />
-      <div>
-        <p class="kicker"><RubricIcon slug={space.slug} /> {space.name}</p>
-        <h2>Рубрика, в которую хочется возвращаться</h2>
-        <p>{space.description}</p>
-        <a class="btn" href={`/${space.slug}/`}>Открыть рубрику</a>
-      </div>
-    </section>
-  )}
-
-  <section class="container tools" data-reveal>
-    <header class="sec-head">
-      <h2>Инструменты</h2>
-      <p>Сервисы из опубликованных обзоров. <a href="/instrumenty/">Весь каталог</a></p>
-    </header>
-    <PartnerDisclosure />
-    <SyntxAffiliate />
-    <ToolGrid />
-  </section>
-
-  <div class="container">
-    <TelegramCta />
-  </div>
+<BaseLayout title={title} description={description} withBrand={false} schema={schema}>
+  <Home lang="ru" />
 </BaseLayout>

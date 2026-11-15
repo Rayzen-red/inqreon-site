@@ -1,7 +1,19 @@
 ---
-// Плашка раскрытия над статьёй (если affiliate: true) — по шаблону affiliate-links-marking.md, раздел 6.2
+interface Props {
+  lang?: 'en' | 'ru';
+}
+const { lang = 'ru' } = Astro.props;
 ---
 <aside class="disclosure" role="note">
-  <strong>Партнёрские ссылки.</strong> В статье могут быть партнёрские ссылки: если вы оформите подписку по ним, Inqreon получит комиссию. Это не влияет на цену для вас и на выводы обзора. Рекламные блоки отмечены пометкой «Реклама» с указанием рекламодателя и erid.{' '}
-  <a href="/raskrytie-partnerskih-ssylok/">Подробнее о партнёрских ссылках</a>
+  {lang === 'en' ? (
+    <>
+      <strong>Affiliate links.</strong> A link that can pay a commission is labeled and uses <code>rel="sponsored nofollow"</code>. The price you pay does not change, and a label is not a ranking. Empty partner URLs are not partnerships.{' '}
+      <a href="/en/affiliates/">How affiliate links work</a>
+    </>
+  ) : (
+    <>
+      <strong>Партнёрские ссылки.</strong> В статье могут быть партнёрские ссылки: если вы оформите подписку по ним, Inqreon получит комиссию. Это не влияет на цену для вас и на выводы обзора. Рекламные блоки отмечены пометкой «Реклама» с указанием рекламодателя и erid.{' '}
+      <a href="/raskrytie-partnerskih-ssylok/">Подробнее о партнёрских ссылках</a>
+    </>
+  )}
 </aside>

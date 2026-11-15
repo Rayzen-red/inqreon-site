@@ -1,0 +1,17 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+---
+<PageLayout title="Affiliate links — Inqreon" description="How Inqreon marks a link that can pay a commission, and why an empty partner URL is not a partnership." h1="Affiliate links">
+  <p>Inqreon is free to read. To pay for the work, the site can carry affiliate links to services it writes about.</p>
+  <h2>What that means</h2>
+  <ul>
+    <li>If you subscribe or add credit through an affiliate link, Inqreon may earn a commission.</li>
+    <li><strong>Your price does not change.</strong> You pay the same as if you had opened the service yourself.</li>
+    <li>A commission does not buy a rank. The site does not publish ranks.</li>
+  </ul>
+  <h2>How a paid link is marked</h2>
+  <p>The URL lives in <code>src/data/partners.ts</code>. While that field is empty, the site links to the service’s own address and does not call it a partnership. When the field is filled, the link is labeled and uses <code>rel="sponsored nofollow"</code>.</p>
+  <p>Ordinary links to official sites and sources are not affiliate links.</p>
+  <h2>What is live today</h2>
+  <p>The Russian catalog has one labeled ad, for SYNTX, a Telegram bot. Its advertising id (erid) is not filled in yet. Aggregator URLs in the config are empty. The Russian page <a href="/raskrytie-partnerskih-ssylok/" hreflang="ru" lang="ru">Раскрытие партнёрских ссылок</a> is the same policy in Russian, including the legal note that still needs a lawyer.</p>
+</PageLayout>

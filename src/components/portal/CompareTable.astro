@@ -1,0 +1,72 @@
+---
+import { AGGREGATORS, COMPARE_ARTICLE } from '../../data/compare';
+import { partnerOutbound } from '../../data/partners';
+
+interface Props {
+  lang?: 'en' | 'ru';
+}
+const { lang = 'ru' } = Astro.props;
+const ru = lang === 'ru';
+---
+<section class="compare" aria-labelledby="compare-h">
+  <p class="disclosure" role="note">
+    {ru ? (
+      <>
+        Партнёрские адреса лежат в одном файле и пока пустые, кроме уже размеченной рекламы SYNTX в каталоге. Пустая ячейка — не партнёрство: ссылка ведёт на сайт самого сервиса. Когда адрес заполнят, у ссылки будет пометка «реклама» и <code>rel="sponsored nofollow"</code>. На описание сервиса это не влияет.
+      </>
+    ) : (
+      <>
+        Affiliate URLs live in one config file and are empty, except a labeled SYNTX ad on the Russian catalog. An empty cell is not a partnership: the link goes to the service’s own site. A filled URL is marked Sponsored and uses <code>rel="sponsored nofollow"</code>. That does not change the description.
+      </>
+    )}
+  </p>
+  <div class="compare-scroll">
+    <table>
+      <caption id="compare-h" class="visually-hidden">
+        {ru ? 'Агрегаторы моделей' : 'Sites that bundle many models'}
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">{ru ? 'Сервис' : 'Service'}</th>
+          <th scope="col">{ru ? 'Формат' : 'Kind'}</th>
+          <th scope="col">{ru ? 'Для чего' : 'What it’s for'}</th>
+          <th scope="col">{ru ? 'Сайт' : 'Site'}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {AGGREGATORS.map((item) => {
+          const link = partnerOutbound(item.id);
+          return (
+            <tr id={item.id}>
+              <th scope="row">{item.name}</th>
+              <td>{ru ? item.kind.ru : item.kind.en}</td>
+              <td>{ru ? item.role.ru : item.role.en}</td>
+              <td>
+                {link && (
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel={link.sponsored ? 'sponsored nofollow noopener' : 'noopener noreferrer'}
+                  >
+                    {link.sponsored ? (ru ? 'Реклама' : 'Sponsored') : (ru ? 'Сайт сервиса' : 'Their site')}
+                  </a>
+                )}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+  <p class="compare-note">
+    {ru ? (
+      <>
+        Цены, лимиты и проверка по странам — в <a href={COMPARE_ARTICLE}>статье об агрегаторах</a>. Дата проверки там указана. Здесь нет оценок и мест в рейтинге.
+      </>
+    ) : (
+      <>
+        Checked prices and country notes are in the <a href={COMPARE_ARTICLE} hreflang="ru" lang="ru">Russian article</a>. This page does not rank anyone.
+      </>
+    )}
+  </p>
+</section>

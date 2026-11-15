@@ -30,31 +30,30 @@ import {
   Sprite,
   SpriteMaterial,
   SRGBColorSpace,
-  TextureLoader,
   WebGLRenderer,
 } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { LAYERS, STEP_CAPTIONS } from '../data/offer';
+import { sceneScript } from '../data/offer';
 
 const CARD_W = 3.7;
 const CARD_H = 2.31;
 const CARD_D = 0.2;
 
-type LayerId = (typeof LAYERS)[number]['id'];
+type LayerId = 'ui' | 'auth' | 'db' | 'pay' | 'deploy';
+
+let layerCount = 5;
 
 interface Card {
   group: Group;
   slab: MeshPhysicalMaterial;
-  face: MeshBasicMaterial;
+  brokenFace: MeshBasicMaterial;
+  fixedFace: MeshBasicMaterial;
   red: MeshBasicMaterial;
   green: MeshBasicMaterial;
   beam: Mesh;
-  broken: CanvasTexture;
-  fixed: CanvasTexture;
-  shownFixed: boolean;
 }
 
 let pokeDraw = () => {};
@@ -178,7 +177,6 @@ export async function mountRescue(): Promise<void> {
 
   const stack = new Group();
   scene.add(stack);
-  const plates = mountPlates(scene);
   const mascots = mountMascots(stack);
   let scrollP = 0;
   let scanAt = 0.18;
@@ -192,8 +190,11 @@ export async function mountRescue(): Promise<void> {
     /* canvas falls back to the generic monospace stack */
   }
 
+  const script = sceneScript(document.documentElement.lang === 'ru' ? 'ru' : 'en');
+  const layers = script.layers;
+  layerCount = layers.length;
   const texW = narrow ? 900 : 1280;
-  const cards: Card[] = LAYERS.map((layer) => makeCard(layer.id, layer.name, layer.bad, layer.ok, texW, renderer));
+  const cards: Card[] = layers.map((layer) => makeCard(layer.id, layer.name, layer.bad, layer.ok, texW, renderer));
   cards.forEach((card) => stack.add(card.group));
 
   const agent = makeAgent();
@@ -265,7 +266,7 @@ export async function mountRescue(): Promise<void> {
       el.classList.toggle('on', i === n);
       el.classList.toggle('done', i < n);
     });
-    if (caption) caption.textContent = STEP_CAPTIONS[n] ?? '';
+    if (caption) caption.textContent = script.captions[n] ?? '';
   }
 
   function apply() {
@@ -274,7 +275,7 @@ export async function mountRescue(): Promise<void> {
     cards.forEach((card, i) => {
       const spread = state.explode;
       const y = (mid - i) * (0.055 + spread * 0.7);
-      const x = (i - mid) * spread * 0.05 + Math.sin(i * 2.4) * 0.07 * state.glitch;
+      const x = (i - mid) * spread * 0.05 + Math.sin(i * 2.4) * 0.03 * state.glitch;
       const z = (mid - i) * 0.025 * (1 - spread);
       const k = state.fix - i;
       const bump = k > 0 && k < 1 ? Math.sin(k * Math.PI) : 0;
@@ -292,12 +293,8 @@ export async function mountRescue(): Promise<void> {
       card.beam.visible = beamOn;
       card.beam.position.y = (0.5 - u) * CARD_H;
 
-      const wantFixed = fixedAmt >= 0.62;
-      if (wantFixed !== card.shownFixed) {
-        card.shownFixed = wantFixed;
-        card.face.map = wantFixed ? card.fixed : card.broken;
-        card.face.needsUpdate = true;
-      }
+      card.brokenFace.opacity = 1 - fixedAmt;
+      card.fixedFace.opacity = fixedAmt;
     });
 
     const spot = agentSpot(state.agent);
@@ -316,12 +313,15 @@ export async function mountRescue(): Promise<void> {
       const scanW = segment(scrollP, scanAt, fixAt);
       const fixW = segment(scrollP, fixAt, launchAt);
       const liveW = segment(scrollP, launchAt, 1);
-      mascots.mats[0].opacity = scanW * Math.max(vis, 0.35);
-      mascots.mats[1].opacity = fixW * Math.max(vis, 0.2);
-      mascots.mats[2].opacity = liveW;
+      const weights = [scanW, fixW, liveW];
+      let best = 0;
+      if ((weights[1] ?? 0) >= (weights[best] ?? 0)) best = 1;
+      if ((weights[2] ?? 0) >= (weights[best] ?? 0)) best = 2;
+      const showMascot = (weights[best] ?? 0) > 0.08;
+      mascots.mats.forEach((mat, i) => {
+        mat.opacity = showMascot && i === best ? 1 : 0;
+      });
     }
-    plates.sync(scrollP, scanAt, fixAt, launchAt);
-
     const fit = camera.aspect < 0.85 ? 1.28 : camera.aspect < 1.15 ? 1.1 : 1;
     camera.position.set(state.camX, state.camY, state.camZ * fit);
     camera.lookAt(0, state.lookY, 0);
@@ -335,9 +335,8 @@ export async function mountRescue(): Promise<void> {
 
   gsap.registerPlugin(ScrollTrigger);
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
-  tl.to(state, { glitch: 1, duration: 0.12, ease: 'steps(2)' }, 0)
-    .to(state, { glitch: 0.35, duration: 0.08, ease: 'steps(1)' }, 0.12)
-    .to(state, { glitch: 0, duration: 0.1 }, 0.22);
+  tl.to(state, { glitch: 0.6, duration: 0.2, ease: 'power1.inOut' }, 0)
+    .to(state, { glitch: 0, duration: 0.24, ease: 'power1.out' }, 0.2);
 
   tl.addLabel('scan', 0.42);
   tl.to(
@@ -356,18 +355,18 @@ export async function mountRescue(): Promise<void> {
     },
     'scan',
   );
-  tl.to(state, { scan: LAYERS.length, duration: 1.05, ease: 'power1.inOut' }, 'scan+=0.55');
+  tl.to(state, { scan: layers.length, duration: 1.05, ease: 'power1.inOut' }, 'scan+=0.55');
 
   tl.addLabel('fix', 'scan+=1.85');
-  LAYERS.forEach((_, i) => {
+  layers.forEach((_, i) => {
     const at = i * 0.78;
     tl.to(state, { agent: i, agentVis: 1, duration: 0.24, ease: 'power2.out' }, `fix+=${at}`);
     tl.to(state, { fix: i + 1, duration: 0.32, ease: 'power1.inOut' }, `fix+=${(at + 0.2).toFixed(3)}`);
     tl.to(state, { agentVis: 0, duration: 0.16, ease: 'power2.in' }, `fix+=${(at + 0.52).toFixed(3)}`);
   });
-  tl.to(state, { camX: -0.85, yaw: 0.12, duration: LAYERS.length * 0.78, ease: 'none' }, 'fix');
+  tl.to(state, { camX: -0.85, yaw: 0.12, duration: layers.length * 0.78, ease: 'none' }, 'fix');
 
-  tl.addLabel('launch', `fix+=${(LAYERS.length * 0.78 + 0.15).toFixed(3)}`);
+  tl.addLabel('launch', `fix+=${(layers.length * 0.78 + 0.15).toFixed(3)}`);
   tl.to(
     state,
     {
@@ -383,7 +382,7 @@ export async function mountRescue(): Promise<void> {
       live: 1,
       red: 0,
       agentVis: 0,
-      scan: LAYERS.length,
+      scan: layers.length,
       duration: 1.15,
       ease: 'power3.inOut',
     },
@@ -409,8 +408,8 @@ export async function mountRescue(): Promise<void> {
     start: 'top top',
     end: () => `+=${Math.round(window.innerHeight * (window.matchMedia('(max-width: 860px)').matches ? 3.6 : 4.6))}`,
     pin: true,
-    scrub: 0.65,
-    anticipatePin: 1,
+    scrub: true,
+    anticipatePin: 0,
     animation: tl,
     onUpdate: paint,
   });
@@ -435,47 +434,6 @@ function segment(p: number, start: number, end: number): number {
   const inn = start <= 0 ? 1 : MathUtils.smoothstep(p, start - feather, start + feather);
   const out = end >= 1 ? 1 : 1 - MathUtils.smoothstep(p, end - feather, end + feather);
   return MathUtils.clamp(inn * out, 0, 1);
-}
-
-/** State renders sit behind the code-driven cards. The mascot photos replace the placeholder robot once they decode. */
-function mountPlates(scene: Scene): { sync: (p: number, a: number, b: number, c: number) => void } {
-  const names = ['layers-broken', 'layers-scanning', 'layers-fixing', 'layers-reassembled'] as const;
-  const mats = names.map(() => {
-    const mat = new MeshBasicMaterial({
-      transparent: true,
-      opacity: 0,
-      depthWrite: false,
-      toneMapped: false,
-    });
-    const mesh = new Mesh(new PlaneGeometry(5.1, 2.86), mat);
-    mesh.position.set(0.15, 0.1, -1.15);
-    mesh.renderOrder = -1;
-    scene.add(mesh);
-    return mat;
-  });
-  let ready = false;
-  const loader = new TextureLoader();
-  void Promise.all(names.map((name) => loadPlain(loader, `/images/en/${name}-800w.webp`))).then((textures) => {
-    textures.forEach((tex, i) => {
-      const mat = mats[i];
-      if (!mat) return;
-      mat.map = tex;
-      mat.needsUpdate = true;
-    });
-    ready = true;
-    pokeDraw();
-  }).catch(() => {
-    ready = false;
-  });
-  return {
-    sync(p, a, b, c) {
-      if (!ready) return;
-      const weights = [segment(p, 0, a), segment(p, a, b), segment(p, b, c), segment(p, c, 1)];
-      mats.forEach((mat, i) => {
-        mat.opacity = (weights[i] ?? 0) * 0.38;
-      });
-    },
-  };
 }
 
 function mountMascots(stack: Group): { group: Group; mats: SpriteMaterial[]; ready: boolean } {
@@ -510,20 +468,6 @@ function mountMascots(stack: Group): { group: Group; mats: SpriteMaterial[]; rea
     api.ready = false;
   });
   return api;
-}
-
-function loadPlain(loader: TextureLoader, url: string) {
-  return new Promise<ReturnType<TextureLoader['load']>>((resolve, reject) => {
-    loader.load(
-      url,
-      (tex) => {
-        tex.colorSpace = SRGBColorSpace;
-        resolve(tex);
-      },
-      undefined,
-      () => reject(new Error(url)),
-    );
-  });
 }
 
 function loadKeyed(url: string): Promise<CanvasTexture> {
@@ -565,10 +509,10 @@ function loadKeyed(url: string): Promise<CanvasTexture> {
 
 function agentSpot(t: number): { x: number; y: number; z: number } {
   if (t < 0) return { x: -2.6, y: 1.4, z: 0.8 };
-  const i0 = Math.max(0, Math.min(LAYERS.length - 1, Math.floor(t)));
-  const i1 = Math.min(LAYERS.length - 1, i0 + 1);
+  const i0 = Math.max(0, Math.min(layerCount - 1, Math.floor(t)));
+  const i1 = Math.min(layerCount - 1, i0 + 1);
   const f = MathUtils.clamp(t - i0, 0, 1);
-  const mid = (LAYERS.length - 1) / 2;
+  const mid = (layerCount - 1) / 2;
   const spread = state.explode;
   const yOf = (i: number) => (mid - i) * (0.055 + spread * 0.7);
   const arc = Math.sin(f * Math.PI) * 0.55;
@@ -600,10 +544,13 @@ function makeCard(id: LayerId, name: string, bad: string, ok: string, texW: numb
   const maxAniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   for (const tex of [broken, fixed]) tex.anisotropy = maxAniso;
 
-  const face = new MeshBasicMaterial({ map: broken, transparent: true, toneMapped: false });
-  const faceMesh = new Mesh(new PlaneGeometry(CARD_W - 0.16, CARD_H - 0.16), face);
-  faceMesh.position.z = CARD_D / 2 + 0.012;
-  group.add(faceMesh);
+  const brokenFace = new MeshBasicMaterial({ map: broken, transparent: true, toneMapped: false, opacity: 1 });
+  const fixedFace = new MeshBasicMaterial({ map: fixed, transparent: true, toneMapped: false, opacity: 0 });
+  const brokenMesh = new Mesh(new PlaneGeometry(CARD_W - 0.16, CARD_H - 0.16), brokenFace);
+  const fixedMesh = new Mesh(new PlaneGeometry(CARD_W - 0.16, CARD_H - 0.16), fixedFace);
+  brokenMesh.position.z = CARD_D / 2 + 0.012;
+  fixedMesh.position.z = CARD_D / 2 + 0.014;
+  group.add(brokenMesh, fixedMesh);
 
   const red = new MeshBasicMaterial({
     map: washTex('255,72,86', 0.55),
@@ -643,7 +590,7 @@ function makeCard(id: LayerId, name: string, bad: string, ok: string, texW: numb
     obj.renderOrder = 2;
   });
 
-  return { group, slab, face, red, green, beam, broken, fixed, shownFixed: false };
+  return { group, slab, brokenFace, fixedFace, red, green, beam };
 }
 
 function makeAgent(): { group: Group; light: PointLight } {

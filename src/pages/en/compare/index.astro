@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CompareTable from '../../../components/portal/CompareTable.astro';
+
+const title = 'AI aggregators compared — Inqreon';
+const description = 'Sites that bundle many models in one chat or one API key: what each one is for. No scores. Checked prices live in the Russian article.';
+---
+<BaseLayout title={title} description={description}>
+  <div class="container page-hero">
+    <p class="kicker">Compare</p>
+    <h1>Sites that bundle many models</h1>
+    <p class="lead">An aggregator sells access to other companies’ models, as a chat or as an API key. This table says what each one is for. It does not rank them.</p>
+  </div>
+  <div class="container">
+    <CompareTable lang="en" />
+  </div>
+</BaseLayout>

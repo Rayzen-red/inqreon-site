@@ -1,10 +1,27 @@
 ---
-import { HAS_UPWORK, TELEGRAM_URL } from '../../data/offer';
+import { HAS_UPWORK } from '../../data/offer';
 import { PRICES, formatHourly } from '../../data/prices';
 
+interface Props { lang?: 'en' | 'ru' }
+const { lang = 'en' } = Astro.props;
+const ru = lang === 'ru';
 const hourly = formatHourly(PRICES.hourly.min, PRICES.hourly.max);
 
-const faqs: Array<[string, string]> = [
+const faqs: Array<[string, string]> = ru
+  ? [
+      ['Какие проекты берёте?', 'Сайты и приложения из Lovable, Bolt, Cursor или v0, обычно с Supabase и Stripe. Если стек другой, начните с разбора: я прямо напишу, могу ли помочь.'],
+      ['Почему без звонков?', 'Переписка оставляет каждое решение в письме и не зависит от часового пояса. Когда починка идёт, каждый день приходит короткое письмо.'],
+      ['Нужно присылать пароли?', 'Нет. Вы добавляете меня в репозиторий, Supabase и хостинг. Аккаунты и ключи остаются вашими. Доступ можно забрать в любой момент. Пароли и секретные ключи в первое письмо не кладите.'],
+      ['Как быстро готов разбор?', 'Письменный отчёт приходит до любой починки. Дату я не обещаю, пока не увижу приложение. После согласия на починку — письмо каждый день.'],
+      ['Если починить нельзя?', 'Я пишу это в разборе, до оплаты починки. Не берусь за работу, которую не смогу закончить.'],
+      ['Если разбор найдёт больше, чем я ждал?', 'Цена согласована до начала. Если всплывёт новое, я описываю это и называю цену. Без вашего согласия ничего лишнего не делается.'],
+      ['Если задача не ложится в ступень?', `Тогда ставка ${hourly}. Я подтверждаю её письмом до начала.`],
+      HAS_UPWORK
+        ? ['Как платить?', 'На Upwork, фиксированным контрактом. Работа, файлы и оплата остаются на платформе.']
+        : ['Как платить?', 'Напишите на почту, чтобы начать разбор. Цену я подтверждаю письмом до начала. Хватит ссылки на проект и короткого описания. Тот же разговор можно вести в Telegram.'],
+      ['Кому принадлежит код после починки?', 'Вам. Всё остаётся в вашем репозитории и ваших аккаунтах.'],
+    ]
+  : [
   [
     'Which projects do you take?',
     'Apps and websites built with Lovable, Bolt, Cursor, or v0, usually with Supabase and Stripe. If yours is different, start with a Scan and I’ll tell you plainly whether I can help.',
@@ -51,18 +68,18 @@ const faqs: Array<[string, string]> = [
 <section class="sec" style="padding-top:0" aria-labelledby="rules-h">
   <div class="wrap">
     <div class="sec-head rv">
-      <span class="eyebrow">How I work</span>
-      <h2 id="rules-h">Five rules I don't break</h2>
+      <span class="eyebrow">{ru ? 'Как я работаю' : 'How I work'}</span>
+      <h2 id="rules-h">{ru ? 'Пять правил, которые не нарушаю' : "Five rules I don't break"}</h2>
     </div>
     <div class="rules">
-      <div class="rule rv"><span class="ix">01</span><b>Written messages only</b><p>No calls. Every decision stays on record.</p></div>
-      <div class="rule rv"><span class="ix">02</span><b>Fixed price</b><p>Agreed before work starts. Hourly only when a tier doesn’t fit.</p></div>
-      <div class="rule rv"><span class="ix">03</span><b>Daily updates</b><p>Every day of a fix, you know what was done.</p></div>
-      <div class="rule rv"><span class="ix">04</span><b>Your keys stay yours</b><p>You invite me. You can remove access at any time.</p></div>
+      <div class="rule rv"><span class="ix">01</span><b>{ru ? 'Только переписка' : 'Written messages only'}</b><p>{ru ? 'Без звонков. Каждое решение остаётся в письме.' : 'No calls. Every decision stays on record.'}</p></div>
+      <div class="rule rv"><span class="ix">02</span><b>{ru ? 'Фиксированная цена' : 'Fixed price'}</b><p>{ru ? 'Согласована до начала. Почасовая ставка — только если ступень не подходит.' : 'Agreed before work starts. Hourly only when a tier doesn’t fit.'}</p></div>
+      <div class="rule rv"><span class="ix">03</span><b>{ru ? 'Письмо каждый день' : 'Daily updates'}</b><p>{ru ? 'В каждый день починки понятно, что сделано.' : 'Every day of a fix, you know what was done.'}</p></div>
+      <div class="rule rv"><span class="ix">04</span><b>{ru ? 'Ключи остаются у вас' : 'Your keys stay yours'}</b><p>{ru ? 'Вы приглашаете меня и можете забрать доступ когда угодно.' : 'You invite me. You can remove access at any time.'}</p></div>
       {HAS_UPWORK ? (
-        <div class="rule rv"><span class="ix">05</span><b>Stays on Upwork</b><p>Work and payment stay on the platform.</p></div>
+        <div class="rule rv"><span class="ix">05</span><b>{ru ? 'Всё на Upwork' : 'Stays on Upwork'}</b><p>{ru ? 'Работа и оплата остаются на платформе.' : 'Work and payment stay on the platform.'}</p></div>
       ) : (
-        <div class="rule rv"><span class="ix">05</span><b>You approve first</b><p>A link and what is broken are enough to start. No code changes until you approve the plan.</p></div>
+        <div class="rule rv"><span class="ix">05</span><b>{ru ? 'Сначала ваше согласие' : 'You approve first'}</b><p>{ru ? 'Чтобы начать, хватает ссылки и описания поломки. Код не меняется, пока вы не согласны с планом.' : 'A link and what is broken are enough to start. No code changes until you approve the plan.'}</p></div>
       )}
     </div>
   </div>
@@ -71,17 +88,16 @@ const faqs: Array<[string, string]> = [
 <section class="sec" id="case" style="padding-top:0" aria-labelledby="case-h">
   <div class="wrap case">
     <div class="rv">
-      <span class="eyebrow">Case · my own project</span>
+      <span class="eyebrow">{ru ? 'Свой проект, не клиент' : 'Case · my own project'}</span>
       <h2 id="case-h" style="margin-top:16px">inqreon.com</h2>
-      <p class="lead" style="margin-top:16px">An AI-built website with a Telegram bot. I built it with Cursor and took it through domain, deploy, and a mobile layout. The site and the bot are live.</p>
+      <p class="lead" style="margin-top:16px">{ru ? 'Этот сайт и телеграм-бот. Собрал в Cursor, довёл домен, выкладку и мобильную вёрстку. Сайт и бот работают.' : 'This site and a Telegram bot. I built it in Cursor and took it through the domain, deploy, and a mobile layout. The site and the bot are live.'}</p>
       <dl>
-        <dt>Role</dt><dd>Developer and designer</dd>
-        <dt>Stack</dt><dd>Astro · GitHub Actions · GitHub Pages</dd>
-        <dt>Done</dt><dd>Domain, automatic deploy, mobile layout, Telegram bot with auto-posting</dd>
-        <dt>Status</dt><dd>Site and bot are live</dd>
+        <dt>{ru ? 'Роль' : 'Role'}</dt><dd>{ru ? 'Разработка и дизайн' : 'Developer and designer'}</dd>
+        <dt>{ru ? 'Стек' : 'Stack'}</dt><dd>Astro · GitHub Actions · GitHub Pages</dd>
+        <dt>{ru ? 'Сделано' : 'Done'}</dt><dd>{ru ? 'Домен, автоматическая выкладка, мобильная вёрстка, бот с автопостингом' : 'Domain, automatic deploy, mobile layout, Telegram bot with auto-posting'}</dd>
+        <dt>{ru ? 'Статус' : 'Status'}</dt><dd>{ru ? 'Сайт и бот работают' : 'Site and bot are live'}</dd>
       </dl>
-      <a class="btn" href="https://inqreon.com/" target="_blank" rel="noopener noreferrer">Open inqreon.com <span class="arr" aria-hidden="true">↗</span></a>
-      <p class="price-note">The site itself is a Russian-language blog about AI tools. This is my own project, not a client.</p>
+      <p class="price-note">{ru ? 'Это мой проект, не клиентский.' : 'This is my own project, not a client.'}</p>
     </div>
     <div class="pipe rv" id="pipe" role="img" aria-label="Deploy pipeline: Cursor, GitHub, Actions, Pages, inqreon.com. A Telegram bot auto-posts to the channel.">
       <div class="pipe-row">
@@ -105,7 +121,7 @@ const faqs: Array<[string, string]> = [
   <div class="wrap">
     <div class="sec-head rv">
       <span class="eyebrow">FAQ</span>
-      <h2 id="faq-h">Questions before you order</h2>
+      <h2 id="faq-h">{ru ? 'Вопросы' : 'Questions'}</h2>
     </div>
     <div class="faq">
       {faqs.map(([q, a]) => (
@@ -115,10 +131,6 @@ const faqs: Array<[string, string]> = [
         </details>
       ))}
     </div>
-    <p class="price-note">
-      {HAS_UPWORK ? 'Work is booked on Upwork.' : 'Start by email, or message '}
-      {HAS_UPWORK ? null : <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">Telegram</a>}
-      {HAS_UPWORK ? null : '.'}
-    </p>
+    <p class="price-note">{ru ? 'Написать можно кнопкой «Написать в поддержку» в шапке: бот или почта.' : 'The support button in the header opens the bot or email.'}</p>
   </div>
 </section>

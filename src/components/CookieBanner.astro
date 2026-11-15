@@ -1,10 +1,16 @@
 ---
-// Короткое уведомление о cookie. Кнопка «Понятно» пишет согласие в localStorage
-// (ключ inqreon-cookie-consent, значение accepted).
+// Cookie notice. OK writes inqreon-cookie-consent = accepted.
+const en = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/');
 ---
-<aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label="Уведомление о файлах cookie">
-  <p>Мы используем cookie и счётчики Яндекс Метрики и Google, чтобы понимать, какие страницы читают. Подробнее — в <a href="/politika-konfidencialnosti/">политике конфиденциальности</a>.</p>
-  <button type="button" class="btn">Понятно</button>
+<aside id="cookie-banner" class="cookie-banner" hidden role="region" aria-label={en ? 'Cookie notice' : 'Уведомление о файлах cookie'}>
+  <p>
+    {en ? (
+      <>This site uses cookies and analytics (Google Analytics and Yandex Metrica) to see which pages are read. <a href="/en/privacy/">Privacy policy</a>.</>
+    ) : (
+      <>Мы используем cookie и счётчики Яндекс Метрики и Google, чтобы понимать, какие страницы читают. Подробнее — в <a href="/politika-konfidencialnosti/">политике конфиденциальности</a>.</>
+    )}
+  </p>
+  <button type="button" class="btn">{en ? 'OK' : 'Понятно'}</button>
 </aside>
 <script is:inline>
   (function () {

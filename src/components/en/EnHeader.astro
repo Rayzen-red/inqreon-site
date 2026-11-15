@@ -1,64 +1,44 @@
 ---
-import OrderLink from './OrderLink.astro';
-import { HAS_UPWORK } from '../../data/offer';
-import { SERVICE_PATH } from '../../data/automation';
-import { PRICES, SHOW_AUTOMATION_BLOCK, formatPrice } from '../../data/prices';
+import Support from '../portal/Support.astro';
+import { alternatePath } from '../../data/translations.mjs';
 
 interface Props {
   lang?: 'en' | 'ru';
-  /** Russian alternate for this page. Defaults to the Russian service page when that block is on. */
-  ruHref?: string;
-  ruPaired?: boolean;
-  ruTitle?: string;
-  news?: boolean;
-  /** Section links stay on this page. Other English pages point them at the landing page. */
-  here?: boolean;
 }
-const {
-  lang = 'en',
-  ruHref,
-  ruPaired = true,
-  ruTitle,
-  news = false,
-  here = true,
-} = Astro.props;
-const to = (hash: string) => (news || !here ? `/en/${hash}` : hash);
-const resolvedRu = ruHref ?? (SHOW_AUTOMATION_BLOCK ? SERVICE_PATH.ru : '/');
+const { lang = 'en' } = Astro.props;
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const paired = alternatePath(path);
+const other = paired ?? (lang === 'en' ? '/' : '/en/');
+const items = lang === 'en'
+  ? [
+      { href: '/en/news/', label: 'News' },
+      { href: '/en/guides/', label: 'Articles' },
+      { href: '/en/tools/', label: 'Guide' },
+      { href: '/en/compare/', label: 'Compare' },
+      { href: '/en/services/', label: 'Services', current: true },
+    ]
+  : [
+      { href: '/news/', label: 'Новости' },
+      { href: '/neyroseti/', label: 'Статьи' },
+      { href: '/instrumenty/', label: 'Гид' },
+      { href: '/sravneniya/', label: 'Сравнение' },
+      { href: '/uslugi/', label: 'Услуги', current: true },
+    ];
 ---
 <header class="nav" id="nav">
   <div class="wrap">
-    <a class="logo" href={lang === 'ru' ? SERVICE_PATH.ru : '/en/'} aria-label="Inqreon"><span class="logo-mark" aria-hidden="true">iq</span>Inqreon</a>
-    {lang === 'en' && (
-      <nav class="nav-links" aria-label="Main">
-        <a class="nav-news" href="/en/news/" aria-current={news ? 'page' : undefined}>News</a>
-        <a href={to('#rescue')}>How a rescue works</a>
-        <a href={to('#pricing')}>Pricing</a>
-        {SHOW_AUTOMATION_BLOCK && <a href={to('#programs')}>Programs</a>}
-        <a href={to('#case')}>Case</a>
-        <a href={to('#faq')}>FAQ</a>
-      </nav>
-    )}
-    <div class="nav-right">
-      {lang === 'en' && (
-        <a class="nav-news nav-news-bar" href="/en/news/" aria-current={news ? 'page' : undefined}>News</a>
-      )}
-      <div class="lang" role="group" aria-label={lang === 'ru' ? 'Язык' : 'Language'}>
-        {lang === 'en' ? (
-          <span lang="en" aria-current="true">EN</span>
-        ) : (
-          <a href="/en/" lang="en" hreflang="en">EN</a>
-        )}
-        {lang === 'ru' ? (
-          <span lang="ru" aria-current="true">RU</span>
-        ) : (
-          <a href={resolvedRu} lang="ru" hreflang={ruPaired ? 'ru' : undefined} aria-label={ruTitle}>RU</a>
-        )}
-      </div>
-      {lang === 'en' && !news && (HAS_UPWORK ? (
-        <OrderLink kind="hire" variant="cta" size="sm" label="Hire on Upwork" />
-      ) : (
-        <OrderLink kind="scan" variant="cta" size="sm" label={`Scan ${formatPrice(PRICES.scan)}`} />
+    <a class="logo" href={lang === 'ru' ? '/' : '/en/'} aria-label="Inqreon"><span class="logo-mark" aria-hidden="true">iq</span>Inqreon</a>
+    <nav class="nav-links" aria-label={lang === 'ru' ? 'Разделы' : 'Sections'}>
+      {items.map((item) => (
+        <a href={item.href} aria-current={item.current ? 'page' : undefined}>{item.label}</a>
       ))}
+    </nav>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label={lang === 'ru' ? 'Язык' : 'Language'}>
+        {lang === 'en' ? <span lang="en" aria-current="true">EN</span> : <a href={other} lang="en" hreflang={paired ? 'en' : undefined}>EN</a>}
+        {lang === 'ru' ? <span lang="ru" aria-current="true">RU</span> : <a href={other} lang="ru" hreflang={paired ? 'ru' : undefined}>RU</a>}
+      </div>
+      <Support />
     </div>
   </div>
   <div class="progress" id="progress"></div>

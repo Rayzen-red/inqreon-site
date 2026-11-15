@@ -1,7 +1,10 @@
 ---
-// Партнёрский блок SYNTX. Идентификатора erid пока нет — в разметке комментарий-заглушка.
-const href = 'https://t.me/syntxaibot?start=aff_5329155594';
+import { partnerOutbound } from '../data/partners';
+// Рекламный блок SYNTX. Адрес берётся из src/data/partners.ts. erid пока нет.
+const link = partnerOutbound('syntx');
+const href = link?.href ?? '';
 ---
+{link?.sponsored && (
 <aside class="ad-card" data-partner="SYNTX">
   <Fragment set:html="<!-- erid: ЗАПОЛНИТЬ (erid ещё не получен) -->" />
   <span class="ad-label">Реклама</span>
@@ -10,3 +13,4 @@ const href = 'https://t.me/syntxaibot?start=aff_5329155594';
   </p>
   <span class="ad-caption">Рекламодатель: SYNTX INTELLIGENCE – FZCO (ОАЭ), рег. № 70517</span>
 </aside>
+)}

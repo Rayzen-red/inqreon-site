@@ -109,8 +109,8 @@ section { position: relative; scroll-margin-top: 84px; }
 .nav-news:hover, .nav-news[aria-current="page"] { color: var(--text); }
 .nav-news-bar { display: none; }
 @media (max-width: 900px) {
-  .nav-links { display: none; }
-  .nav-news-bar { display: inline; }
+  .nav .wrap { height: auto; min-height: 68px; flex-wrap: wrap; padding-block: 10px; }
+  .nav-links { flex-wrap: wrap; gap: 10px 14px; margin-left: 0; }
 }
 .nav-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
 .lang { display: inline-flex; border: 1px solid var(--line2); border-radius: 999px; padding: 3px; font: 600 12px/1 var(--mono); }
@@ -128,7 +128,18 @@ section { position: relative; scroll-margin-top: 84px; }
   }
 }
 @keyframes progress-grow { to { transform: scaleX(1); } }
-@media (max-width: 900px) { .nav-links { display: none; } }
+.nav .support summary { font-family: var(--sans); }
+.nav .support-menu {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 40;
+  min-width: 220px; background: #121418; border: 1px solid var(--line2); padding: 6px; display: grid;
+}
+.nav .support-menu a { color: var(--text); text-decoration: none; padding: 8px 10px; font-size: 14px; }
+.nav .support { position: relative; }
+.nav .support summary {
+  list-style: none; cursor: pointer; background: var(--cta); color: var(--cta-ink);
+  border-radius: 999px; padding: 8px 12px; font-weight: 700; font-size: 13px;
+}
+.nav .support summary::-webkit-details-marker { display: none; }
 @media (max-width: 520px) {
   .nav .btn-sm .t-long { display: none; }
   .nav .wrap { gap: 12px; }
@@ -232,10 +243,7 @@ section { position: relative; scroll-margin-top: 84px; }
   position: absolute; inset: 6% 2% 48px; display: grid; place-items: center; z-index: 1;
 }
 .scene-poster img { width: min(100%, 680px); height: auto; filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.45)); }
-.scene.is-live .scene-poster { opacity: 0; visibility: hidden; }
-@media (prefers-reduced-motion: no-preference) {
-  .scene-poster { transition: opacity 0.45s ease; }
-}
+.scene.is-live .scene-poster { display: none; }
 .scene-story { display: none; }
 .story-card { margin: 0; }
 .story-card figcaption {

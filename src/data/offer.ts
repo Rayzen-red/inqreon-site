@@ -122,3 +122,23 @@ export const STEP_CAPTIONS = [
   'Fix: each layer repaired by the approved plan.',
   'Launch: back together and live.',
 ] as const;
+
+const LAYERS_RU = [
+  { id: 'ui', name: 'UI', bad: 'Кнопка молчит', ok: 'Работает с телефона' },
+  { id: 'auth', name: 'Вход', bad: 'Петля редиректа', ok: 'Сессия держится' },
+  { id: 'db', name: 'База', bad: 'RLS выключен', ok: 'Политики RLS есть' },
+  { id: 'pay', name: 'Оплата', bad: 'Вебхук не сверен', ok: 'Вебхуки сверены' },
+  { id: 'deploy', name: 'Деплой', bad: 'Нет переменных', ok: 'Открыт ваш домен' },
+] as const;
+
+const STEP_CAPTIONS_RU = [
+  'В превью целое. У живого человека ломается.',
+  'Разбор: каждый слой просмотрен, проблемы записаны.',
+  'Починка: слой за слоем, по согласованному плану.',
+  'Запуск: собрано и открыто.',
+] as const;
+
+export function sceneScript(lang: 'en' | 'ru') {
+  if (lang === 'ru') return { layers: LAYERS_RU, captions: STEP_CAPTIONS_RU };
+  return { layers: LAYERS, captions: STEP_CAPTIONS };
+}
